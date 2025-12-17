@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link2 from "@/components/Link2";
 import Math from "@/components/Math";
 import Centered from "@/components/Centered";
 import RedBold from "@/components/RedBold";
@@ -15,13 +15,7 @@ export default function Page() {
                     school math contest that seeks to inspire students&apos;
                     interest in mathematics and to encourage them to explore
                     math beyond the school curriculum. Contest details can be
-                    found on the{" "}
-                    <Link
-                        href="/info"
-                        className="dark:text-blue-400 text-blue-700 hover:underline">
-                        information page
-                    </Link>
-                    .
+                    found on the <Link2 href="/info">information page</Link2>.
                 </p>
                 <h2 className="text-xl font-bold font-sans">Registration</h2>
                 <ol className="list-decimal ml-4">
@@ -30,13 +24,9 @@ export default function Page() {
                         exceptions, discussed further in #4). The math team
                         sponsors of each school/organization register individual
                         student teams through the website via the{" "}
-                        <Link
-                            className="dark:text-blue-400 text-blue-700 hover:underline"
-                            href="/register">
-                            registration page
-                        </Link>
-                        . There is no limit to the number of full teams a school
-                        or organization may send.
+                        <Link2 href="/register">registration page</Link2>. There
+                        is no limit to the number of full teams a school or
+                        organization may send.
                     </li>
                     <li>
                         <RedBold text={`Upper division (${upper}) only`} />:
@@ -251,11 +241,9 @@ export default function Page() {
                 <p>
                     Further clarifications on terminology, notation, and
                     acceptable answer forms can be found at{" "}
-                    <a
-                        className="hover:underline dark:text-blue-400 text-blue-700"
-                        href="https://mbmt.mbhs.edu/static/files/Conventions.pdf">
+                    <Link2 href="https://mbmt.mbhs.edu/static/files/Conventions.pdf">
                         the conventions document linked here
-                    </a>
+                    </Link2>
                     .
                 </p>
                 <h2 className="text-xl font-bold font-sans">
@@ -296,11 +284,9 @@ export default function Page() {
                 <p>
                     A more detailed guide to the scoring algorithm we use can be
                     found at{" "}
-                    <a
-                        className="hover:underline dark:text-blue-400 text-blue-700"
-                        href="https://mbmt.mbhs.edu/static/files/Scoring.pdf">
+                    <Link2 href="https://mbmt.mbhs.edu/static/files/Scoring.pdf">
                         the scoring document linked here
-                    </a>
+                    </Link2>
                     .
                 </p>
             </div>

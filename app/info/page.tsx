@@ -1,8 +1,7 @@
-import Link from "next/link";
-import Math from "@/components/Math";
 import Centered from "@/components/Centered";
-import RedBold from "@/components/RedBold";
-import { upper, lower } from "@/divisions";
+import { lower } from "@/divisions";
+import Cell from "@/components/Cell";
+import Link2 from "@/components/Link2";
 
 export default function Page() {
     return (
@@ -30,18 +29,9 @@ export default function Page() {
                     number of teams participating and assist us with logistics.
                     Please take note that if you don’t register by this date,
                     you might not receive our free swag. To register, visit{" "}
-                    <Link
-                        className="dark:text-blue-400 text-blue-700 hover:underline"
-                        href="/register">
-                        here
-                    </Link>
-                    . For more details on registration, see our{" "}
-                    <Link
-                        className="dark:text-blue-400 text-blue-700 hover:underline"
-                        href="/rules">
-                        Rules page
-                    </Link>
-                    .
+                    <Link2 href="/register">here</Link2>. For more details on
+                    registration, see our{" "}
+                    <Link2 href="/rules">Rules page</Link2>.
                 </p>
 
                 <h2 className="text-xl font-bold font-sans">Logistics</h2>
@@ -49,11 +39,9 @@ export default function Page() {
                     MBMT 11 will occur at Montgomery Blair High School on
                     Sunday, March 8th, 2026 from 11:00 am - 5:00 pm. Our address
                     is{" "}
-                    <Link
-                        className="dark:text-blue-400 text-blue-700 hover:underline"
-                        href="https://goo.gl/maps/QUudw1ir4JPsHSL98">
+                    <Link2 href="https://goo.gl/maps/QUudw1ir4JPsHSL98">
                         51 University Blvd E, Silver Spring, MD 20901
-                    </Link>
+                    </Link2>
                     . Please arrive on the University Boulevard side of the
                     school. Thanks to the generosity of the Montgomery County
                     Division of Food & Nutrition Services, FREE lunch will be
@@ -104,36 +92,36 @@ export default function Page() {
                 <table className="border-collapse w-fit">
                     <tbody>
                         <tr>
-                            <TableCell>11:00 AM - 12:00 PM</TableCell>
-                            <TableCell>Registration + Lunch</TableCell>
+                            <Cell side="left">11:00 AM - 12:00 PM</Cell>
+                            <Cell side="right">Registration + Lunch</Cell>
                         </tr>
                         <tr>
-                            <TableCell>12:15 - 12:45 PM</TableCell>
-                            <TableCell>Subject Test #1</TableCell>
+                            <Cell side="left">12:15 - 12:45 PM</Cell>
+                            <Cell side="right">Subject Test #1</Cell>
                         </tr>
                         <tr>
-                            <TableCell>12:55 - 1:25 PM</TableCell>
-                            <TableCell>Subject Test #2</TableCell>
+                            <Cell side="left">12:55 - 1:25 PM</Cell>
+                            <Cell side="right">Subject Test #2</Cell>
                         </tr>
                         <tr>
-                            <TableCell>1:25 - 1:40 PM</TableCell>
-                            <TableCell>Break</TableCell>
+                            <Cell side="left">1:25 - 1:40 PM</Cell>
+                            <Cell side="right">Break</Cell>
                         </tr>
                         <tr>
-                            <TableCell>1:45 - 2:30 PM</TableCell>
-                            <TableCell>Team Round</TableCell>
+                            <Cell side="left">1:45 - 2:30 PM</Cell>
+                            <Cell side="right">Team Round</Cell>
                         </tr>
                         <tr>
-                            <TableCell>2:40 - 3:40 PM</TableCell>
-                            <TableCell>Guts Round</TableCell>
+                            <Cell side="left">2:40 - 3:40 PM</Cell>
+                            <Cell side="right">Guts Round</Cell>
                         </tr>
                         <tr>
-                            <TableCell>3:40 - 4:20 PM</TableCell>
-                            <TableCell>Fun Round + Tiebreakers</TableCell>
+                            <Cell side="left">3:40 - 4:20 PM</Cell>
+                            <Cell side="right">Fun Round + Tiebreakers</Cell>
                         </tr>
                         <tr>
-                            <TableCell>4:30 - 5:00 PM</TableCell>
-                            <TableCell>Awards Ceremony</TableCell>
+                            <Cell side="left">4:30 - 5:00 PM</Cell>
+                            <Cell side="right">Awards Ceremony</Cell>
                         </tr>
                     </tbody>
                 </table>
@@ -142,21 +130,17 @@ export default function Page() {
                 <p>
                     If you have any questions, please contact the Montgomery
                     Blair math team captains at{" "}
-                    <a href="mailto:mbhs.math.team@gmail.com">
+                    <Link2 href="mailto:mbhs.math.team@gmail.com">
                         mbhs.math.team@gmail.com
-                    </a>
+                    </Link2>
                     , or our coach, Jeremy Schwartz, at{" "}
-                    <a href="mailto:Jeremy_R_Schwartz@mcpsmd.org">
+                    <Link2 href="mailto:Jeremy_R_Schwartz@mcpsmd.org">
                         Jeremy_R_Schwartz@mcpsmd.org
-                    </a>
+                    </Link2>
                     . We look forward to seeing you and your Mathletes at this
                     year&apos;s MBMT!
                 </p>
             </div>
         </Centered>
     );
-}
-
-function TableCell({ children }: { children: string }) {
-    return <td className="px-2 border-l border-r">{children}</td>;
 }
