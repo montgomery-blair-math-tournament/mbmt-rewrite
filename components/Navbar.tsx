@@ -19,6 +19,11 @@ export default function Navbar() {
                     className="rounded-md duration-150 hover:bg-rose-800 py-0.5 px-1.5">
                     Rules
                 </Link>
+                <Link
+                    href="/info"
+                    className="rounded-md duration-150 hover:bg-rose-800 py-0.5 px-1.5">
+                    Info
+                </Link>
             </div>
         </div>
     );

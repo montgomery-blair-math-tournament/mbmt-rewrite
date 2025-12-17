@@ -30,9 +30,13 @@ export default function Page() {
                         exceptions, discussed further in #4). The math team
                         sponsors of each school/organization register individual
                         student teams through the website via the{" "}
-                        <Link href="/register">registration page</Link>. There
-                        is no limit to the number of full teams a school or
-                        organization may send.
+                        <Link
+                            className="dark:text-blue-400 text-blue-700 hover:underline"
+                            href="/register">
+                            registration page
+                        </Link>
+                        . There is no limit to the number of full teams a school
+                        or organization may send.
                     </li>
                     <li>
                         <RedBold text={`Upper division (${upper}) only`} />:
@@ -133,28 +137,33 @@ export default function Page() {
                         <Math eq="n! = n(n-1)(n-2)…(2)(1)" />. For example,{" "}
                         <Math eq="4! = 4 \cdot 3 \cdot 2 \cdot 1 = 24" />.
                     </li>
-                    <ul className="list-disc ml-4">
-                        <b>
-                            Ordered <Math eq="n" />
-                            -tuples
-                        </b>
-                        : Certain questions will ask for an answer as an ordered
-                        pair, ordered triple, or ordered 6-tuple.
-                        <li>
-                            Ordered pairs: <Math eq="(a, b)" />
-                        </li>
-                        <li>
-                            Ordered triples: <Math eq="(a, b, c)" />
-                        </li>
-                        <li>
-                            Ordered 6-tuples: <Math eq="(a, b, c, d, e, f)" />
-                        </li>
-                        <li>
-                            <Math eq="a, b, c" />, etc. are numbers. Any answer
-                            in the form of an ordered <Math eq="n" />
-                            -tuple MUST include the parentheses and commas.
-                        </li>
-                    </ul>
+                    <li>
+                        <p>
+                            <b>
+                                Ordered <Math eq="n" />
+                                -tuples
+                            </b>
+                            : Certain questions will ask for an answer as an
+                            ordered pair, ordered triple, or ordered 6-tuple.
+                        </p>
+                        <ul className="list-disc ml-4">
+                            <li>
+                                Ordered pairs: <Math eq="(a, b)" />
+                            </li>
+                            <li>
+                                Ordered triples: <Math eq="(a, b, c)" />
+                            </li>
+                            <li>
+                                Ordered 6-tuples:{" "}
+                                <Math eq="(a, b, c, d, e, f)" />
+                            </li>
+                            <li>
+                                <Math eq="a, b, c" />, etc. are numbers. Any
+                                answer in the form of an ordered <Math eq="n" />
+                                -tuple MUST include the parentheses and commas.
+                            </li>
+                        </ul>
+                    </li>
                     <li>
                         <b>Lines in geometry</b>: if a question asks
                         &quot;compute <Math eq="AB" />
