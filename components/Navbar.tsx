@@ -10,10 +10,11 @@ export default function Navbar() {
                     Home
                 </Link>
                 <Link
-                    href="/register"
+                    href="/about"
                     className="rounded-md duration-150 hover:bg-rose-800 py-0.5 px-1.5">
-                    Register
+                    About
                 </Link>
+
                 <Link
                     href="/rules"
                     className="rounded-md duration-150 hover:bg-rose-800 py-0.5 px-1.5">
@@ -23,6 +24,16 @@ export default function Navbar() {
                     href="/info"
                     className="rounded-md duration-150 hover:bg-rose-800 py-0.5 px-1.5">
                     Info
+                </Link>
+                <Link
+                    href="/archive"
+                    className="rounded-md duration-150 hover:bg-rose-800 py-0.5 px-1.5">
+                    Archive
+                </Link>
+                <Link
+                    href="/register"
+                    className="rounded-md duration-150 hover:bg-rose-800 py-0.5 px-1.5">
+                    Register
                 </Link>
             </div>
         </div>

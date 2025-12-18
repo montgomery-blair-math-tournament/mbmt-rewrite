@@ -6,7 +6,7 @@ export default function Link2({
     children,
 }: {
     href: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
 }) {
     return (
         <Link
