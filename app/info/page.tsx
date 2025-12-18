@@ -7,7 +7,7 @@ export default function Page() {
     return (
         <Centered>
             <div className="flex flex-col gap-4 flex-1">
-                <h1 className="text-2xl font-bold font-sans">
+                <h1 className="text-4xl font-bold font-sans">
                     Contest Information
                 </h1>
                 <p>

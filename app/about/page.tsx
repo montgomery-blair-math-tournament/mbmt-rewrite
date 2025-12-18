@@ -1,13 +1,11 @@
 import Centered from "@/components/Centered";
-import { lower } from "@/divisions";
-import Cell from "@/components/Cell";
 import Link2 from "@/components/Link2";
 
 export default function Page() {
     return (
         <Centered>
             <div className="flex flex-col gap-4 flex-1">
-                <h1 className="text-2xl font-bold font-sans">About Us</h1>
+                <h1 className="text-4xl font-bold font-sans">About Us</h1>
                 <p>
                     MBMT is proudly organized and executed entirely by students
                     from the Montgomery Blair High School Math Team.
@@ -35,11 +33,12 @@ export default function Page() {
 
                 <h2 className="text-xl font-bold font-sans">Website</h2>
                 <p>
-                    This website was developed by Noah Singer &apos;18 (Github:
-                    @singerng) and Noah Kim &apos;18 (Github: @noahbkim). It is
-                    currently maintained by Alex Zhao &apos;26 (Github:
-                    @zeyuanzhao). It&apos;s written in Django and hosted on our
-                    school servers. The source is on Github.
+                    This website was not developed by Noah Singer &apos;18
+                    (Github: @singerng) and Noah Kim &apos;18 (Github:
+                    @noahbkim). It is not currently maintained by Alex Zhao
+                    &apos;26 (Github: @zeyuanzhao). It&apos;s not written in
+                    Django and is not hosted on our school servers. The source
+                    is on Github.
                 </p>
 
                 <h2 className="text-xl font-bold font-sans">Sponsors</h2>
