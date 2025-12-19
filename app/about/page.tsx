@@ -1,3 +1,4 @@
+import Cell from "@/components/Cell";
 import Centered from "@/components/Centered";
 import Link2 from "@/components/Link2";
 
@@ -30,6 +31,25 @@ export default function Page() {
                     We&apos;re very thankful to our problem writers, without
                     whom we wouldn&apos;t have a contest:
                 </p>
+                <table className="text-center text-xl">
+                    <tbody>
+                        <tr>
+                            <Cell>Mahilan Guha</Cell>
+                            <Cell>Yunyi Ling</Cell>
+                            <Cell>Michelle Gao</Cell>
+                        </tr>
+                        <tr>
+                            <Cell>Evan Zhang</Cell>
+                            <Cell>Reanna Jin</Cell>
+                            <Cell>Alex Zhao</Cell>
+                        </tr>
+                        <tr>
+                            <Cell>Kele Zhang</Cell>
+                            <Cell>Ashley Zhang</Cell>
+                            <Cell>Jesse Jing</Cell>
+                        </tr>
+                    </tbody>
+                </table>
 
                 <h2 className="text-xl font-bold font-sans">Website</h2>
                 <p>
