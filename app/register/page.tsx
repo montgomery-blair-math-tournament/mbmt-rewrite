@@ -1,12 +1,27 @@
+import Heading from "@/components/Heading";
+import Link2 from "@/components/Link2";
+import Main from "@/components/Main";
+import RegistrationFormIframe from "@/components/RegistrationFormIframe";
+
 export default function Page() {
     return (
-        <div className="flex flex-col gap-4 flex-1">
-            {/* <div>Register here: </div> */}
-            <iframe
-                src="https://docs.google.com/forms/d/e/1FAIpQLSfMF3GF2TvUKSnCce-Vfy0XengH9pi6wllDCsnWkIFTa1f2fQ/viewform?embedded=true"
-                className="flex-1 min-h-fit">
-                Loading…
-            </iframe>
-        </div>
+        <Main>
+            <Heading level={1}>Registration</Heading>
+            <p>
+                Welcome to MBMT 11, held on March 9, 2025! We highly encourage
+                schools&apos; math team coaches or math resource department
+                chairs to act as sponsors; however, any adult who is willing to
+                supervise the team is fine.
+                <br />
+                {/* <Link2 href={process.env.FORM_LINK!}>
+                    Click me to open the registration form...
+                </Link2> */}
+                Register below, or{" "}
+                <Link2 href={process.env.FORM_LINK!}>open in a new tab</Link2>:
+            </p>
+            <div className="flex flex-1 justify-center">
+                <RegistrationFormIframe />
+            </div>
+        </Main>
     );
 }

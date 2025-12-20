@@ -1,201 +1,120 @@
-import Centered from "@/components/Centered";
-import pastTests, { PastTest } from "./pastTests";
+import Main from "@/components/Main";
+import pastTests, { PastTest } from "../pastTests";
 import Cell from "@/components/Cell";
 import Link2 from "@/components/Link2";
+import Heading from "@/components/Heading";
 
 export default function Page() {
+    const pastTestsElements = pastTests.map((p) => (
+        <tbody
+            key={p.year}
+            className="odd:bg-gray-200 even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-900 duration-100 hover:bg-rose-200 dark:hover:bg-rose-900">
+            <tr>
+                <Cell rowspan={p.divisions.length}>{p.year}</Cell>
+                <TableRow p={p} index={0} />
+                <Cell rowspan={p.divisions.length}>
+                    {p.funRound ? <FunRoundLink p={p} /> : "-"}
+                </Cell>
+            </tr>
+            {p.divisions.length == 2 && (
+                <tr>
+                    <TableRow p={p} index={1} />
+                </tr>
+            )}
+        </tbody>
+    ));
+
     return (
-        <Centered>
-            <div className="flex flex-col gap-4 flex-1">
-                <h1 className="text-4xl font-bold font-sans">Test Archive</h1>
-                <p>
-                    Here we&apos;re keeping all of past year&apos;s problems and
-                    solutions, as well as contest results. Some years might be
-                    missing a round since we haven&apos;t done every round every
-                    year. In each year, the more difficult division is listed
-                    second.
-                </p>
+        <Main>
+            <Heading level={1}>Test Archive</Heading>
+            <p>
+                Here we&apos;re keeping all of past year&apos;s problems and
+                solutions, as well as contest results. Some years might be
+                missing a round since we haven&apos;t done every round every
+                year. In each year, the more difficult division is listed
+                second.
+            </p>
 
-                <table className="border-collapse w-fit py-4 align-top">
-                    <thead className="border-b">
-                        <tr className="font-bold">
-                            <Cell>Year</Cell>
-                            <Cell>Division</Cell>
-                            <Cell>Algebra</Cell>
-                            <Cell>Geometry</Cell>
-                            <Cell>Counting</Cell>
-                            <Cell>Number Theory</Cell>
-                            <Cell>Team</Cell>
-                            <Cell>Guts</Cell>
-                            <Cell>Fun</Cell>
-                        </tr>
-                    </thead>
-                    {pastTests.map((p) => {
-                        return (
-                            <tbody key={p.year}>
-                                <tr>
-                                    <TableRow p={p} index={0} />
-                                    <Cell rowspan={2} className="align-top">
-                                        {p.funRound ? (
-                                            <div>
-                                                {p.funRound.map((roundName) => {
-                                                    return (
-                                                        <div
-                                                            key={
-                                                                p.year +
-                                                                "/" +
-                                                                p.divisions[0] +
-                                                                "/" +
-                                                                roundName
-                                                            }>
-                                                            <Link2
-                                                                href={`/static/tests/${p.year}/${p.divisions[0]}/team/${roundName}.pdf`}>
-                                                                {roundName.toLowerCase()}
-                                                            </Link2>
-                                                            <br />
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        ) : (
-                                            "-"
-                                        )}
-                                    </Cell>
-                                </tr>
-                                <tr>
-                                    <TableRow p={p} index={1} />
-                                </tr>
-                            </tbody>
-                        );
-                    })}
-                </table>
-
-                <h2 className="text-xl font-bold font-sans">Contact</h2>
-                <p>
-                    If you have any questions, please contact the Montgomery
-                    Blair math team captains at{" "}
-                    <Link2 href="mailto:mbhs.math.team@gmail.com">
-                        mbhs.math.team@gmail.com
-                    </Link2>
-                    , or our coach, Jeremy Schwartz, at{" "}
-                    <Link2 href="mailto:Jeremy_R_Schwartz@mcpsmd.org">
-                        Jeremy_R_Schwartz@mcpsmd.org
-                    </Link2>
-                    . We look forward to seeing you and your Mathletes at this
-                    year&apos;s MBMT!
-                </p>
-            </div>
-        </Centered>
+            <table className="border-collapse w-fill">
+                <thead className="border-b">
+                    <tr className="font-bold">
+                        <Cell>Year</Cell>
+                        <Cell>Division</Cell>
+                        <Cell>Algebra</Cell>
+                        <Cell>Geometry</Cell>
+                        <Cell>Counting</Cell>
+                        <Cell>Number Theory</Cell>
+                        <Cell>Team</Cell>
+                        <Cell>Guts</Cell>
+                        <Cell>Fun</Cell>
+                    </tr>
+                </thead>
+                {pastTestsElements}
+            </table>
+        </Main>
     );
 }
 
 function TableRow({ p, index }: { p: PastTest; index: number }) {
+    const tests: string[] = [
+        "algebra",
+        "geometry",
+        "counting",
+        "nt",
+        "team",
+        "guts",
+    ];
+
+    const divisionName: string = p.divisions[index].toLowerCase();
+
+    const testElements = tests.map((pdf) => (
+        <Cell key={`${p.year}/${divisionName}/${pdf}`}>
+            {p.tests.includes(pdf) ? (
+                <div>
+                    <Link2
+                        href={`archive/${p.year}/${divisionName}/${pdf}/problems.pdf`}>
+                        Problems
+                    </Link2>
+                    <br />
+                    <Link2
+                        href={`archive/${p.year}/${divisionName}/${pdf}/solutions.pdf`}>
+                        Solutions
+                    </Link2>
+                </div>
+            ) : (
+                "-"
+            )}
+        </Cell>
+    ));
+
     return (
         <>
-            <Cell className={"align-top"}>{p.year}</Cell>
-            <Cell className={"align-top"}>{p.divisions[index]}</Cell>
-            <Cell>
-                {p.tests.includes("algebra") ? (
-                    <div>
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/algebra/problems.pdf`}>
-                            Problems
-                        </Link2>
-                        <br />
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/algebra/solutions.pdf`}>
-                            Solutions
-                        </Link2>
-                    </div>
-                ) : (
-                    "-"
-                )}
-            </Cell>
-            <Cell>
-                {p.tests.includes("geometry") ? (
-                    <div>
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/geometry/problems.pdf`}>
-                            Problems
-                        </Link2>
-                        <br />
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/geometry/solutions.pdf`}>
-                            Solutions
-                        </Link2>
-                    </div>
-                ) : (
-                    "-"
-                )}
-            </Cell>
-            <Cell>
-                {p.tests.includes("counting") ? (
-                    <div>
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/counting/problems.pdf`}>
-                            Problems
-                        </Link2>
-                        <br />
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/counting/solutions.pdf`}>
-                            Solutions
-                        </Link2>
-                    </div>
-                ) : (
-                    "-"
-                )}
-            </Cell>
-            <Cell>
-                {p.tests.includes("nt") ? (
-                    <div>
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/nt/problems.pdf`}>
-                            Problems
-                        </Link2>
-                        <br />
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/nt/solutions.pdf`}>
-                            Solutions
-                        </Link2>
-                    </div>
-                ) : (
-                    "-"
-                )}
-            </Cell>
-            <Cell>
-                {p.tests.includes("team") ? (
-                    <div>
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/team/problems.pdf`}>
-                            Problems
-                        </Link2>
-                        <br />
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/team/solutions.pdf`}>
-                            Solutions
-                        </Link2>
-                    </div>
-                ) : (
-                    "-"
-                )}
-            </Cell>
-            <Cell>
-                {p.tests.includes("guts") ? (
-                    <div>
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/guts/problems.pdf`}>
-                            Problems
-                        </Link2>
-                        <br />
-                        <Link2
-                            href={`/static/tests/${p.year}/${p.divisions[index]}/guts/solutions.pdf`}>
-                            Solutions
-                        </Link2>
-                    </div>
-                ) : (
-                    "-"
-                )}
-            </Cell>
+            <Cell>{firstLetterCaps(divisionName)}</Cell>
+            {testElements}
         </>
     );
+}
+
+// Must check that p.funRound is non-null
+function FunRoundLink({ p }: { p: PastTest }) {
+    return (
+        <div>
+            {p.funRound!.map((pdf) => (
+                <div key={`${p.year}/fun/${pdf}`}>
+                    <Link2 href={`/archive/${p.year}/fun/${pdf}.pdf`}>
+                        {firstLetterCaps(pdf)}
+                    </Link2>
+                    <br />
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function firstLetterCaps(s: string): string {
+    if (s.length === 0) {
+        return s;
+    }
+
+    return `${s.charAt(0).toUpperCase() + s.substring(1).toLowerCase()}`;
 }

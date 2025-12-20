@@ -10,7 +10,7 @@ export default function Link2({
 }) {
     return (
         <Link
-            className="dark:text-blue-400 text-blue-700 hover:underline"
+            className="dark:text-blue-400 text-[#2969a1] duration-100 hover:underline"
             href={href}>
             {children}
         </Link>

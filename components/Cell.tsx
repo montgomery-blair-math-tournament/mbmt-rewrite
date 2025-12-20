@@ -17,7 +17,7 @@ export default function Cell({
         <td
             className={clsx(
                 className,
-                "px-2",
+                "p-2 align-top",
                 side == "left" && "border-r text-right",
                 side == "right" && "border-l text-left"
             )}
