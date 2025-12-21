@@ -8,7 +8,7 @@ export default function Page() {
     const pastTestsElements = pastTests.map((p) => (
         <tbody
             key={p.year}
-            className="odd:bg-gray-200 even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-900 duration-100 hover:bg-rose-200 dark:hover:bg-rose-900">
+            className="odd:bg-gray-200 even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-900 duration-200 hover:bg-rose-200 dark:hover:bg-rose-900">
             <tr>
                 <Cell rowspan={p.divisions.length}>{p.year}</Cell>
                 <TableRow p={p} index={0} />
