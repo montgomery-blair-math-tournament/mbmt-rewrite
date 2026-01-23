@@ -3,8 +3,8 @@ import Main from "@/components/Main";
 import Heading from "@/components/Heading";
 import Image from "next/image";
 import Link from "next/link";
-import sponsorList from "../sponsorList";
-import problemWriters from "../problemWriters";
+import sponsorList from "../../lib/sponsorList";
+import problemWriters from "../../lib/problemWriters";
 
 export default function Page() {
     return (

@@ -1,5 +1,5 @@
 import Main from "@/components/Main";
-import { lower } from "@/app/divisions";
+import { lower } from "@/lib/divisions";
 import Cell from "@/components/Cell";
 import Link2 from "@/components/Link2";
 import Heading from "@/components/Heading";
