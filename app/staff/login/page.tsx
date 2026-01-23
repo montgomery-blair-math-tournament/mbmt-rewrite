@@ -1,86 +1,16 @@
-"use client";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import LoginForm from "./login-form";
 
-import { createClient } from "@/lib/supabase/client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+export default async function LoginPage() {
+    const supabase = await createClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
 
-export default function LoginPage() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const router = useRouter();
-    const supabase = createClient();
+    if (user) {
+        redirect("/staff");
+    }
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-
-        if (error) {
-            setError(error.message);
-            setLoading(false);
-        } else {
-            router.push("/staff");
-            router.refresh();
-        }
-    };
-
-    return (
-        <div className="flex-1 flex items-center justify-center min-h-[500px]">
-            <Card className="w-full max-w-sm mx-auto shadow-md">
-                <CardHeader>
-                    <CardTitle className="text-2xl text-center font-bold">
-                        Staff Login
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleLogin} className="space-y-4">
-                        {error && (
-                            <div className="text-sm font-medium text-destructive text-center p-2 rounded bg-destructive/10">
-                                {error}
-                            </div>
-                        )}
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="text"
-                                required
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                disabled={loading}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                required
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                disabled={loading}
-                            />
-                        </div>
-                        <Button
-                            type="submit"
-                            className="w-full bg-rose-900 hover:bg-rose-800 text-white"
-                            disabled={loading}>
-                            {loading ? "Logging in..." : "Login"}
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
-        </div>
-    );
+    return <LoginForm />;
 }
