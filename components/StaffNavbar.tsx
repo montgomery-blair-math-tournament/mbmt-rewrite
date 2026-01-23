@@ -1,0 +1,41 @@
+import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
+
+export default async function StaffNavbar() {
+    const supabase = await createClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    const links = [
+        { label: "Grading", href: "/staff/grading" },
+        { label: "Participants", href: "/staff/participants" },
+        { label: "Teams", href: "/staff/teams" },
+        { label: "Rounds", href: "/staff/rounds" },
+        { label: "Announcements", href: "/staff/announcements" },
+        { label: "Admin", href: "/staff/admin" },
+    ];
+
+    return (
+        <div className="flex gap-1 md:gap-2 w-full p-2 md:p-3 bg-gray-300 items-center">
+            <Link
+                href="/staff"
+                className="rounded-md text-center text-lg font-semibold align-center duration-200 hover:bg-gray-400 py-1.5 px-3 md:px-4">
+                Staff Panel
+            </Link>
+
+            {links.map((link) => (
+                <Link
+                    key={link.href}
+                    href={link.href}
+                    className="rounded-md text-center align-center duration-200 hover:bg-gray-400 py-1.5 px-2 md:px-3 text-sm md:text-base">
+                    {link.label}
+                </Link>
+            ))}
+
+            <div className="ml-auto font-medium px-2">
+                Hi, {user?.user_metadata?.full_name || user?.email || "User"}!
+            </div>
+        </div>
+    );
+}
