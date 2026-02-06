@@ -15,7 +15,7 @@ export default function ParticipantsPage() {
         const fetchData = async () => {
             const { data, error } = await supabase
                 .from("participant")
-                .select("*, team(name, school, division, chaperone)");
+                .select("*, team!participant_team_id_fkey(name, school, division, chaperone)");
 
             if (error) {
                 console.error("Error fetching participants:", error);

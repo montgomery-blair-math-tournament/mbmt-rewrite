@@ -7,6 +7,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { HiOutlinePencil, HiCheck } from "react-icons/hi2";
+import Link from "next/link";
 import { ParticipantDisplay } from "@/lib/schema/participant";
 
 interface ParticipantsTableProps {
@@ -51,16 +52,16 @@ export default function ParticipantsTable({ participants, loading }: Participant
                             <TableRow key={p.id} className="group hover:bg-gray-50">
                                 <TableCell className="p-2">
                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button className="p-1 hover:bg-gray-200 rounded text-gray-600" title="Edit">
+                                        <Link href={`/staff/participants/${p.id}`} className="p-1 hover:bg-gray-200 rounded text-gray-600 block" title="Edit">
                                             <HiOutlinePencil className="w-4 h-4" />
-                                        </button>
+                                        </Link>
                                         <button className="p-1 hover:bg-gray-200 rounded text-gray-600" title="Check In">
                                             <HiCheck className="w-4 h-4" />
                                         </button>
                                     </div>
                                 </TableCell>
                                 <TableCell>{p.checkedIn ? "Yes" : "No"}</TableCell>
-                                <TableCell>{p.displayId}</TableCell>
+                                <TableCell><Link href={`/staff/participants/${p.id}`} className="hover:underline text-blue-600">{p.displayId}</Link></TableCell>
                                 <TableCell>{p.firstName}</TableCell>
                                 <TableCell>{p.lastName}</TableCell>
                                 <TableCell>{p.division}</TableCell>
