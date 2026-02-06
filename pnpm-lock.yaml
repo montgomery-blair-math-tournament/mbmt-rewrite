@@ -41,12 +41,18 @@ importers:
       react-dom:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
+      react-icons:
+        specifier: ^5.5.0
+        version: 5.5.0(react@19.2.3)
       react-latex-next:
         specifier: ^3.0.0
         version: 3.0.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.4.0
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.1.18
@@ -1769,6 +1775,11 @@ packages:
     peerDependencies:
       react: ^19.2.3
 
+  react-icons@5.5.0:
+    resolution: {integrity: sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw==}
+    peerDependencies:
+      react: '*'
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -2075,8 +2086,8 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@4.2.1:
-    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
 snapshots:
 
@@ -3211,8 +3222,8 @@ snapshots:
       '@babel/parser': 7.28.5
       eslint: 9.39.2(jiti@2.6.1)
       hermes-parser: 0.25.1
-      zod: 4.2.1
-      zod-validation-error: 4.0.2(zod@4.2.1)
+      zod: 4.3.6
+      zod-validation-error: 4.0.2(zod@4.3.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -3874,6 +3885,10 @@ snapshots:
       react: 19.2.3
       scheduler: 0.27.0
 
+  react-icons@5.5.0(react@19.2.3):
+    dependencies:
+      react: 19.2.3
+
   react-is@16.13.1: {}
 
   react-latex-next@3.0.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
@@ -4291,8 +4306,8 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod-validation-error@4.0.2(zod@4.2.1):
+  zod-validation-error@4.0.2(zod@4.3.6):
     dependencies:
-      zod: 4.2.1
+      zod: 4.3.6
 
-  zod@4.2.1: {}
+  zod@4.3.6: {}
