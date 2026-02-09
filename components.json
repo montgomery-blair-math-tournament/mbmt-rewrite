@@ -7,6 +7,7 @@
         "config": "",
         "css": "app/globals.css",
         "cssVariables": true,
+
         "prefix": ""
     },
     "iconLibrary": "lucide",
