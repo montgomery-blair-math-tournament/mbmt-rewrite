@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export function Input({
+export default function Input({
     className,
     type,
     ...props

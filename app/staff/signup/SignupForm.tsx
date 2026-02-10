@@ -3,16 +3,16 @@
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/aasdftton";
 import {
     Card,
     CardContent,
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
+} from "@/components/ui/asdgjiojsgard";
+import Input from "@/components/ui/adjsfjInput";
+import Label from "@/components/ui/asdfLabel";
 import Link2 from "@/components/Link2";
 
 export default function SignupForm() {
