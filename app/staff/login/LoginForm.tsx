@@ -11,8 +11,8 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/asdgjiojsgard";
-import { Input } from "@/components/ui/adjsfjInput";
-import { Label } from "@/components/ui/asdfLabel";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
 import Link2 from "@/components/Link2";
 
 export default function LoginForm() {
