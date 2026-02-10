@@ -31,7 +31,7 @@ export type ParticipantDisplay = {
     grade: number;
     school: string;
     team: string;
-    coach: string;
+    chaperone: string;
     checkedIn: boolean;
     teamId: number;
 };

@@ -5,10 +5,12 @@ import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/settings";
 import { ParticipantDisplay, ParticipantWithTeam } from "@/lib/schema/participant";
 import ParticipantsTable from "@/components/ParticipantsTable";
+import AddParticipantsModal from "@/components/AddParticipantsModal";
 
 export default function ParticipantsPage() {
     const [participants, setParticipants] = useState<ParticipantDisplay[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const supabase = createClient();
 
     useEffect(() => {
@@ -24,7 +26,7 @@ export default function ParticipantsPage() {
             }
 
             // Transform data
-            const formattedData: ParticipantDisplay[] = (data as unknown as ParticipantWithTeam[]).map((p) => {
+            const formattedData = (data as unknown as ParticipantWithTeam[]).map((p) => {
                 const teamData = p.team;
                 const divisionCode = teamData?.division ?? 0;
                 // @ts-ignore - Indexing with number is safe given settings structure
@@ -39,12 +41,11 @@ export default function ParticipantsPage() {
                     grade: p.grade,
                     school: teamData?.school || "N/A",
                     team: teamData?.name || "N/A",
-                    coach: teamData?.chaperone || "N/A",
+                    chaperone: teamData?.chaperone || "N/A",
                     checkedIn: p.checked_in,
                     teamId: p.team_id,
                 };
             });
-            debugger;
             setParticipants(formattedData);
             setLoading(false);
         };
@@ -56,12 +57,20 @@ export default function ParticipantsPage() {
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Participants</h1>
-                <button className="bg-rose-800 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover:cursor-pointer">
+                <button
+                    onClick={() => setIsAddModalOpen(true)}
+                    className="bg-rose-800 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover:cursor-pointer"
+                >
                     Add
                 </button>
             </div>
 
             <ParticipantsTable participants={participants} loading={loading} />
+
+            <AddParticipantsModal
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+            />
         </div>
     );
 }

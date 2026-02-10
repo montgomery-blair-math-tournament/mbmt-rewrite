@@ -7,6 +7,7 @@ import Heading from "@/components/Heading";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { HiCheck, HiXMark } from "react-icons/hi2";
 import Link from 'next/link';
+import RoundCard from "@/components/RoundCard";
 
 type Round = {
     id: number;
@@ -26,6 +27,7 @@ type ParticipantDetail = {
     checkedIn: boolean;
     individualRounds: Round[];
     teamRounds: Round[];
+    teamId: number;
 };
 
 export default function ParticipantPage({ params }: { params: Promise<{ id: string }> }) {
@@ -126,7 +128,8 @@ export default function ParticipantPage({ params }: { params: Promise<{ id: stri
                 team: teamData?.name || "N/A",
                 checkedIn: pData.checked_in,
                 individualRounds,
-                teamRounds
+                teamRounds,
+                teamId: pData.team_id ?? 0 // Default to 0 or handle null
             });
             setLoading(false);
         };
@@ -167,57 +170,32 @@ export default function ParticipantPage({ params }: { params: Promise<{ id: stri
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                 {/* Individual Rounds */}
-                <div className="border rounded-lg p-4 bg-white shadow-sm">
+                <div className="space-y-4">
                     <Heading level={2}>Individual Rounds</Heading>
-                    <div className="mt-4">
+                    <div className="grid grid-cols-1 gap-4">
                         {participant.individualRounds.length === 0 ? (
                             <p className="text-gray-500 italic">No individual rounds assigned.</p>
                         ) : (
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Round Name</TableHead>
-                                        <TableHead>Division</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {participant.individualRounds.map((round) => (
-                                        <TableRow key={round.id}>
-                                            <TableCell>{round.name}</TableCell>
-                                            <TableCell>{(DIVISIONS as any)[round.division]?.name || round.division}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                            participant.individualRounds.map((round) => (
+                                <RoundCard key={round.id} round={round} userId={participant.id} />
+                            ))
                         )}
                     </div>
                 </div>
 
                 {/* Team Rounds */}
-                <div className="border rounded-lg p-4 bg-white shadow-sm">
+                <div className="space-y-4">
                     <Heading level={2}>Team Rounds</Heading>
                     <div className="text-sm text-gray-500 mb-2">Team: {participant.team}</div>
-                    <div className="mt-4">
+                    <div className="grid grid-cols-1 gap-4">
                         {participant.teamRounds.length === 0 ? (
                             <p className="text-gray-500 italic">No team rounds assigned.</p>
                         ) : (
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Round Name</TableHead>
-                                        <TableHead>Division</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {participant.teamRounds.map((round) => (
-                                        <TableRow key={round.id}>
-                                            <TableCell>{round.name}</TableCell>
-                                            <TableCell>{(DIVISIONS as any)[round.division]?.name || round.division}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                            participant.teamRounds.map((round) => (
+                                <RoundCard key={round.id} round={round} teamId={participant.teamId} />
+                            ))
                         )}
                     </div>
                 </div>

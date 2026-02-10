@@ -22,7 +22,7 @@ export type TeamDisplay = {
     displayId: string;
     name: string;
     school: string;
-    coach: string;
+    chaperone: string;
     division: string;
     size: number;
 };

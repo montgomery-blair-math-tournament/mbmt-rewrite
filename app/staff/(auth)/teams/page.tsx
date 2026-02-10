@@ -37,7 +37,7 @@ export default function TeamsPage() {
                     displayId: displayId,
                     name: t.name,
                     school: t.school,
-                    coach: t.chaperone || "N/A",
+                    chaperone: t.chaperone || "N/A",
                     division: divisionInfo.name,
                     size: t.participant?.[0]?.count || 0,
                 };

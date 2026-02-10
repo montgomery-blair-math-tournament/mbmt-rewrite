@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table";
 import { HiOutlinePencil } from "react-icons/hi2";
 import { TeamDisplay } from "@/lib/schema/team";
+import Link from "next/link";
 
 interface TeamsTableProps {
     teams: TeamDisplay[];
@@ -24,7 +25,7 @@ export default function TeamsTable({ teams, loading }: TeamsTableProps) {
                         <TableHead>ID</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>School</TableHead>
-                        <TableHead>Coach</TableHead>
+                        <TableHead>Chaperone</TableHead>
                         <TableHead>Division</TableHead>
                         <TableHead>Size</TableHead>
                     </TableRow>
@@ -44,16 +45,23 @@ export default function TeamsTable({ teams, loading }: TeamsTableProps) {
                         </TableRow>
                     ) : (
                         teams.map((t) => (
-                            <TableRow key={t.id} className="group hover:bg-gray-50">
+                            <TableRow
+                                key={t.id}
+                                className="group hover:bg-gray-50">
                                 <TableCell className="p-2">
-                                    <button className="p-1 hover:bg-gray-200 rounded text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" title="Edit">
-                                        <HiOutlinePencil className="w-4 h-4" />
-                                    </button>
+                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Link
+                                            href={`/staff/teams/${t.id}`}
+                                            className="p-1 hover:bg-gray-200 rounded text-gray-600 block"
+                                            title="Edit">
+                                            <HiOutlinePencil className="w-4 h-4" />
+                                        </Link>
+                                    </div>
                                 </TableCell>
                                 <TableCell>{t.displayId}</TableCell>
                                 <TableCell>{t.name}</TableCell>
                                 <TableCell>{t.school}</TableCell>
-                                <TableCell>{t.coach}</TableCell>
+                                <TableCell>{t.chaperone}</TableCell>
                                 <TableCell>{t.division}</TableCell>
                                 <TableCell>{t.size}</TableCell>
                             </TableRow>
