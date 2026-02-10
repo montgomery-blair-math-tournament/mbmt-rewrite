@@ -3,10 +3,17 @@
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/Button";
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import Link2 from "@/components/Link2";
 
 export default function LoginForm() {
     const [email, setEmail] = useState("");
@@ -36,7 +43,7 @@ export default function LoginForm() {
     };
 
     return (
-        <div className="flex-1 flex items-center justify-center min-h-[500px]">
+        <div className="flex-1 flex items-center justify-center min-h-125">
             <Card className="w-full max-w-sm mx-auto shadow-md">
                 <CardHeader>
                     <CardTitle className="text-2xl text-center font-bold">
@@ -80,6 +87,9 @@ export default function LoginForm() {
                         </Button>
                     </form>
                 </CardContent>
+                <CardFooter>
+                    <Link2 href="/staff/signup">Sign up instead...</Link2>
+                </CardFooter>
             </Card>
         </div>
     );

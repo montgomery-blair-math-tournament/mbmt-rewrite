@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -24,7 +24,7 @@ export default function Navbar() {
             <Link href="/archive" className={linkStyle}>
                 Archive
             </Link>
-            <Link href="/register" className={clsx(linkStyle, "ml-auto")}>
+            <Link href="/register" className={cn(linkStyle, "ml-auto")}>
                 Register
             </Link>
         </div>

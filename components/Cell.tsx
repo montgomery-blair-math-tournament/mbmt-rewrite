@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
 export default function Cell({
     side,
@@ -15,7 +15,7 @@ export default function Cell({
 }) {
     return (
         <td
-            className={clsx(
+            className={cn(
                 className,
                 "p-2 align-top",
                 side == "left" && "border-r text-right",
