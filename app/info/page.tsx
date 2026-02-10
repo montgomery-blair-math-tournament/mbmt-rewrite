@@ -9,7 +9,7 @@ export default function Page() {
         <Main>
             <Heading level={1}>Contest Information</Heading>
             <p>
-                <i>Last updated 12/17/2025</i>
+                <i>Last updated 02/09/2026</i>
             </p>
 
             <p>
@@ -27,10 +27,11 @@ export default function Page() {
                 would like all math team sponsors to register their teams by
                 Saturday, February 7th, 2026. This will help us estimate the
                 number of teams participating and assist us with logistics.
-                Please take note that if you don’t register by this date, you
-                might not receive our free swag. To register, visit{" "}
-                <Link2 href="/register">here</Link2>. For more details on
-                registration, see our <Link2 href="/rules">Rules page</Link2>.
+                Please note that if you don’t register by this date, you may not
+                receive our free swag. To register, visit{" "}
+                <Link2 href="/register">the registration page here</Link2>. For
+                more details on registration, see our{" "}
+                <Link2 href="/rules">rules page</Link2>.
             </p>
 
             <Heading level={2}>Logistics</Heading>
@@ -41,10 +42,14 @@ export default function Page() {
                     51 University Blvd E, Silver Spring, MD 20901
                 </Link2>
                 . Please arrive on the University Boulevard side of the school.
-                Thanks to the generosity of the Montgomery County Division of
-                Food & Nutrition Services, FREE lunch will be provided to all
-                competitors and coaches. Coaches and participants are invited to
-                bring snacks for their own team.
+                Thanks to the generosity of the{" "}
+                <Link2 href="https://www.montgomeryschoolsmd.org/departments/food-and-nutrition/">
+                    Montgomery County Public Schools&apos; Division of Food &
+                    Nutrition Services
+                </Link2>
+                , FREE lunch will be provided to all competitors and coaches.
+                Coaches and participants are invited and encouraged to bring
+                snacks for their teams.
             </p>
 
             <Heading level={2}>Contest</Heading>

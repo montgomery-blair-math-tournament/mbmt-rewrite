@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import sponsorList from "../../lib/sponsorList";
 import problemWriters from "../../lib/problemWriters";
+import Link2 from "@/components/Link2";
 
 export default function Page() {
     return (
@@ -50,11 +51,13 @@ export default function Page() {
 
             <Heading level={2}>Website</Heading>
             <p>
-                This website was not developed by Noah Singer &apos;18 (Github:
-                @singerng) and Noah Kim &apos;18 (Github: @noahbkim). It is not
-                currently maintained by Alex Zhao &apos;26 (Github:
-                @zeyuanzhao). It&apos;s not written in Django and is not hosted
-                on our school servers. The source is on Github.
+                This website was developed by Alex Zhao &apos;26 (Github:
+                @zeyuanzhao) and Kiran Oliver &apos;28 (Github: @penguen01). A
+                majority of the content on these webpages was written by Noah
+                Singer &apos;18 (Github: @singerng) and Noah Kim &apos;18
+                (Github: @noahbkim). Both this website and the grading server
+                are hosted on <Link2 href="https://vercel.com">Vercel</Link2>.{" "}
+                The code is not currently on GitHub, but will be in the future.
             </p>
 
             <Heading level={2}>Sponsors</Heading>
