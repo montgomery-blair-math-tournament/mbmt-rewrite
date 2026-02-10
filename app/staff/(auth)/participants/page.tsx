@@ -1,7 +1,9 @@
+import Heading from "@/components/Heading";
+
 export default function ParticipantsPage() {
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-4">Participants</h1>
+            <Heading level={2}>Participants</Heading>
         </div>
     );
 }
