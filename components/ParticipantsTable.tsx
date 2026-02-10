@@ -66,12 +66,11 @@ export default function ParticipantsTable({
                                 {!readonly && (
                                     <TableCell className="p-2">
                                         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Link
-                                                href={`/staff/participants/${p.id}`}
-                                                className="p-1 hover:bg-gray-200 rounded text-gray-600 block"
+                                            <button
+                                                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:cursor-pointer"
                                                 title="Edit">
                                                 <HiOutlinePencil className="w-4 h-4" />
-                                            </Link>
+                                            </button>
                                             <button
                                                 className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:cursor-pointer"
                                                 title="Check In">

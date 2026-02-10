@@ -50,15 +50,20 @@ export default function TeamsTable({ teams, loading }: TeamsTableProps) {
                                 className="group hover:bg-gray-50">
                                 <TableCell className="p-2">
                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <Link
-                                            href={`/staff/teams/${t.id}`}
-                                            className="p-1 hover:bg-gray-200 rounded text-gray-600 block"
+                                        <button
+                                            className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:cursor-pointer"
                                             title="Edit">
                                             <HiOutlinePencil className="w-4 h-4" />
-                                        </Link>
+                                        </button>
                                     </div>
                                 </TableCell>
-                                <TableCell>{t.displayId}</TableCell>
+                                <TableCell>
+                                    <Link
+                                        href={`/staff/teams/${t.id}`}
+                                        className="hover:underline text-blue-600">
+                                        {t.displayId}
+                                    </Link>
+                                </TableCell>
                                 <TableCell>{t.name}</TableCell>
                                 <TableCell>{t.school}</TableCell>
                                 <TableCell>{t.chaperone}</TableCell>

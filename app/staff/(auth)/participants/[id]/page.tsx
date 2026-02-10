@@ -4,9 +4,16 @@ import { useEffect, useState, use } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/settings";
 import Heading from "@/components/Heading";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import { HiCheck, HiXMark } from "react-icons/hi2";
-import Link from 'next/link';
+import Link from "next/link";
 import RoundCard from "@/components/RoundCard";
 
 type Round = {
@@ -30,9 +37,15 @@ type ParticipantDetail = {
     teamId: number;
 };
 
-export default function ParticipantPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ParticipantPage({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
     const { id } = use(params);
-    const [participant, setParticipant] = useState<ParticipantDetail | null>(null);
+    const [participant, setParticipant] = useState<ParticipantDetail | null>(
+        null
+    );
     const [loading, setLoading] = useState(true);
     const supabase = createClient();
 
@@ -88,11 +101,11 @@ export default function ParticipantPage({ params }: { params: Promise<{ id: stri
             }
 
             // 5. Fetch All Round Details
-            const pRIds = pRoundIds?.map(x => x.round_id) || [];
-            const tRIds = tRoundIds.map(x => x.round_id) || [];
+            const pRIds = pRoundIds?.map((x) => x.round_id) || [];
+            const tRIds = tRoundIds.map((x) => x.round_id) || [];
             const allRoundIds = Array.from(new Set([...pRIds, ...tRIds]));
 
-            let roundsMap = new Map<number, Round>();
+            const roundsMap = new Map<number, Round>();
             if (allRoundIds.length > 0) {
                 const { data: rounds, error: roundsError } = await supabase
                     .from("round")
@@ -110,12 +123,12 @@ export default function ParticipantPage({ params }: { params: Promise<{ id: stri
             const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
 
             const individualRounds = pRIds
-                .map(rid => roundsMap.get(rid))
-                .filter(r => r !== undefined) as Round[];
+                .map((rid) => roundsMap.get(rid))
+                .filter((r) => r !== undefined) as Round[];
 
             const teamRounds = tRIds
-                .map(rid => roundsMap.get(rid))
-                .filter(r => r !== undefined) as Round[];
+                .map((rid) => roundsMap.get(rid))
+                .filter((r) => r !== undefined) as Round[];
 
             setParticipant({
                 id: pData.id,
@@ -129,7 +142,7 @@ export default function ParticipantPage({ params }: { params: Promise<{ id: stri
                 checkedIn: pData.checked_in,
                 individualRounds,
                 teamRounds,
-                teamId: pData.team_id ?? 0 // Default to 0 or handle null
+                teamId: pData.team_id ?? 0, // Default to 0 or handle null
             });
             setLoading(false);
         };
@@ -145,12 +158,16 @@ export default function ParticipantPage({ params }: { params: Promise<{ id: stri
             {/* Header */}
             <div>
                 <div className="mb-2">
-                    <Link href="/staff/participants" className="text-sm text-gray-500 hover:underline">
+                    <Link
+                        href="/staff/participants"
+                        className="text-sm text-gray-500 hover:underline">
                         ← Back to Participants
                     </Link>
                 </div>
                 <div className="flex items-center gap-4">
-                    <Heading level={1}>{participant.firstName} {participant.lastName}</Heading>
+                    <Heading level={1}>
+                        {participant.firstName} {participant.lastName}
+                    </Heading>
                     {participant.checkedIn ? (
                         <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-400 flex items-center gap-1">
                             <HiCheck className="w-3 h-3" /> Checked In
@@ -162,7 +179,9 @@ export default function ParticipantPage({ params }: { params: Promise<{ id: stri
                     )}
                 </div>
                 <div className="text-gray-500 flex gap-4 mt-2">
-                    <span className="font-mono bg-gray-100 px-2 py-0.5 rounded text-sm">{participant.displayId}</span>
+                    <span className="font-mono bg-gray-100 px-2 py-0.5 rounded text-sm">
+                        {participant.displayId}
+                    </span>
                     <span>{participant.school}</span>
                     <span>{participant.division} Division</span>
                     <span>Grade {participant.grade}</span>
@@ -170,16 +189,21 @@ export default function ParticipantPage({ params }: { params: Promise<{ id: stri
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                 {/* Individual Rounds */}
                 <div className="space-y-4">
                     <Heading level={2}>Individual Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">
                         {participant.individualRounds.length === 0 ? (
-                            <p className="text-gray-500 italic">No individual rounds assigned.</p>
+                            <p className="text-gray-500 italic">
+                                No individual rounds assigned.
+                            </p>
                         ) : (
                             participant.individualRounds.map((round) => (
-                                <RoundCard key={round.id} round={round} userId={participant.id} />
+                                <RoundCard
+                                    key={round.id}
+                                    round={round}
+                                    userId={participant.id}
+                                />
                             ))
                         )}
                     </div>
@@ -188,13 +212,21 @@ export default function ParticipantPage({ params }: { params: Promise<{ id: stri
                 {/* Team Rounds */}
                 <div className="space-y-4">
                     <Heading level={2}>Team Rounds</Heading>
-                    <div className="text-sm text-gray-500 mb-2">Team: {participant.team}</div>
+                    <div className="text-sm text-gray-500 mb-2">
+                        Team: {participant.team}
+                    </div>
                     <div className="grid grid-cols-1 gap-4">
                         {participant.teamRounds.length === 0 ? (
-                            <p className="text-gray-500 italic">No team rounds assigned.</p>
+                            <p className="text-gray-500 italic">
+                                No team rounds assigned.
+                            </p>
                         ) : (
                             participant.teamRounds.map((round) => (
-                                <RoundCard key={round.id} round={round} teamId={participant.teamId} />
+                                <RoundCard
+                                    key={round.id}
+                                    round={round}
+                                    teamId={participant.teamId}
+                                />
                             ))
                         )}
                     </div>
