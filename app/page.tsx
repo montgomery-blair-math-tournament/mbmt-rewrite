@@ -8,7 +8,7 @@ export default function Home() {
             <div className="flex-1 flex flex-col items-center justify-center">
                 <TitleCard />
 
-                <div className="flex justify-between max-w-5/6 gap-12">
+                <div className="flex justify-between max-w-5/6 md:gap-12 flex-col gap-6 md:flex-row">
                     <div>
                         <Heading level={2}>Solve problems.</Heading>
                         <b>MBMT is all about math.</b> Whether you&apos;re just
