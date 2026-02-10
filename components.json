@@ -6,8 +6,8 @@
     "tailwind": {
         "config": "",
         "css": "app/globals.css",
+        "baseColor": "neutral",
         "cssVariables": true,
-
         "prefix": ""
     },
     "iconLibrary": "lucide",
