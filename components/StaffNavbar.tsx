@@ -30,7 +30,7 @@ export default async function StaffNavbar() {
     ];
 
     return (
-        <div className="flex gap-1 md:gap-2 w-full p-2 md:p-3 bg-gray-300 items-center rounded-xl">
+        <div className="flex gap-1 md:gap-2 w-full p-2 bg-gray-300 items-center">
             <Link
                 href="/staff"
                 className="rounded-md text-center text-lg font-semibold align-center duration-200 hover:bg-gray-400 py-1.5 px-3 md:px-4">
