@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
     Table,
     TableBody,
@@ -9,6 +12,7 @@ import {
 import { HiOutlinePencil, HiCheck } from "react-icons/hi2";
 import Link from "next/link";
 import { ParticipantDisplay } from "@/lib/schema/participant";
+import CheckInModal from "./CheckInModal";
 
 export default function ParticipantsTable({
     participants,
@@ -19,6 +23,15 @@ export default function ParticipantsTable({
     loading: boolean;
     readonly?: boolean;
 }) {
+    const [selectedParticipant, setSelectedParticipant] =
+        useState<ParticipantDisplay | null>(null);
+    const [isCheckInModalOpen, setIsCheckInModalOpen] = useState(false);
+
+    const handleCheckIn = (participant: ParticipantDisplay) => {
+        setSelectedParticipant(participant);
+        setIsCheckInModalOpen(true);
+    };
+
     return (
         <div className="border rounded-md">
             <Table>
@@ -67,6 +80,7 @@ export default function ParticipantsTable({
                                                 <HiOutlinePencil className="w-4 h-4" />
                                             </button>
                                             <button
+                                                onClick={() => handleCheckIn(p)}
                                                 className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:cursor-pointer"
                                                 title="Check In">
                                                 <HiCheck className="w-4 h-4" />
@@ -100,6 +114,12 @@ export default function ParticipantsTable({
                     )}
                 </TableBody>
             </Table>
+
+            <CheckInModal
+                isOpen={isCheckInModalOpen}
+                onClose={() => setIsCheckInModalOpen(false)}
+                participant={selectedParticipant}
+            />
         </div>
     );
 }

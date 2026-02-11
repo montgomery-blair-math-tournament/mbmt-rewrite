@@ -12,6 +12,7 @@ import { toast } from "sonner";
 
 import { ParticipantDetail } from "@/lib/schema/participant";
 import { Round } from "@/lib/schema/round";
+import CheckInModal from "@/components/CheckInModal";
 
 export default function ParticipantPage({
     params,
@@ -23,6 +24,7 @@ export default function ParticipantPage({
         null
     );
     const [loading, setLoading] = useState(true);
+    const [isCheckInModalOpen, setIsCheckInModalOpen] = useState(false);
     const supabase = createClient();
 
     useEffect(() => {
@@ -135,13 +137,17 @@ export default function ParticipantPage({
                         {participant.firstName} {participant.lastName}
                     </Heading>
                     {participant.checkedIn ? (
-                        <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-400 flex items-center gap-1">
+                        <button
+                            onClick={() => setIsCheckInModalOpen(true)}
+                            className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-400 flex items-center gap-1 hover:bg-green-200 hover:cursor-pointer transition-colors">
                             <HiCheck className="w-3 h-3" /> Checked In
-                        </span>
+                        </button>
                     ) : (
-                        <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-400 flex items-center gap-1">
+                        <button
+                            onClick={() => setIsCheckInModalOpen(true)}
+                            className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-400 flex items-center gap-1 hover:bg-gray-200 hover:cursor-pointer transition-colors">
                             <HiXMark className="w-3 h-3" /> Not Checked In
-                        </span>
+                        </button>
                     )}
                 </div>
                 <div className="text-gray-500 flex gap-4 mt-2">
@@ -200,6 +206,11 @@ export default function ParticipantPage({
                     </div>
                 </div>
             </div>
+            <CheckInModal
+                isOpen={isCheckInModalOpen}
+                onClose={() => setIsCheckInModalOpen(false)}
+                participant={participant}
+            />
         </div>
     );
 }
