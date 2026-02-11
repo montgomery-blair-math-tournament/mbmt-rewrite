@@ -1,10 +1,11 @@
 import Main from "@/components/Main";
-import { lower } from "@/lib/divisions";
+import { DIVISIONS } from "@/lib/settings";
 import Cell from "@/components/Cell";
 import Link2 from "@/components/Link2";
 import Heading from "@/components/Heading";
 
 export default function Page() {
+    const lower = DIVISIONS[0].name;
     return (
         <Main>
             <Heading level={1}>Contest Information</Heading>
@@ -23,10 +24,10 @@ export default function Page() {
 
             <Heading level={2}>Registration</Heading>
             <p>
-                Registration will open on Wednesday, December 17th, 2025. We
-                would like all math team sponsors to register their teams by
-                Saturday, February 7th, 2026. This will help us estimate the
-                number of teams participating and assist us with logistics.
+                Registration will open on <b>Wednesday, December 17th, 2025</b>.
+                We would like all math team sponsors to register their teams by{" "}
+                <b>Saturday, February 7th, 2026</b>. This will help us estimate
+                the number of teams participating and assist us with logistics.
                 Please note that if you don’t register by this date, you may not
                 receive our free swag. To register, visit{" "}
                 <Link2 href="/register">the registration page here</Link2>. For
@@ -44,12 +45,11 @@ export default function Page() {
                 . Please arrive on the University Boulevard side of the school.
                 Thanks to the generosity of the{" "}
                 <Link2 href="https://www.montgomeryschoolsmd.org/departments/food-and-nutrition/">
-                    Montgomery County Public Schools&apos; Division of Food &
-                    Nutrition Services
+                    MCPS Division of Food & Nutrition Services
                 </Link2>
-                , FREE lunch will be provided to all competitors and coaches.
-                Coaches and participants are invited and encouraged to bring
-                snacks for their teams.
+                , <b>free</b> lunch will be provided to all competitors and
+                coaches. Coaches and participants are encouraged to bring snacks
+                for their teams.
             </p>
 
             <Heading level={2}>Contest</Heading>

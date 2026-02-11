@@ -2,10 +2,12 @@ import Link2 from "@/components/Link2";
 import Math from "@/components/Math";
 import Main from "@/components/Main";
 import RedBold from "@/components/RedBold";
-import { upper, lower } from "@/lib/divisions";
+import { DIVISIONS } from "@/lib/settings";
 import Heading from "@/components/Heading";
 
 export default function Page() {
+    const upper = DIVISIONS[1].name;
+    const lower = DIVISIONS[0].name;
     return (
         <Main>
             <Heading level={1}>Official Rules</Heading>
@@ -23,9 +25,9 @@ export default function Page() {
             <ol className="list-decimal ml-4">
                 <li>
                     Participants in MBMT compete in teams of 5 (with some
-                    exceptions, discussed further in #4). The math team sponsors
-                    of each school/organization register individual student
-                    teams through the website via the{" "}
+                    exceptions, discussed below). The math team sponsors of each
+                    school or organization register individual student teams
+                    through the website via the{" "}
                     <Link2 href="/register">registration page</Link2>. There is
                     no limit to the number of full teams a school or
                     organization may send.
@@ -262,8 +264,8 @@ export default function Page() {
                     Tiebreaker rounds will be held during the Fun Round.
                 </li>
                 <li>
-                    The <b>team score</b> is a weighted sum of the Individual
-                    Round, Team Round, and Guts Round scores. The
+                    The <b>team score</b> is a weighted sum of the Individual{" "}
+                    Round, Team Round, and Guts Round scores. The{" "}
                     <b>top 5 teams</b> in each division will be recognized.
                 </li>
                 <li>
