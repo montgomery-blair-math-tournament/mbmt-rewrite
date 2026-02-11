@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/settings";
-import { ParticipantDisplay, ParticipantWithTeam } from "@/lib/schema/participant";
+import {
+    ParticipantDisplay,
+    ParticipantWithTeam,
+} from "@/lib/schema/participant";
 import ParticipantsTable from "@/components/ParticipantsTable";
 import AddParticipantsModal from "@/components/AddParticipantsModal";
 
@@ -17,7 +20,9 @@ export default function ParticipantsPage() {
         const fetchData = async () => {
             const { data, error } = await supabase
                 .from("participant")
-                .select("*, team!participant_team_id_fkey(name, school, division, chaperone)");
+                .select(
+                    "*, team!participant_team_id_fkey(name, school, division, chaperone)"
+                );
 
             if (error) {
                 console.error("Error fetching participants:", error);
@@ -26,10 +31,12 @@ export default function ParticipantsPage() {
             }
 
             // Transform data
-            const formattedData = (data as unknown as ParticipantWithTeam[]).map((p) => {
+            const formattedData = (
+                data as unknown as ParticipantWithTeam[]
+            ).map((p) => {
                 const teamData = p.team;
                 const divisionCode = teamData?.division ?? 0;
-                // @ts-ignore - Indexing with number is safe given settings structure
+                // @ts-expect-error - Indexing with number is safe given settings structure
                 const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
 
                 return {
@@ -51,7 +58,7 @@ export default function ParticipantsPage() {
         };
 
         fetchData();
-    }, []);
+    }, [supabase]);
 
     return (
         <div className="p-6">
@@ -59,8 +66,7 @@ export default function ParticipantsPage() {
                 <h1 className="text-3xl font-bold">Participants</h1>
                 <button
                     onClick={() => setIsAddModalOpen(true)}
-                    className="bg-rose-800 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover:cursor-pointer"
-                >
+                    className="bg-rose-800 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover:cursor-pointer">
                     Add
                 </button>
             </div>

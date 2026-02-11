@@ -4,14 +4,7 @@ import { useEffect, useState, use } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/settings";
 import Heading from "@/components/Heading";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
+
 import { HiCheck, HiXMark } from "react-icons/hi2";
 import Link from "next/link";
 import RoundCard from "@/components/RoundCard";
@@ -84,7 +77,7 @@ export default function ParticipantPage({
             }
 
             // 3. Fetch Participant Round IDs
-            const { data: pRoundIds, error: prIdError } = await supabase
+            const { data: pRoundIds } = await supabase
                 .from("participant_round")
                 .select("round_id")
                 .eq("participant_id", id);
@@ -92,7 +85,7 @@ export default function ParticipantPage({
             // 4. Fetch Team Round IDs
             let tRoundIds: { round_id: number }[] = [];
             if (pData.team_id) {
-                const { data: trRes, error: trError } = await supabase
+                const { data: trRes } = await supabase
                     .from("team_round")
                     .select("round_id")
                     .eq("team_id", pData.team_id);
@@ -107,19 +100,19 @@ export default function ParticipantPage({
 
             const roundsMap = new Map<number, Round>();
             if (allRoundIds.length > 0) {
-                const { data: rounds, error: roundsError } = await supabase
+                const { data: rounds } = await supabase
                     .from("round")
                     .select("id, name, division")
                     .in("id", allRoundIds);
 
                 if (rounds) {
-                    rounds.forEach((r: any) => roundsMap.set(r.id, r));
+                    rounds.forEach((r: Round) => roundsMap.set(r.id, r));
                 }
             }
 
             // Construct Result
             const divisionCode = teamData?.division ?? 0;
-            // @ts-ignore
+            // @ts-expect-error - Dictionary indexing safe here
             const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
 
             const individualRounds = pRIds
@@ -148,7 +141,7 @@ export default function ParticipantPage({
         };
 
         fetchData();
-    }, [id]);
+    }, [id, supabase]);
 
     if (loading) return <div className="p-6">Loading...</div>;
     if (!participant) return <div className="p-6">Participant not found</div>;
@@ -182,6 +175,13 @@ export default function ParticipantPage({
                     <span className="font-mono bg-gray-100 px-2 py-0.5 rounded text-sm">
                         {participant.displayId}
                     </span>
+                    <span>
+                        <Link
+                            href={`/staff/teams/${participant.teamId}`}
+                            className="text-rose-600 hover:underline hover:text-rose-800">
+                            {participant.team}
+                        </Link>
+                    </span>
                     <span>{participant.school}</span>
                     <span>{participant.division} Division</span>
                     <span>Grade {participant.grade}</span>
@@ -212,9 +212,6 @@ export default function ParticipantPage({
                 {/* Team Rounds */}
                 <div className="space-y-4">
                     <Heading level={2}>Team Rounds</Heading>
-                    <div className="text-sm text-gray-500 mb-2">
-                        Team: {participant.team}
-                    </div>
                     <div className="grid grid-cols-1 gap-4">
                         {participant.teamRounds.length === 0 ? (
                             <p className="text-gray-500 italic">

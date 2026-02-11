@@ -60,7 +60,7 @@ export default function TeamsTable({ teams, loading }: TeamsTableProps) {
                                 <TableCell>
                                     <Link
                                         href={`/staff/teams/${t.id}`}
-                                        className="hover:underline text-blue-600">
+                                        className="hover:underline text-rose-600 hover:text-rose-800">
                                         {t.displayId}
                                     </Link>
                                 </TableCell>

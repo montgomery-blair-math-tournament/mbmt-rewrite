@@ -24,9 +24,11 @@ export default function TeamsPage() {
             }
 
             // Transform data
-            const formattedData: TeamDisplay[] = (data as unknown as TeamWithCount[]).map((t) => {
+            const formattedData: TeamDisplay[] = (
+                data as unknown as TeamWithCount[]
+            ).map((t) => {
                 const divisionCode = t.division ?? 0;
-                // @ts-ignore - Indexing with number is safe given settings structure
+                // @ts-expect-error - Indexing with number is safe given settings structure
                 const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
 
                 // Determine display ID - 'T' + division info prefix + id
@@ -48,7 +50,7 @@ export default function TeamsPage() {
         };
 
         fetchData();
-    }, []);
+    }, [supabase]);
 
     return (
         <div className="p-6">
