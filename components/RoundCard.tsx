@@ -4,7 +4,7 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/Card";
 import { DIVISIONS } from "@/lib/settings";
 
 import { Round } from "@/lib/schema/round";
