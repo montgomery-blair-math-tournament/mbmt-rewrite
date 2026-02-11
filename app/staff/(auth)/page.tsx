@@ -1,7 +1,9 @@
+import Heading from "@/components/Heading";
+
 export default function StaffPage() {
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-4">Staff Dashboard</h1>
+            <Heading level={1}>Staff Dashboard</Heading>
         </div>
     );
 }
