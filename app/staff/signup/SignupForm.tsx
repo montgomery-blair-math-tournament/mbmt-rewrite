@@ -3,12 +3,19 @@
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import Button from "@/components/ui/Button";
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/Card";
+import Input from "@/components/ui/Input";
+import Label from "@/components/ui/Label";
+import Link2 from "@/components/Link2";
 
-export default function LoginForm() {
+export default function SignupForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -16,12 +23,12 @@ export default function LoginForm() {
     const router = useRouter();
     const supabase = createClient();
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
-        const { error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signUp({
             email,
             password,
         });
@@ -30,8 +37,18 @@ export default function LoginForm() {
             setError(error.message);
             setLoading(false);
         } else {
-            router.push("/staff");
-            router.refresh();
+            const { error: signInError } =
+                await supabase.auth.signInWithPassword({
+                    email,
+                    password,
+                });
+            if (signInError) {
+                setError(signInError.message);
+                setLoading(false);
+            } else {
+                router.push("/staff");
+                router.refresh();
+            }
         }
     };
 
@@ -40,11 +57,11 @@ export default function LoginForm() {
             <Card className="w-full max-w-sm mx-auto shadow-md">
                 <CardHeader>
                     <CardTitle className="text-2xl text-center font-bold">
-                        Staff Login
+                        Staff Sign-Up
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleLogin} className="space-y-4">
+                    <form onSubmit={handleSignup} className="space-y-4">
                         {error && (
                             <div className="text-sm font-medium text-destructive text-center p-2 rounded bg-destructive/10">
                                 {error}
@@ -76,10 +93,13 @@ export default function LoginForm() {
                             type="submit"
                             className="w-full bg-rose-900 hover:bg-rose-800 text-white"
                             disabled={loading}>
-                            {loading ? "Logging in..." : "Login"}
+                            {loading ? "Signing up...." : "Sign Up"}
                         </Button>
                     </form>
                 </CardContent>
+                <CardFooter>
+                    <Link2 href="/staff/login">Log in instead...</Link2>
+                </CardFooter>
             </Card>
         </div>
     );

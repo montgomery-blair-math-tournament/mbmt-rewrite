@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import React from "react";
 
 export default function Main({
@@ -10,8 +10,8 @@ export default function Main({
 }) {
     return (
         <div
-            className={clsx(
-                "flex flex-col gap-4 flex-1 max-w-5/6 md:max-w-3/4 mx-auto",
+            className={cn(
+                "flex flex-col gap-4 flex-1 max-w-5/6 p-8 mx-auto",
                 className
             )}>
             {children}

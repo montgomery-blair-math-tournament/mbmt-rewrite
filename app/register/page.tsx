@@ -17,7 +17,10 @@ export default function Page() {
                     Click me to open the registration form...
                 </Link2> */}
                 Register below, or{" "}
-                <Link2 href={process.env.NEXT_PUBLIC_FORM_LINK ?? "#"}>open in a new tab</Link2>:
+                <Link2 href={process.env.NEXT_PUBLIC_FORM_LINK ?? "#"}>
+                    open in a new tab
+                </Link2>
+                :
             </p>
             <div className="flex flex-1 justify-center">
                 <RegistrationFormIframe />

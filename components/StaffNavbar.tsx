@@ -30,10 +30,10 @@ export default async function StaffNavbar() {
     ];
 
     return (
-        <div className="flex gap-1 md:gap-2 w-full p-2 md:p-3 bg-gray-300 items-center rounded-xl">
+        <div className="flex gap-1 md:gap-2 w-full p-2 dark:bg-gray-700 bg-gray-300 items-center">
             <Link
                 href="/staff"
-                className="rounded-md text-center text-lg font-semibold align-center duration-200 hover:bg-gray-400 py-1.5 px-3 md:px-4">
+                className="rounded-md text-center text-lg font-semibold align-center duration-200 hover:bg-gray-400 dark:hover:bg-gray-600 py-1.5 px-3 md:px-4">
                 Staff Panel
             </Link>
 
@@ -41,7 +41,7 @@ export default async function StaffNavbar() {
                 <Link
                     key={link.href}
                     href={link.href}
-                    className="rounded-md text-center align-center duration-200 hover:bg-gray-400 py-1.5 px-2 md:px-3 text-sm md:text-base">
+                    className="rounded-md text-center align-center duration-200 hover:bg-gray-400 dark:hover:bg-gray-600 py-1.5 px-2 md:px-3 text-sm md:text-base">
                     {link.label}
                 </Link>
             ))}
@@ -51,7 +51,7 @@ export default async function StaffNavbar() {
                     <form action="/staff/auth/signout" method="POST">
                         <button
                             type="submit"
-                            className="ml-4 rounded-md text-center align-center duration-200 hover:bg-gray-400 py-1.5 px-2 md:px-3 text-sm md:text-base hover:cursor-pointer">
+                            className="ml-4 rounded-md text-center align-center duration-200 hover:bg-gray-400 dark:hover:bg-gray-600 py-1.5 px-2 md:px-3 text-sm md:text-base hover:cursor-pointer">
                             Logout
                         </button>
                     </form>
