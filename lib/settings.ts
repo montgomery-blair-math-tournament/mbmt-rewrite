@@ -1,6 +1,11 @@
-export const CURRENT_YEAR = 2025;
+interface Division {
+    name: string;
+    prefix: string;
+}
 
-export const DIVISIONS = {
+export const CURRENT_YEAR: number = 2025;
+
+export const DIVISIONS: Record<number, Division> = {
     0: {
         name: "Abel",
         prefix: "A",
@@ -9,4 +14,7 @@ export const DIVISIONS = {
         name: "Jacobi",
         prefix: "J",
     },
-} as const;
+};
+
+export const upper = "Jacobi";
+export const lower = "Abel";

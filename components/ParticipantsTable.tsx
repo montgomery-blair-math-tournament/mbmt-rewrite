@@ -10,26 +10,21 @@ import { HiOutlinePencil, HiCheck } from "react-icons/hi2";
 import Link from "next/link";
 import { ParticipantDisplay } from "@/lib/schema/participant";
 
-interface ParticipantsTableProps {
-    participants: ParticipantDisplay[];
-    loading: boolean;
-    readonly?: boolean;
-}
-
 export default function ParticipantsTable({
     participants,
     loading,
     readonly = false,
-}: ParticipantsTableProps) {
+}: {
+    participants: ParticipantDisplay[];
+    loading: boolean;
+    readonly?: boolean;
+}) {
     return (
         <div className="border rounded-md">
             <Table>
                 <TableHeader>
                     <TableRow>
-                        {/* Actions Column (Width w-20 approx) */}
-                        {!readonly && (
-                            <TableHead className="w-[80px]"></TableHead>
-                        )}
+                        {!readonly && <TableHead className="w-20"></TableHead>}
                         <TableHead>Check In</TableHead>
                         <TableHead>ID</TableHead>
                         <TableHead>First Name</TableHead>

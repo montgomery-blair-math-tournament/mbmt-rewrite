@@ -9,6 +9,7 @@ import {
 } from "@/lib/schema/participant";
 import ParticipantsTable from "@/components/ParticipantsTable";
 import AddParticipantsModal from "@/components/AddParticipantsModal";
+import { toast } from "sonner";
 
 export default function ParticipantsPage() {
     const [participants, setParticipants] = useState<ParticipantDisplay[]>([]);
@@ -20,23 +21,18 @@ export default function ParticipantsPage() {
         const fetchData = async () => {
             const { data, error } = await supabase
                 .from("participant")
-                .select(
-                    "*, team!participant_team_id_fkey(name, school, division, chaperone)"
-                );
+                .select("*, team(name, school, division, chaperone)");
 
             if (error) {
                 console.error("Error fetching participants:", error);
+                toast.error("Error fetching participants");
                 setLoading(false);
                 return;
             }
 
-            // Transform data
-            const formattedData = (
-                data as unknown as ParticipantWithTeam[]
-            ).map((p) => {
+            const formattedData = (data as ParticipantWithTeam[]).map((p) => {
                 const teamData = p.team;
                 const divisionCode = teamData?.division ?? 0;
-                // @ts-expect-error - Indexing with number is safe given settings structure
                 const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
 
                 return {

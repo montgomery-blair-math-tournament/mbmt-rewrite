@@ -7,23 +7,17 @@ import {
 } from "@/components/ui/card";
 import { DIVISIONS } from "@/lib/settings";
 
-interface Round {
-    id: number;
-    name: string;
-    division: number;
-}
+import { Round } from "@/lib/schema/round";
 
-interface RoundCardProps {
+export default function RoundCard({
+    round,
+    userId,
+    teamId,
+}: {
     round: Round;
-    userId?: number; // Optional: if present, logic to fetch score could be added here
-    teamId?: number; // Optional: context
-    // For now, since we don't have score data, we just display the round info
-}
-
-export default function RoundCard({ round, userId, teamId }: RoundCardProps) {
-    // const divisionName = (DIVISIONS as any)[round.division]?.name || round.division;
-    // Safely access DIVISIONS
-    // @ts-expect-error - Dictionary indexing safe here
+    userId?: number;
+    teamId?: number;
+}) {
     const divisionInfo = DIVISIONS[round.division] || DIVISIONS[0];
     const divisionName = divisionInfo.name;
 

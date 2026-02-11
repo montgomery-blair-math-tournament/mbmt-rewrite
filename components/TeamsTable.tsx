@@ -10,18 +10,19 @@ import { HiOutlinePencil } from "react-icons/hi2";
 import { TeamDisplay } from "@/lib/schema/team";
 import Link from "next/link";
 
-interface TeamsTableProps {
+export default function TeamsTable({
+    teams,
+    loading,
+}: {
     teams: TeamDisplay[];
     loading: boolean;
-}
-
-export default function TeamsTable({ teams, loading }: TeamsTableProps) {
+}) {
     return (
         <div className="border rounded-md">
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-[80px]"></TableHead>
+                        <TableHead className="w-20"></TableHead>
                         <TableHead>ID</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>School</TableHead>

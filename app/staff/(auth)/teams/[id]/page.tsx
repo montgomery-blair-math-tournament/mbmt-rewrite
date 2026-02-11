@@ -3,28 +3,15 @@
 import { useEffect, useState, use } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/settings";
+import { TeamDetail } from "@/lib/schema/team";
+import { Round } from "@/lib/schema/round";
+
 import Heading from "@/components/Heading";
 import ParticipantsTable from "@/components/ParticipantsTable";
 import RoundCard from "@/components/RoundCard";
 import Link from "next/link";
 import { ParticipantDisplay } from "@/lib/schema/participant";
-
-type Round = {
-    id: number;
-    name: string;
-    division: number;
-};
-
-type TeamDetail = {
-    id: number;
-    name: string;
-    school: string;
-    division: number;
-    chaperone: string | null;
-    chaperoneEmail: string | null;
-    chaperonePhone: string | null;
-    displayId: string;
-};
+import { toast } from "sonner";
 
 export default function TeamPage({
     params,
@@ -44,7 +31,6 @@ export default function TeamPage({
 
             setLoading(true);
 
-            // 1. Fetch Team Details
             const { data: tData, error: tError } = await supabase
                 .from("team")
                 .select("*")
@@ -53,11 +39,11 @@ export default function TeamPage({
 
             if (tError || !tData) {
                 console.error("Error fetching team:", tError);
+                toast.error("Error fetching team");
                 setLoading(false);
                 return;
             }
 
-            // 2. Fetch Team Members
             const { data: mData, error: mError } = await supabase
                 .from("participant")
                 .select("*")
@@ -65,9 +51,9 @@ export default function TeamPage({
 
             if (mError) {
                 console.error("Error fetching members:", mError);
+                toast.error("Error fetching members");
             }
 
-            // 3. Fetch Team Rounds
             const { data: trData } = await supabase
                 .from("team_round")
                 .select("round_id")
@@ -86,14 +72,12 @@ export default function TeamPage({
                 }
             }
 
-            // Process Data
-            // @ts-expect-error - Dictionary indexing safe here
             const divisionInfo = DIVISIONS[tData.division] || DIVISIONS[0];
 
             setTeam({
                 id: tData.id,
                 name: tData.name,
-                school: tData.school || "N/A",
+                school: tData.school,
                 division: tData.division,
                 chaperone: tData.chaperone,
                 chaperoneEmail: tData.chaperone_email,
@@ -101,30 +85,22 @@ export default function TeamPage({
                 displayId: `${divisionInfo.prefix}${tData.id}`,
             });
 
-            // Map members to ParticipantDisplay
             if (mData) {
                 const mappedMembers: ParticipantDisplay[] = mData.map((m) => {
-                    // We can reuse the team info since they are in this team
                     return {
                         id: m.id,
-                        displayId: `${divisionInfo.prefix}${tData.id}${String.fromCharCode(97 + (mData.indexOf(m) % 26))}`, // Simple ID generation logic or use DB if available.
-                        // Actually, let's just use ID for now or if there's a specific logic.
-                        // Wait, standard logic is usually TeamID + letter.
-                        // Let's use the index for now.
+                        displayId: `${divisionInfo.prefix}${m.id}`,
                         firstName: m.first_name,
                         lastName: m.last_name,
                         division: divisionInfo.name,
                         grade: m.grade,
-                        school: tData.school || "",
+                        school: tData.school,
                         team: tData.name,
-                        chaperone: tData.chaperone || "",
+                        chaperone: tData.chaperone,
                         checkedIn: m.checked_in,
                         teamId: tData.id,
                     };
                 });
-                // Refine display ID logic: usually individual IDs are not stored but derived?
-                // Actually existing participants table logic might have more complex ID generation.
-                // For now, simple is fine.
                 setMembers(mappedMembers);
             }
 
@@ -138,12 +114,10 @@ export default function TeamPage({
     if (loading) return <div className="p-6">Loading...</div>;
     if (!team) return <div className="p-6">Team not found</div>;
 
-    // @ts-expect-error - Dictionary indexing safe here
     const divisionInfo = DIVISIONS[team.division] || DIVISIONS[0];
 
     return (
         <div className="p-6 space-y-6">
-            {/* Header */}
             <div>
                 <div className="mb-2">
                     <Link
@@ -166,13 +140,11 @@ export default function TeamPage({
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Members Column (Takes up 2 cols) */}
                 <div className="lg:col-span-2 space-y-4">
                     <Heading level={2}>Members</Heading>
                     <ParticipantsTable participants={members} loading={false} />
                 </div>
 
-                {/* Rounds Column (Takes up 1 col) */}
                 <div className="space-y-4">
                     <Heading level={2}>Team Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">

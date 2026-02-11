@@ -11,18 +11,29 @@ export const teamSchema = z.object({
     chaperone_phone: z.string().nullable(),
 });
 
-// Type for the join query result (including participant count)
-export type TeamWithCount = z.infer<typeof teamSchema> & {
+export type Team = z.infer<typeof teamSchema>;
+
+export type TeamWithCount = Team & {
     participant: { count: number }[];
 };
 
-// Type for the table display
 export type TeamDisplay = {
     id: number;
     displayId: string;
     name: string;
     school: string;
-    chaperone: string;
+    chaperone: string | null;
     division: string;
     size: number;
+};
+
+export type TeamDetail = {
+    id: number;
+    name: string;
+    school: string;
+    division: number;
+    chaperone: string | null;
+    chaperoneEmail: string | null;
+    chaperonePhone: string | null;
+    displayId: string;
 };

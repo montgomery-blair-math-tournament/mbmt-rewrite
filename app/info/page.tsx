@@ -1,10 +1,11 @@
 import Main from "@/components/Main";
-import { lower } from "@/lib/divisions";
+import { DIVISIONS } from "@/lib/settings";
 import Cell from "@/components/Cell";
 import Link2 from "@/components/Link2";
 import Heading from "@/components/Heading";
 
 export default function Page() {
+    const lower = DIVISIONS[0].name;
     return (
         <Main>
             <Heading level={1}>Contest Information</Heading>

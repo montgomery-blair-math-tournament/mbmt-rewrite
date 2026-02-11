@@ -8,27 +8,10 @@ import Heading from "@/components/Heading";
 import { HiCheck, HiXMark } from "react-icons/hi2";
 import Link from "next/link";
 import RoundCard from "@/components/RoundCard";
+import { toast } from "sonner";
 
-type Round = {
-    id: number;
-    name: string;
-    division: number;
-};
-
-type ParticipantDetail = {
-    id: number;
-    displayId: string;
-    firstName: string;
-    lastName: string;
-    division: string;
-    grade: number;
-    school: string;
-    team: string;
-    checkedIn: boolean;
-    individualRounds: Round[];
-    teamRounds: Round[];
-    teamId: number;
-};
+import { ParticipantDetail } from "@/lib/schema/participant";
+import { Round } from "@/lib/schema/round";
 
 export default function ParticipantPage({
     params,
@@ -46,10 +29,6 @@ export default function ParticipantPage({
         const fetchData = async () => {
             if (!id) return;
 
-            // 1. Fetch participant details
-            // We just fetch the team_id, we will fetch team details separately or via simple join if works.
-            // Let's do simple join for team as that seemed to generally work, or fallback to manual if safer.
-            // Actually, manual fetch for team is safest given schema issues.
             const { data: pData, error: pError } = await supabase
                 .from("participant")
                 .select("*")
@@ -58,11 +37,11 @@ export default function ParticipantPage({
 
             if (pError || !pData) {
                 console.error("Error fetching participant:", pError);
+                toast.error("Error fetching participant");
                 setLoading(false);
                 return;
             }
 
-            // 2. Fetch Team Details (if exists)
             let teamData = null;
             if (pData.team_id) {
                 const { data: tData, error: tError } = await supabase
@@ -76,13 +55,10 @@ export default function ParticipantPage({
                 }
             }
 
-            // 3. Fetch Participant Round IDs
             const { data: pRoundIds } = await supabase
                 .from("participant_round")
                 .select("round_id")
                 .eq("participant_id", id);
-
-            // 4. Fetch Team Round IDs
             let tRoundIds: { round_id: number }[] = [];
             if (pData.team_id) {
                 const { data: trRes } = await supabase
@@ -93,7 +69,6 @@ export default function ParticipantPage({
                 if (trRes) tRoundIds = trRes;
             }
 
-            // 5. Fetch All Round Details
             const pRIds = pRoundIds?.map((x) => x.round_id) || [];
             const tRIds = tRoundIds.map((x) => x.round_id) || [];
             const allRoundIds = Array.from(new Set([...pRIds, ...tRIds]));
@@ -110,9 +85,7 @@ export default function ParticipantPage({
                 }
             }
 
-            // Construct Result
             const divisionCode = teamData?.division ?? 0;
-            // @ts-expect-error - Dictionary indexing safe here
             const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
 
             const individualRounds = pRIds
@@ -130,12 +103,13 @@ export default function ParticipantPage({
                 lastName: pData.last_name,
                 division: divisionInfo.name,
                 grade: pData.grade,
-                school: teamData?.school || "N/A",
-                team: teamData?.name || "N/A",
+                school: teamData?.school,
+                team: teamData?.name,
+                chaperone: teamData?.chaperone,
                 checkedIn: pData.checked_in,
                 individualRounds,
                 teamRounds,
-                teamId: pData.team_id ?? 0, // Default to 0 or handle null
+                teamId: pData.team_id ?? 0,
             });
             setLoading(false);
         };
@@ -148,7 +122,6 @@ export default function ParticipantPage({
 
     return (
         <div className="p-6 space-y-6">
-            {/* Header */}
             <div>
                 <div className="mb-2">
                     <Link
@@ -189,7 +162,6 @@ export default function ParticipantPage({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Individual Rounds */}
                 <div className="space-y-4">
                     <Heading level={2}>Individual Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">
@@ -209,7 +181,6 @@ export default function ParticipantPage({
                     </div>
                 </div>
 
-                {/* Team Rounds */}
                 <div className="space-y-4">
                     <Heading level={2}>Team Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">

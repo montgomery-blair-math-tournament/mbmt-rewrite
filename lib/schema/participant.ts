@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Round } from "./round";
 
 export const participantSchema = z.object({
     id: z.number(),
@@ -10,28 +11,32 @@ export const participantSchema = z.object({
     tshirt: z.string(),
 });
 
-// Type for the join query result
-export type ParticipantWithTeam = z.infer<typeof participantSchema> & {
+export type Participant = z.infer<typeof participantSchema>;
+
+export type ParticipantWithTeam = Participant & {
     team: {
         name: string;
         school: string;
-        division: number; // 0 or 1
+        division: number;
         chaperone: string;
     } | null;
 };
 
-
-// Type for the table display
 export type ParticipantDisplay = {
     id: number;
-    displayId: string; // The formatted ID (e.g. A123)
+    displayId: string;
     firstName: string;
     lastName: string;
-    division: string; // "Abel" or "Jacobi"
+    division: string;
     grade: number;
     school: string;
     team: string;
     chaperone: string;
     checkedIn: boolean;
     teamId: number;
+};
+
+export type ParticipantDetail = ParticipantDisplay & {
+    individualRounds: Round[];
+    teamRounds: Round[];
 };

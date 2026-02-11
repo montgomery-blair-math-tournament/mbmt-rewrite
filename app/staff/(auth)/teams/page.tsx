@@ -23,15 +23,12 @@ export default function TeamsPage() {
                 return;
             }
 
-            // Transform data
             const formattedData: TeamDisplay[] = (
                 data as unknown as TeamWithCount[]
             ).map((t) => {
                 const divisionCode = t.division ?? 0;
-                // @ts-expect-error - Indexing with number is safe given settings structure
                 const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
 
-                // Determine display ID - 'T' + division info prefix + id
                 const displayId = `T${divisionInfo.prefix}${t.id}`;
 
                 return {
@@ -39,9 +36,9 @@ export default function TeamsPage() {
                     displayId: displayId,
                     name: t.name,
                     school: t.school,
-                    chaperone: t.chaperone || "N/A",
+                    chaperone: t.chaperone,
                     division: divisionInfo.name,
-                    size: t.participant?.[0]?.count || 0,
+                    size: t.participant?.[0]?.count,
                 };
             });
 

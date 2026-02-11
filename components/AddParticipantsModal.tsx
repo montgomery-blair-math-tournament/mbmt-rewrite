@@ -3,21 +3,18 @@
 import { HiXMark } from "react-icons/hi2";
 import ParticipantsTable from "./ParticipantsTable";
 
-interface AddParticipantsModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
-
 export default function AddParticipantsModal({
     isOpen,
     onClose,
-}: AddParticipantsModalProps) {
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+}) {
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg shadow-xl w-11/12 h-5/6 flex flex-col">
-                {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b">
                     <div className="flex items-center gap-4">
                         <button
@@ -32,7 +29,6 @@ export default function AddParticipantsModal({
                     </div>
                 </div>
 
-                {/* Body - Scrollable */}
                 <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
                     <div className="bg-white p-4 rounded-md shadow-sm">
                         <h3 className="text-lg font-medium mb-4">
@@ -46,7 +42,6 @@ export default function AddParticipantsModal({
                     </div>
                 </div>
 
-                {/* Footer */}
                 <div className="flex items-center justify-end gap-3 px-6 py-4 border-t bg-gray-50 rounded-b-lg">
                     <button
                         onClick={onClose}
