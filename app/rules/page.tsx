@@ -23,9 +23,9 @@ export default function Page() {
             <ol className="list-decimal ml-4">
                 <li>
                     Participants in MBMT compete in teams of 5 (with some
-                    exceptions, discussed further in #4). The math team sponsors
-                    of each school/organization register individual student
-                    teams through the website via the{" "}
+                    exceptions, discussed below). The math team sponsors of each
+                    school or organization register individual student teams
+                    through the website via the{" "}
                     <Link2 href="/register">registration page</Link2>. There is
                     no limit to the number of full teams a school or
                     organization may send.
@@ -262,8 +262,8 @@ export default function Page() {
                     Tiebreaker rounds will be held during the Fun Round.
                 </li>
                 <li>
-                    The <b>team score</b> is a weighted sum of the Individual
-                    Round, Team Round, and Guts Round scores. The
+                    The <b>team score</b> is a weighted sum of the Individual{" "}
+                    Round, Team Round, and Guts Round scores. The{" "}
                     <b>top 5 teams</b> in each division will be recognized.
                 </li>
                 <li>
