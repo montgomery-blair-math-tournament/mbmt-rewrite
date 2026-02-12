@@ -1,5 +1,5 @@
 {
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "markdown.validate.enabled": true,
-    "npm.packageManager": "pnpm"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "markdown.validate.enabled": true,
+  "npm.packageManager": "pnpm"
 }
