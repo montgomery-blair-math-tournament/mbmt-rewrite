@@ -12,13 +12,17 @@ import { Round } from "@/lib/schema/round";
 
 export default function RoundCard({
     round,
-    userId,
-    teamId,
+    href,
+    showProgress = false,
+    showDetails = false,
+    numQuestions,
     stats,
 }: {
     round: Round;
-    userId?: number;
-    teamId?: number;
+    href?: string;
+    showProgress?: boolean;
+    showDetails?: boolean;
+    numQuestions?: number;
     stats?: {
         graded: number;
         total: number;
@@ -27,35 +31,17 @@ export default function RoundCard({
     const divisionInfo = DIVISIONS[round.division] || DIVISIONS[0];
     const divisionName = divisionInfo.name;
 
+    const linkHref = href || `/staff/rounds/${round.id}`;
+
     return (
-        <Link href={`/staff/rounds/${round.id}`} className="block h-full">
+        <Link href={linkHref} className="block h-full">
             <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
                 <CardHeader className="pb-2">
                     <CardTitle className="text-lg">{round.name}</CardTitle>
                     <CardDescription>{divisionName} Division</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {userId && (
-                        <div className="flex justify-between items-center mt-2">
-                            <span className="text-sm font-medium text-gray-500">
-                                Score
-                            </span>
-                            <span className="text-lg font-bold text-gray-900">
-                                --
-                            </span>
-                        </div>
-                    )}
-                    {teamId && (
-                        <div className="flex justify-between items-center mt-2">
-                            <span className="text-sm font-medium text-gray-500">
-                                Team Score
-                            </span>
-                            <span className="text-lg font-bold text-gray-900">
-                                --
-                            </span>
-                        </div>
-                    )}
-                    {stats && (
+                    {showProgress && stats && (
                         <div className="flex justify-between items-center mt-2">
                             <span className="text-sm font-medium text-gray-500">
                                 Progress
@@ -63,6 +49,30 @@ export default function RoundCard({
                             <span className="text-lg font-bold text-gray-900">
                                 {stats.graded} / {stats.total}
                             </span>
+                        </div>
+                    )}
+                    {showDetails && (
+                        <div className="space-y-2 mt-2">
+                            {numQuestions !== undefined && (
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium text-gray-500">
+                                        Questions
+                                    </span>
+                                    <span className="text-lg font-bold text-gray-900">
+                                        {numQuestions}
+                                    </span>
+                                </div>
+                            )}
+                            {stats && (
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium text-gray-500">
+                                        Participants
+                                    </span>
+                                    <span className="text-lg font-bold text-gray-900">
+                                        {stats.total}
+                                    </span>
+                                </div>
+                            )}
                         </div>
                     )}
                 </CardContent>

@@ -35,3 +35,15 @@ export async function upsertProblem(data: Partial<Problem>) {
         revalidatePath(`/staff/rounds/${data.round_id}`);
     }
 }
+
+export async function deleteProblem(id: number, roundId: number) {
+    const supabase = await createClient();
+
+    const { error } = await supabase.from("problem").delete().eq("id", id);
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    revalidatePath(`/staff/rounds/${roundId}`);
+}

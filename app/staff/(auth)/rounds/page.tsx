@@ -22,7 +22,7 @@ export default async function RoundsPage() {
     const roundsWithStats = await Promise.all(
         rounds.map(async (round) => {
             let registered = 0;
-            let graded = 0;
+            let numQuestions = 0;
 
             if (round.type === "individual") {
                 const { count: regCount } = await supabase
@@ -30,13 +30,16 @@ export default async function RoundsPage() {
                     .select("*", { count: "exact", head: true })
                     .eq("round_id", round.id);
 
-                const { count: gradCount } = await supabase
-                    .from("score")
+                // Currently individual rounds don't have problems in the database in the same way,
+                // or we assume they do. Let's try to fetch problems for them too if they exist.
+                // If the schema supports it. Based on previous analysis, `problem` table has `round_id`.
+                const { count: qCount } = await supabase
+                    .from("problem")
                     .select("*", { count: "exact", head: true })
                     .eq("round_id", round.id);
 
                 registered = regCount || 0;
-                graded = gradCount || 0;
+                numQuestions = qCount || 0;
             } else if (round.type === "team") {
                 const { count: regCount } = await supabase
                     .from("team_round")
@@ -45,30 +48,19 @@ export default async function RoundsPage() {
 
                 registered = regCount || 0;
 
-                const { data: problems } = await supabase
+                const { count: qCount } = await supabase
                     .from("problem")
-                    .select("id")
+                    .select("*", { count: "exact", head: true })
                     .eq("round_id", round.id);
 
-                if (problems && problems.length > 0) {
-                    const pIds = problems.map((p) => p.id);
-
-                    const { data: answers } = await supabase
-                        .from("team_answer")
-                        .select("team_id")
-                        .in("problem_id", pIds)
-                        .not("score", "is", null);
-
-                    if (answers) {
-                        const uniqueTeams = new Set(
-                            answers.map((a) => a.team_id)
-                        );
-                        graded = uniqueTeams.size;
-                    }
-                }
+                numQuestions = qCount || 0;
             }
 
-            return { ...round, stats: { graded, total: registered } };
+            return {
+                ...round,
+                stats: { graded: 0, total: registered }, // Graded is not needed for this view but struct requires it if we used strict typing, but we are passing explicit props now.
+                numQuestions,
+            };
         })
     );
 
@@ -80,7 +72,10 @@ export default async function RoundsPage() {
                     <RoundCard
                         key={round.id}
                         round={round}
+                        showDetails={true}
+                        numQuestions={round.numQuestions}
                         stats={round.stats}
+                        href={`/staff/rounds/${round.id}`}
                     />
                 ))}
             </div>
