@@ -61,8 +61,7 @@ export default function Page() {
                 <li>
                     We <b>do not</b> allow mixed-school or mixed-organization
                     teams. However, we do allow organizations consisting of
-                    home-school groups, and community activity groups, to name a
-                    few.
+                    home-school groups.
                 </li>
                 <li>
                     We <b>do not</b> allow elementary school students to
