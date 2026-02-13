@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const roundSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  division: z.number(),
+    id: z.number(),
+    name: z.string(),
+    division: z.number(),
 });
 
 export type Round = z.infer<typeof roundSchema>;
