@@ -2,12 +2,12 @@ import { StaticImageData } from "next/image";
 
 import AwesomeMathImage from "@/public/images/amsp.png";
 import AOPSImage from "@/public/images/aopslogo.png";
-import DesmosImage from "@/public/images/desmos.png";
 import JaneStreetImage from "@/public/images/jane-street.png";
-import LiveImage from "@/public/images/live.png";
+import JumpTradingImage from "@/public/images/jump.jpg";
 import MagnetImage from "@/public/images/magnet.jpg";
 import MCPSFoodImage from "@/public/images/mcpsfood.png";
 import WolframImage from "@/public/images/wolfram.png";
+import CitadelImage from "@/public/images/citadel.png";
 
 const sponsorList: {
     name: string;
@@ -52,15 +52,15 @@ const sponsorList: {
         width: 200,
     },
     {
-        name: "LIVE by Po-Shen Loh",
-        image: LiveImage,
-        link: "https://live.poshenloh.com/",
+        name: "Jump Trading",
+        image: JumpTradingImage,
+        link: "https://jumptrading.com/",
         width: 300,
     },
     {
-        name: "Desmos",
-        image: DesmosImage,
-        link: "https://www.desmos.com/",
+        name: "Citadel",
+        image: CitadelImage,
+        link: "https://www.citadel.com/",
         width: 300,
     },
 ];
