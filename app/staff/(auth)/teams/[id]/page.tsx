@@ -154,11 +154,7 @@ export default function TeamPage({
                             </p>
                         ) : (
                             teamRounds.map((round) => (
-                                <RoundCard
-                                    key={round.id}
-                                    round={round}
-                                    teamId={team.id}
-                                />
+                                <RoundCard key={round.id} round={round} />
                             ))
                         )}
                     </div>

@@ -177,11 +177,7 @@ export default function ParticipantPage({
                             </p>
                         ) : (
                             participant.individualRounds.map((round) => (
-                                <RoundCard
-                                    key={round.id}
-                                    round={round}
-                                    userId={participant.id}
-                                />
+                                <RoundCard key={round.id} round={round} />
                             ))
                         )}
                     </div>
@@ -196,11 +192,7 @@ export default function ParticipantPage({
                             </p>
                         ) : (
                             participant.teamRounds.map((round) => (
-                                <RoundCard
-                                    key={round.id}
-                                    round={round}
-                                    teamId={participant.teamId}
-                                />
+                                <RoundCard key={round.id} round={round} />
                             ))
                         )}
                     </div>
