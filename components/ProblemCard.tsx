@@ -2,15 +2,35 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Problem } from "@/lib/schema/problem";
 import Math from "./Math";
 
-export default function ProblemCard({ problem }: { problem: Problem }) {
+import { HiPencil } from "react-icons/hi2";
+
+export default function ProblemCard({
+    problem,
+    onEdit,
+}: {
+    problem: Problem;
+    onEdit?: (problem: Problem) => void;
+}) {
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
                 <CardTitle className="text-lg">
                     Problem {problem.number}
                 </CardTitle>
-                <div className="text-sm text-gray-500 capitalize px-2 py-1 bg-gray-100 rounded-full">
-                    {problem.type}
+                <div className="flex items-center gap-2">
+                    <div className="text-sm text-gray-500 capitalize px-2 py-1 bg-gray-100 rounded-full">
+                        {problem.type === "boolean"
+                            ? "Correct/Incorrect"
+                            : problem.type}
+                    </div>
+                    {onEdit && (
+                        <button
+                            onClick={() => onEdit(problem)}
+                            className="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-rose-600 transition-colors hover:cursor-pointer"
+                            aria-label="Edit problem">
+                            <HiPencil className="w-4 h-4" />
+                        </button>
+                    )}
                 </div>
             </CardHeader>
             <CardContent>

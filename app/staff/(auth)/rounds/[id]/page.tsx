@@ -1,9 +1,6 @@
-import Heading from "@/components/Heading";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Problem } from "@/lib/schema/problem";
-import ProblemCard from "@/components/ProblemCard";
-import { DIVISIONS } from "@/lib/settings";
+import RoundDetailClient from "./RoundDetailClient";
 
 export default async function RoundPage({
     params,
@@ -37,35 +34,49 @@ export default async function RoundPage({
 
     const problems = problemsData as Problem[];
 
-    return (
-        <div className="space-y-6">
-            <div>
-                <div className="mb-2">
-                    <Link
-                        href="/staff/rounds"
-                        className="text-sm text-gray-500 hover:underline">
-                        ← Back to Rounds
-                    </Link>
-                </div>
-                <div className="flex items-center gap-4">
-                    <Heading level={1}>{round.name}</Heading>
-                    <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300 border border-gray-500">
-                        {DIVISIONS[round.division]?.name || "Unknown Division"}
-                    </span>
-                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 border border-blue-500 capitalize">
-                        {round.type} Round
-                    </span>
-                </div>
-            </div>
+    let registered = 0;
+    let graded = 0;
 
-            <div className="space-y-4">
-                <Heading level={2}>Problems</Heading>
-                <div className="grid grid-cols-1 gap-4">
-                    {problems.map((problem) => (
-                        <ProblemCard key={problem.id} problem={problem} />
-                    ))}
-                </div>
-            </div>
-        </div>
+    if (round.type === "individual") {
+        const { count: regCount } = await supabase
+            .from("participant_round")
+            .select("*", { count: "exact", head: true })
+            .eq("round_id", round.id);
+
+        const { count: gradCount } = await supabase
+            .from("score")
+            .select("*", { count: "exact", head: true })
+            .eq("round_id", round.id);
+
+        registered = regCount || 0;
+        graded = gradCount || 0;
+    } else if (round.type === "team") {
+        const { count: regCount } = await supabase
+            .from("team_round")
+            .select("*", { count: "exact", head: true })
+            .eq("round_id", round.id);
+
+        registered = regCount || 0;
+
+        if (problems.length > 0) {
+            const pIds = problems.map((p) => p.id);
+
+            const { data: answers } = await supabase
+                .from("team_answer")
+                .select("team_id")
+                .in("problem_id", pIds)
+                .not("score", "is", null);
+
+            if (answers) {
+                const uniqueTeams = new Set(answers.map((a) => a.team_id));
+                graded = uniqueTeams.size;
+            }
+        }
+    }
+
+    const stats = { graded, total: registered };
+
+    return (
+        <RoundDetailClient round={round} problems={problems} stats={stats} />
     );
 }
