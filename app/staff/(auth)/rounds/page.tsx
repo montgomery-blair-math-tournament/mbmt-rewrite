@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import Heading from "@/components/Heading";
+import RoundsHeader from "./RoundsHeader";
 import RoundCard from "@/components/RoundCard";
 import { Round } from "@/lib/schema/round";
 
@@ -30,9 +30,6 @@ export default async function RoundsPage() {
                     .select("*", { count: "exact", head: true })
                     .eq("round_id", round.id);
 
-                // Currently individual rounds don't have problems in the database in the same way,
-                // or we assume they do. Let's try to fetch problems for them too if they exist.
-                // If the schema supports it. Based on previous analysis, `problem` table has `round_id`.
                 const { count: qCount } = await supabase
                     .from("problem")
                     .select("*", { count: "exact", head: true })
@@ -58,7 +55,7 @@ export default async function RoundsPage() {
 
             return {
                 ...round,
-                stats: { graded: 0, total: registered }, // Graded is not needed for this view but struct requires it if we used strict typing, but we are passing explicit props now.
+                stats: { graded: 0, total: registered },
                 numQuestions,
             };
         })
@@ -66,7 +63,7 @@ export default async function RoundsPage() {
 
     return (
         <div className="space-y-6">
-            <Heading level={1}>Rounds</Heading>
+            <RoundsHeader />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {roundsWithStats.map((round) => (
                     <RoundCard

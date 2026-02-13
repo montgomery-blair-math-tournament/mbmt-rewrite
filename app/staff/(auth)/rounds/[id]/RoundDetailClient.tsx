@@ -14,6 +14,7 @@ import Modal from "@/components/Modal";
 
 import { Stats } from "@/lib/schema/stats";
 import { deleteProblem } from "./actions";
+import { deleteRound } from "../actions";
 import { toast } from "sonner";
 
 export default function RoundDetailClient({
@@ -33,6 +34,7 @@ export default function RoundDetailClient({
     const [problemToDelete, setProblemToDelete] = useState<Problem | null>(
         null
     );
+    const [isDeleteRoundOpen, setIsDeleteRoundOpen] = useState(false);
 
     const handleEditProblem = (problem: Problem) => {
         setSelectedProblem(problem);
@@ -98,6 +100,11 @@ export default function RoundDetailClient({
                             Edit Round
                         </button>
                         <button
+                            onClick={() => setIsDeleteRoundOpen(true)}
+                            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 hover:cursor-pointer">
+                            Delete Round
+                        </button>
+                        <button
                             onClick={handleAddProblem}
                             className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
                             <HiPlus className="mr-2 h-4 w-4" />
@@ -156,6 +163,40 @@ export default function RoundDetailClient({
                 <div className="text-sm text-gray-500">
                     Are you sure you want to delete Problem{" "}
                     {problemToDelete?.number}? This action cannot be undone.
+                </div>
+            </Modal>
+
+            <Modal
+                isOpen={isDeleteRoundOpen}
+                onClose={() => setIsDeleteRoundOpen(false)}
+                title="Delete Round"
+                className="w-full max-w-md h-auto"
+                footer={
+                    <>
+                        <button
+                            onClick={() => setIsDeleteRoundOpen(false)}
+                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
+                            Cancel
+                        </button>
+                        <button
+                            onClick={async () => {
+                                try {
+                                    await deleteRound(round.id);
+                                    toast.success("Round deleted");
+                                } catch (e) {
+                                    console.error(e);
+                                    toast.error("Failed to delete round");
+                                }
+                            }}
+                            className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 hover:cursor-pointer">
+                            Delete
+                        </button>
+                    </>
+                }>
+                <div className="text-sm text-gray-500">
+                    Are you sure you want to delete round <b>{round.name}</b>?
+                    This action cannot be undone and will delete all problems
+                    associated with it.
                 </div>
             </Modal>
         </div>
