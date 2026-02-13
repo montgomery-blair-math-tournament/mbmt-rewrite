@@ -79,7 +79,7 @@ export default function ParticipantPage({
             if (allRoundIds.length > 0) {
                 const { data: rounds } = await supabase
                     .from("round")
-                    .select("id, name, division")
+                    .select("id, name, division, type")
                     .in("id", allRoundIds);
 
                 if (rounds) {
@@ -123,7 +123,7 @@ export default function ParticipantPage({
     if (!participant) return <div className="p-6">Participant not found</div>;
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="space-y-6">
             <div>
                 <div className="mb-2">
                     <Link
@@ -177,11 +177,7 @@ export default function ParticipantPage({
                             </p>
                         ) : (
                             participant.individualRounds.map((round) => (
-                                <RoundCard
-                                    key={round.id}
-                                    round={round}
-                                    userId={participant.id}
-                                />
+                                <RoundCard key={round.id} round={round} />
                             ))
                         )}
                     </div>
@@ -196,11 +192,7 @@ export default function ParticipantPage({
                             </p>
                         ) : (
                             participant.teamRounds.map((round) => (
-                                <RoundCard
-                                    key={round.id}
-                                    round={round}
-                                    teamId={participant.teamId}
-                                />
+                                <RoundCard key={round.id} round={round} />
                             ))
                         )}
                     </div>

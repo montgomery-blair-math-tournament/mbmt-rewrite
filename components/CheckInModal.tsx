@@ -68,7 +68,7 @@ export default function CheckInModal({
             if (roundIds.length > 0) {
                 const { data: rounds } = await supabase
                     .from("round")
-                    .select("id, name, division")
+                    .select("id, name, division, type")
                     .in("id", roundIds);
 
                 if (rounds) {

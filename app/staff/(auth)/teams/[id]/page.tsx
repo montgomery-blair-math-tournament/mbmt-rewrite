@@ -64,7 +64,7 @@ export default function TeamPage({
                 const roundIds = trData.map((r) => r.round_id);
                 const { data: rData } = await supabase
                     .from("round")
-                    .select("id, name, division")
+                    .select("id, name, division, type")
                     .in("id", roundIds);
 
                 if (rData) {
@@ -117,7 +117,7 @@ export default function TeamPage({
     const divisionInfo = DIVISIONS[team.division] || DIVISIONS[0];
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="space-y-6">
             <div>
                 <div className="mb-2">
                     <Link
@@ -154,11 +154,7 @@ export default function TeamPage({
                             </p>
                         ) : (
                             teamRounds.map((round) => (
-                                <RoundCard
-                                    key={round.id}
-                                    round={round}
-                                    teamId={team.id}
-                                />
+                                <RoundCard key={round.id} round={round} />
                             ))
                         )}
                     </div>

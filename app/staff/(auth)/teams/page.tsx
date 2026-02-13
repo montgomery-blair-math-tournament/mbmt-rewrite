@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/settings";
 import { TeamDisplay, TeamWithCount } from "@/lib/schema/team";
+import Heading from "@/components/Heading";
 import TeamsTable from "@/components/TeamsTable";
 
 export default function TeamsPage() {
@@ -15,7 +16,7 @@ export default function TeamsPage() {
         const fetchData = async () => {
             const { data, error } = await supabase
                 .from("team")
-                .select("*, participant(count)");
+                .select("*, participant!participant_team_id_fkey(count)");
 
             if (error) {
                 console.error("Error fetching teams:", error);
@@ -50,9 +51,9 @@ export default function TeamsPage() {
     }, [supabase]);
 
     return (
-        <div className="p-6">
+        <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Teams</h1>
+                <Heading level={1}>Teams</Heading>
                 <button className="bg-rose-800 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover:cursor-pointer">
                     Add
                 </button>

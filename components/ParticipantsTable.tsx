@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import {
-    Table,
+import Table, {
     TableBody,
     TableCell,
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/Table";
 import { HiOutlinePencil, HiCheck } from "react-icons/hi2";
 import Link from "next/link";
 import { ParticipantDisplay } from "@/lib/schema/participant";
