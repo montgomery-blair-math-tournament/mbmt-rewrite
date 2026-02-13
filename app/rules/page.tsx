@@ -13,6 +13,10 @@ export default function Page() {
             <Heading level={1}>Official Rules</Heading>
 
             <p>
+                <i>Last updated 02/13/2026</i>
+            </p>
+
+            <p>
                 Welcome to the eleventh annual Montgomery Blair Math Tournament,
                 or MBMT XI for short! MBMT is a free middle school math contest
                 that seeks to inspire students&apos; interest in mathematics and
