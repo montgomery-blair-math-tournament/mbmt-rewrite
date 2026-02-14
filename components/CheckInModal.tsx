@@ -9,6 +9,7 @@ import {
 import { Round } from "@/lib/schema/round";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import Button from "@/components/ui/Button";
 
 export default function CheckInModal({
     isOpen,
@@ -98,16 +99,16 @@ export default function CheckInModal({
             className="w-full max-w-2xl h-auto max-h-[90vh]"
             footer={
                 <>
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
-                        Cancel
-                    </button>
-                    <button
-                        onClick={onCheckIn}
-                        className="px-4 py-2 text-sm font-medium text-white bg-rose-800 rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
-                        Check In
-                    </button>
+                    <>
+                        <Button variant="outline" onClick={onClose}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={onCheckIn}
+                            className="bg-rose-800 hover:bg-rose-700 text-white">
+                            Check In
+                        </Button>
+                    </>
                 </>
             }>
             <div className="space-y-6">

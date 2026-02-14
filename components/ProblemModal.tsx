@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 import { upsertProblem } from "@/app/staff/(auth)/rounds/[id]/actions";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
 import Label from "@/components/ui/Label";
+import { Input } from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
 import { toast } from "sonner";
 
 export default function ProblemModal({
@@ -76,27 +78,27 @@ export default function ProblemModal({
             className="w-[600px] h-auto"
             footer={
                 <>
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleSubmit}
-                        disabled={loading}
-                        className="px-4 py-2 text-sm font-medium text-white bg-rose-600 border border-transparent rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 disabled:opacity-50 hover:cursor-pointer">
-                        {loading ? "Saving..." : isEditing ? "Edit" : "Add"}
-                    </button>
+                    <>
+                        <Button variant="outline" onClick={onClose}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleSubmit}
+                            disabled={loading}
+                            className="bg-rose-600 hover:bg-rose-700 text-white">
+                            {loading ? "Saving..." : isEditing ? "Edit" : "Add"}
+                        </Button>
+                    </>
                 </>
             }>
             <div className="space-y-4">
                 <div>
                     <Label className="mb-2 block">Number</Label>
-                    <input
+                    <Input
                         type="text"
                         value={number}
                         onChange={(e) => setNumber(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500 sm:text-sm border p-2"
+                        className="mt-1"
                         placeholder="e.g. 1"
                     />
                 </div>
@@ -126,18 +128,18 @@ export default function ProblemModal({
                         value={probText}
                         onChange={(e) => setProbText(e.target.value)}
                         rows={3}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500 sm:text-sm border p-2"
+                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
                         placeholder="Problem statement (LaTeX supported)"
                     />
                 </div>
 
                 <div>
                     <Label className="mb-2 block">Answer</Label>
-                    <input
+                    <Input
                         type="text"
                         value={answer}
                         onChange={(e) => setAnswer(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500 sm:text-sm border p-2"
+                        className="mt-1"
                         placeholder="Answer (LaTeX supported)"
                     />
                 </div>

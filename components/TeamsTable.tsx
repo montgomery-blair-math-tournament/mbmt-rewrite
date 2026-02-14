@@ -8,6 +8,7 @@ import Table, {
 import { HiOutlinePencil } from "react-icons/hi2";
 import { TeamDisplay } from "@/lib/schema/team";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 export default function TeamsTable({
     teams,
@@ -50,11 +51,13 @@ export default function TeamsTable({
                                 className="group hover:bg-gray-50">
                                 <TableCell className="p-2">
                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button
-                                            className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:cursor-pointer"
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8 hover:bg-gray-200 text-gray-600"
                                             title="Edit">
                                             <HiOutlinePencil className="w-4 h-4" />
-                                        </button>
+                                        </Button>
                                     </div>
                                 </TableCell>
                                 <TableCell>

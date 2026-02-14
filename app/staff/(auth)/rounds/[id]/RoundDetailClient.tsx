@@ -11,6 +11,7 @@ import { useState } from "react";
 import EditRoundModal from "@/components/EditRoundModal";
 import ProblemModal from "@/components/ProblemModal";
 import Modal from "@/components/Modal";
+import Button from "@/components/ui/Button";
 
 import { Stats } from "@/lib/schema/stats";
 import { deleteProblem } from "./actions";
@@ -93,23 +94,25 @@ export default function RoundDetailClient({
                         </span>
                     </div>
                     <div className="flex gap-2">
-                        <button
+                        <Button
+                            variant="outline"
                             onClick={() => setIsEditRoundOpen(true)}
-                            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
+                            className="bg-white hover:bg-gray-50 text-gray-700 border-gray-300 shadow-sm">
                             <HiPencil className="mr-2 h-4 w-4" />
                             Edit Round
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                            variant="outline"
                             onClick={() => setIsDeleteRoundOpen(true)}
-                            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 hover:cursor-pointer">
+                            className="bg-white hover:bg-red-50 text-red-700 border-gray-300 shadow-sm hover:text-red-800">
                             Delete Round
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             onClick={handleAddProblem}
-                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
+                            className="bg-rose-600 hover:bg-rose-700 text-white shadow-sm">
                             <HiPlus className="mr-2 h-4 w-4" />
                             Add Problem
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -148,16 +151,16 @@ export default function RoundDetailClient({
                 className="w-full max-w-md h-auto"
                 footer={
                     <>
-                        <button
-                            onClick={() => setProblemToDelete(null)}
-                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
+                        <Button
+                            variant="outline"
+                            onClick={() => setProblemToDelete(null)}>
                             Cancel
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             onClick={handleConfirmDelete}
-                            className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 hover:cursor-pointer">
+                            className="bg-red-600 hover:bg-red-700 text-white">
                             Delete
-                        </button>
+                        </Button>
                     </>
                 }>
                 <div className="text-sm text-gray-500">
@@ -173,12 +176,12 @@ export default function RoundDetailClient({
                 className="w-full max-w-md h-auto"
                 footer={
                     <>
-                        <button
-                            onClick={() => setIsDeleteRoundOpen(false)}
-                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsDeleteRoundOpen(false)}>
                             Cancel
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             onClick={async () => {
                                 try {
                                     await deleteRound(round.id);
@@ -188,9 +191,9 @@ export default function RoundDetailClient({
                                     toast.error("Failed to delete round");
                                 }
                             }}
-                            className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 hover:cursor-pointer">
+                            className="bg-red-600 hover:bg-red-700 text-white">
                             Delete
-                        </button>
+                        </Button>
                     </>
                 }>
                 <div className="text-sm text-gray-500">

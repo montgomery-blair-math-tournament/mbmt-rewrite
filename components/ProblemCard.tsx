@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Problem } from "@/lib/schema/problem";
 import Math from "./Math";
+import Button from "@/components/ui/Button";
 
 import { HiPencil, HiTrash } from "react-icons/hi2";
 
@@ -26,20 +27,24 @@ export default function ProblemCard({
                             : problem.type}
                     </div>
                     {onEdit && (
-                        <button
+                        <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => onEdit(problem)}
-                            className="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-rose-600 transition-colors hover:cursor-pointer"
+                            className="h-8 w-8 hover:bg-gray-200 text-gray-500 hover:text-rose-600"
                             aria-label="Edit problem">
                             <HiPencil className="w-4 h-4" />
-                        </button>
+                        </Button>
                     )}
                     {onDelete && (
-                        <button
+                        <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => onDelete(problem)}
-                            className="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-red-600 transition-colors hover:cursor-pointer"
+                            className="h-8 w-8 hover:bg-gray-200 text-gray-500 hover:text-red-600"
                             aria-label="Delete problem">
                             <HiTrash className="w-4 h-4" />
-                        </button>
+                        </Button>
                     )}
                 </div>
             </CardHeader>

@@ -12,6 +12,7 @@ import { HiOutlinePencil, HiCheck } from "react-icons/hi2";
 import Link from "next/link";
 import { ParticipantDisplay } from "@/lib/schema/participant";
 import CheckInModal from "./CheckInModal";
+import Button from "@/components/ui/Button";
 
 export default function ParticipantsTable({
     participants,
@@ -73,17 +74,21 @@ export default function ParticipantsTable({
                                 {!readonly && (
                                     <TableCell className="p-2">
                                         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button
-                                                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:cursor-pointer"
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 hover:bg-gray-200 text-gray-600"
                                                 title="Edit">
                                                 <HiOutlinePencil className="w-4 h-4" />
-                                            </button>
-                                            <button
+                                            </Button>
+                                            <Button
                                                 onClick={() => handleCheckIn(p)}
-                                                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:cursor-pointer"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 hover:bg-gray-200 text-gray-600"
                                                 title="Check In">
                                                 <HiCheck className="w-4 h-4" />
-                                            </button>
+                                            </Button>
                                         </div>
                                     </TableCell>
                                 )}

@@ -2,6 +2,7 @@
 
 import { HiXMark } from "react-icons/hi2";
 import { ReactNode } from "react";
+import Button from "@/components/ui/Button";
 
 interface ModalProps {
     isOpen: boolean;
@@ -28,12 +29,14 @@ export default function Modal({
                 className={`bg-white rounded-lg shadow-xl flex flex-col ${className}`}>
                 <div className="flex items-center justify-between px-6 py-4 border-b">
                     <div className="flex items-center gap-4">
-                        <button
+                        <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={onClose}
-                            className="p-2 hover:bg-gray-100 rounded-full transition-colors hover:cursor-pointer"
+                            className="rounded-full"
                             aria-label="Close">
                             <HiXMark className="w-6 h-6 text-gray-500" />
-                        </button>
+                        </Button>
                         <h2 className="text-xl font-semibold">{title}</h2>
                     </div>
                 </div>

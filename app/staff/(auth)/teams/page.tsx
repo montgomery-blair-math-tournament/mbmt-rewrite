@@ -6,6 +6,7 @@ import { DIVISIONS } from "@/lib/settings";
 import { TeamDisplay, TeamWithCount } from "@/lib/schema/team";
 import Heading from "@/components/Heading";
 import TeamsTable from "@/components/TeamsTable";
+import Button from "@/components/ui/Button";
 
 export default function TeamsPage() {
     const [teams, setTeams] = useState<TeamDisplay[]>([]);
@@ -54,9 +55,9 @@ export default function TeamsPage() {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <Heading level={1}>Teams</Heading>
-                <button className="bg-rose-800 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover:cursor-pointer">
+                <Button className="bg-rose-800 hover:bg-rose-700 text-white">
                     Add
-                </button>
+                </Button>
             </div>
 
             <TeamsTable teams={teams} loading={loading} />

@@ -9,6 +9,7 @@ import { HiCheck, HiXMark } from "react-icons/hi2";
 import Link from "next/link";
 import RoundCard from "@/components/RoundCard";
 import { toast } from "sonner";
+import Button from "@/components/ui/Button";
 
 import { ParticipantDetail } from "@/lib/schema/participant";
 import { Round } from "@/lib/schema/round";
@@ -137,17 +138,19 @@ export default function ParticipantPage({
                         {participant.firstName} {participant.lastName}
                     </Heading>
                     {participant.checkedIn ? (
-                        <button
+                        <Button
+                            variant="outline"
                             onClick={() => setIsCheckInModalOpen(true)}
-                            className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-400 flex items-center gap-1 hover:bg-green-200 hover:cursor-pointer transition-colors">
-                            <HiCheck className="w-3 h-3" /> Checked In
-                        </button>
+                            className="bg-green-100 text-green-800 border-green-400 hover:bg-green-200 h-6 px-2.5 text-xs">
+                            <HiCheck className="w-3 h-3 mr-1" /> Checked In
+                        </Button>
                     ) : (
-                        <button
+                        <Button
+                            variant="outline"
                             onClick={() => setIsCheckInModalOpen(true)}
-                            className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-400 flex items-center gap-1 hover:bg-gray-200 hover:cursor-pointer transition-colors">
-                            <HiXMark className="w-3 h-3" /> Not Checked In
-                        </button>
+                            className="bg-gray-100 text-gray-800 border-gray-400 hover:bg-gray-200 h-6 px-2.5 text-xs">
+                            <HiXMark className="w-3 h-3 mr-1" /> Not Checked In
+                        </Button>
                     )}
                 </div>
                 <div className="text-gray-500 flex gap-4 mt-2">
