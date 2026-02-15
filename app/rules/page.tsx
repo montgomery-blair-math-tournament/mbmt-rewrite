@@ -6,8 +6,8 @@ import { DIVISIONS } from "@/lib/settings";
 import Heading from "@/components/Heading";
 
 export default function Page() {
-    const upper = DIVISIONS[1].name;
     const lower = DIVISIONS[0].name;
+    const upper = DIVISIONS[1].name;
     return (
         <Main>
             <Heading level={1}>Official Rules</Heading>

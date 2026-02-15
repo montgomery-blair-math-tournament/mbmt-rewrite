@@ -1,11 +1,11 @@
 import React from "react";
 
 export default function Heading({
-    level,
     children,
+    level = 1,
 }: {
-    level: 1 | 2 | 3;
     children?: React.ReactNode;
+    level: 1 | 2 | 3;
 }) {
     if (level == 3) {
         return <h3 className="text-xl mt-1 font-bold font-sans">{children}</h3>;

@@ -1,7 +1,9 @@
+import { REGISTRATION_FORM_LINK } from "@/lib/settings";
+
 export default function RegistrationFormIframe() {
     return (
         <iframe
-            src={`${process.env.NEXT_PUBLIC_FORM_LINK!}?embedded=true`}
+            src={`${REGISTRATION_FORM_LINK}?embedded=true`}
             className="flex-1 bg-white"
             title="Registration form"
             loading="lazy"

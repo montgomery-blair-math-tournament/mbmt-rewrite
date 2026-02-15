@@ -16,5 +16,5 @@ export const DIVISIONS: Record<number, Division> = {
     },
 };
 
-export const upper = "Jacobi";
-export const lower = "Abel";
+export const REGISTRATION_FORM_LINK: string =
+    "https://docs.google.com/forms/d/e/1FAIpQLSfXBDg700tBiwaJcIGGP5cS6liuRKGYhmoq2HqiCyrCE1Owhw/viewform";
