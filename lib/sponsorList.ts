@@ -20,7 +20,13 @@ const sponsorList: {
         name: "Montgomery Blair Magnet Foundation",
         image: MagnetImage,
         link: "http://www.mbhsmagnet.org/",
-        width: 150,
+        width: 200,
+    },
+    {
+        name: "HRT",
+        image: HRTImage,
+        link: "https://hrt.com/",
+        width: 600,
     },
     {
         name: "Art of Problem Solving",
@@ -62,12 +68,6 @@ const sponsorList: {
         name: "Citadel",
         image: CitadelImage,
         link: "https://www.citadel.com/",
-        width: 300,
-    },
-    {
-        name: "HRT",
-        image: HRTImage,
-        link: "https://hrt.com/",
         width: 300,
     },
 ];
