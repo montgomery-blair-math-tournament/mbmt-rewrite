@@ -6,16 +6,16 @@ export default function Link2({
     className,
     href,
     children,
-    ...params
+    ...props
 }: React.ComponentProps<typeof Link>) {
     return (
         <Link
             className={cn(
-                className,
-                "dark:text-blue-400 text-[#2969a1] hover:underline"
+                "dark:text-blue-400 text-[#2969a1] hover:underline",
+                className
             )}
             href={href}
-            {...params}>
+            {...props}>
             {children}
         </Link>
     );

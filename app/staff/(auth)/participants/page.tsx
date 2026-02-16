@@ -11,6 +11,7 @@ import {
 import ParticipantsTable from "@/components/ParticipantsTable";
 import AddParticipantsModal from "@/components/AddParticipantsModal";
 import { toast } from "sonner";
+import HeaderButton from "@/components/HeaderButton";
 
 export default function ParticipantsPage() {
     const [participants, setParticipants] = useState<ParticipantDisplay[]>([]);
@@ -60,14 +61,12 @@ export default function ParticipantsPage() {
     }, [supabase]);
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-center">
                 <Heading level={1}>Participants</Heading>
-                <button
-                    onClick={() => setIsAddModalOpen(true)}
-                    className="bg-rose-800 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover:cursor-pointer">
+                <HeaderButton onClick={() => setIsAddModalOpen(true)}>
                     Add
-                </button>
+                </HeaderButton>
             </div>
 
             <ParticipantsTable participants={participants} loading={loading} />

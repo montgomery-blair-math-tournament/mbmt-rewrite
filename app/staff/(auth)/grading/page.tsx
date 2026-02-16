@@ -73,7 +73,7 @@ export default async function GradingPage() {
     );
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
             <Heading level={1}>Grading</Heading>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {roundsWithStats.map((round) => (

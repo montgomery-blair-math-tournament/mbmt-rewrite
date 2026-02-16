@@ -41,7 +41,9 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} ${slabo27px.variable} ${nunitoSans.variable} antialiased`}>
                 <div className="min-h-screen w-full flex flex-col font-nunito-sans">
                     <Navbar />
-                    <main className="flex flex-col flex-1">{children}</main>
+                    <main className="flex flex-col flex-1 dark:bg-gray-950 bg-gray-50">
+                        {children}
+                    </main>
                     <Toaster richColors />
                 </div>
             </body>

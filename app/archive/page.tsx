@@ -1,29 +1,9 @@
 import Main from "@/components/Main";
 import pastTests, { PastTest } from "../../lib/pastTests";
-import Cell from "@/components/Cell";
 import Link2 from "@/components/Link2";
 import Heading from "@/components/Heading";
 
 export default function Page() {
-    const pastTestsElements = pastTests.map((p) => (
-        <tbody
-            key={p.year}
-            className="odd:bg-gray-200 even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-900 duration-200 hover:bg-rose-200 dark:hover:bg-rose-900">
-            <tr>
-                <Cell rowspan={p.divisions.length}>{p.year}</Cell>
-                <TableRow p={p} index={0} />
-                <Cell rowspan={p.divisions.length}>
-                    {p.funRound ? <FunRoundLink p={p} /> : "-"}
-                </Cell>
-            </tr>
-            {p.divisions.length == 2 && (
-                <tr>
-                    <TableRow p={p} index={1} />
-                </tr>
-            )}
-        </tbody>
-    ));
-
     return (
         <Main>
             <Heading level={1}>Test Archive</Heading>
@@ -36,20 +16,46 @@ export default function Page() {
             </p>
 
             <table className="border-collapse w-fill">
-                <thead className="border-b">
-                    <tr className="font-bold">
-                        <Cell>Year</Cell>
-                        <Cell>Division</Cell>
-                        <Cell>Algebra</Cell>
-                        <Cell>Geometry</Cell>
-                        <Cell>Counting</Cell>
-                        <Cell>Number Theory</Cell>
-                        <Cell>Team</Cell>
-                        <Cell>Guts</Cell>
-                        <Cell>Fun</Cell>
+                {/* header */}
+                <thead>
+                    <tr className="font-bold select-none bg-rose-300/80 dark:bg-rose-900">
+                        <td className="p-2">Year</td>
+                        <td className="p-2">Division</td>
+                        <td className="p-2">Algebra</td>
+                        <td className="p-2">Geometry</td>
+                        <td className="p-2">Counting</td>
+                        <td className="p-2">Number Theory</td>
+                        <td className="p-2">Team</td>
+                        <td className="p-2">Guts</td>
+                        <td className="p-2">Fun</td>
                     </tr>
                 </thead>
-                {pastTestsElements}
+
+                {/* per-year rows */}
+                {pastTests.map((p) => (
+                    <tbody
+                        key={p.year}
+                        className="odd:bg-gray-200 bg-gray-100 odd:dark:bg-gray-800 dark:bg-gray-900 hover:bg-rose-200 dark:hover:bg-rose-900 transition-colors">
+                        <tr>
+                            <td
+                                className="p-2 align-top"
+                                rowSpan={p.divisions.length}>
+                                {p.year}
+                            </td>
+                            <TableRow p={p} index={0} />
+                            <td
+                                className="p-2 align-top"
+                                rowSpan={p.divisions.length}>
+                                {p.funRound ? <FunRoundLink p={p} /> : "-"}
+                            </td>
+                        </tr>
+                        {p.divisions.length == 2 && (
+                            <tr>
+                                <TableRow p={p} index={1} />
+                            </tr>
+                        )}
+                    </tbody>
+                ))}
             </table>
         </Main>
     );
@@ -67,36 +73,39 @@ function TableRow({ p, index }: { p: PastTest; index: number }) {
 
     const divisionName: string = p.divisions[index].toLowerCase();
 
-    const testElements = tests.map((pdf) => (
-        <Cell key={`${p.year}/${divisionName}/${pdf}`}>
-            {p.tests.includes(pdf) ? (
+    const testElements = tests.map((testName) => (
+        <td key={`${p.year}/${divisionName}/${testName}`} className="p-2">
+            {p.tests.includes(testName) ? (
                 <div>
                     <Link2
-                        href={`archive/${p.year}/${divisionName}/${pdf}/problems.pdf`}>
+                        href={`archive/${p.year}/${divisionName}/${testName}/problems.pdf`}>
                         Problems
                     </Link2>
                     <br />
                     <Link2
-                        href={`archive/${p.year}/${divisionName}/${pdf}/solutions.pdf`}>
+                        href={`archive/${p.year}/${divisionName}/${testName}/solutions.pdf`}>
                         Solutions
                     </Link2>
                 </div>
             ) : (
                 "-"
             )}
-        </Cell>
+        </td>
     ));
 
     return (
         <>
-            <Cell>{firstLetterCaps(divisionName)}</Cell>
+            <td className="align-top p-2">{firstLetterCaps(divisionName)}</td>
             {testElements}
         </>
     );
 }
 
-// Must check that p.funRound is non-null
 function FunRoundLink({ p }: { p: PastTest }) {
+    if (p.funRound == null) {
+        return <div></div>;
+    }
+
     return (
         <div>
             {p.funRound!.map((pdf) => (

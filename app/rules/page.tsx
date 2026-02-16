@@ -13,7 +13,7 @@ export default function Page() {
             <Heading level={1}>Official Rules</Heading>
 
             <p>
-                <i>Last updated 02/13/2026</i>
+                <i>Last updated 02/15/2026</i>
             </p>
 
             <p>
@@ -227,7 +227,7 @@ export default function Page() {
                     use the variables as defined in the problem.
                 </li>
                 <li>
-                    &quot;Divisors&quot; refers to positive integral divisors
+                    &quot;Divisors&quot; refers to positive integer divisors
                     unless otherwise specified.
                 </li>
                 <li>

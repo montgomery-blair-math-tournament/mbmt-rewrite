@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Modal from "./Modal";
+import Modal, { ModalButton } from "./ui/Modal";
 import {
     ParticipantDisplay,
     ParticipantDetail,
@@ -9,6 +9,7 @@ import {
 import { Round } from "@/lib/schema/round";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { redirect } from "next/navigation";
 
 export default function CheckInModal({
     isOpen,
@@ -30,7 +31,7 @@ export default function CheckInModal({
         return !!participant && !("individualRounds" in participant);
     });
 
-    const onCheckIn = async () => {
+    async function onCheckIn() {
         try {
             const { error } = await supabase
                 .from("participant")
@@ -40,14 +41,39 @@ export default function CheckInModal({
             if (error) throw error;
         } catch (error) {
             console.error(error);
-            toast.error("Failed to check in participant");
+            toast.error(
+                `Failed to check in participant ${participant?.firstName} ${participant?.lastName}`
+            );
             return;
         }
         toast.success(
             `${participant?.firstName} ${participant?.lastName} checked in successfully`
         );
         onClose();
-    };
+        redirect("/staff/participants");
+    }
+
+    async function onCancelCheckIn() {
+        try {
+            const { error } = await supabase
+                .from("participant")
+                .update({ checked_in: false })
+                .eq("id", participant?.id);
+
+            if (error) throw error;
+        } catch (error) {
+            console.error(error);
+            toast.error(
+                `Failed to cancel check in for participant ${participant?.firstName} ${participant?.lastName}`
+            );
+            return;
+        }
+        toast.success(
+            `Successfully canceled check in for ${participant?.firstName} ${participant?.lastName}`
+        );
+        onClose();
+        redirect("/staff/participants");
+    }
 
     useEffect(() => {
         const fetchRounds = async () => {
@@ -94,81 +120,100 @@ export default function CheckInModal({
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title={`Check in for ${participant.firstName} ${participant.lastName}`}
+            title={`${participant.checkedIn ? "Cancelling check in" : "Check in"} for ${participant.firstName} ${participant.lastName}`}
             className="w-full max-w-2xl h-auto max-h-[90vh]"
             footer={
                 <>
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
+                    <ModalButton variant="primary" onClick={onClose}>
                         Cancel
-                    </button>
-                    <button
-                        onClick={onCheckIn}
-                        className="px-4 py-2 text-sm font-medium text-white bg-rose-800 rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
-                        Check In
-                    </button>
+                    </ModalButton>
+                    <ModalButton
+                        variant="themed"
+                        onClick={() =>
+                            participant.checkedIn
+                                ? onCancelCheckIn()
+                                : onCheckIn()
+                        }>
+                        {!participant.checkedIn
+                            ? "Check In"
+                            : "Cancel Check In"}
+                    </ModalButton>
                 </>
             }>
-            <div className="space-y-6">
-                <div>
-                    <h3 className="text-rose-500 font-semibold mb-3">
-                        Read and follow the script:
-                    </h3>
+            <div>
+                {!participant.checkedIn && (
+                    <div>
+                        <h3 className="text-rose-600 dark:text-rose-400 font-semibold mb-3">
+                            Read and follow the script:
+                        </h3>
 
-                    <div className="space-y-4 text-base leading-relaxed text-gray-800">
-                        <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md font-medium">
+                        <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-800 dark:text-gray-200">
+                            <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-600 text-yellow-900 dark:text-yellow-100 p-3 rounded-md">
+                                <p>
+                                    Confirm they are{" "}
+                                    <strong>
+                                        {participant.firstName}{" "}
+                                        {participant.lastName}
+                                    </strong>{" "}
+                                    from <strong>{participant.school}</strong>{" "}
+                                    in Grade{" "}
+                                    <strong>{participant.grade}</strong>.
+                                </p>
+                            </div>
+
                             <p>
-                                Confirm they are{" "}
+                                Your participant ID is{" "}
+                                <strong>{participant.displayId}</strong> and
+                                your team ID is{" "}
                                 <strong>
-                                    {participant.firstName}{" "}
-                                    {participant.lastName}
-                                </strong>{" "}
-                                from <strong>{participant.school}</strong> in
-                                Grade <strong>{participant.grade}</strong>.
-                            </p>
-                        </div>
-
-                        <p>
-                            Your participant ID is{" "}
-                            <strong>{participant.displayId}</strong> and your
-                            team ID is{" "}
-                            <strong>
-                                T{participant.division[0]}
-                                {participant.teamId}
-                            </strong>
-                            .
-                        </p>
-
-                        <p>
-                            You are on <strong>{participant.team}</strong> in
-                            the <strong>{participant.division}</strong>{" "}
-                            division.
-                        </p>
-
-                        <p>
-                            You will be taking the following individual rounds:{" "}
-                            <strong>{roundListContent}</strong>.
-                        </p>
-
-                        <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md font-medium">
-                            <p>
-                                Find{" "}
-                                <strong>
-                                    {participant.firstName}{" "}
-                                    {participant.lastName}
+                                    T{participant.division[0]}
+                                    {participant.teamId}
                                 </strong>
-                                's sticker. Hand over welcome packet.
+                                .
+                            </p>
+
+                            <p>
+                                You are on <strong>{participant.team}</strong>{" "}
+                                in the <strong>{participant.division}</strong>{" "}
+                                division.
+                            </p>
+
+                            <p>
+                                You will be taking the following individual
+                                rounds: <strong>{roundListContent}</strong>.
+                            </p>
+
+                            <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-600 text-yellow-900 dark:text-yellow-100 p-3 rounded-md">
+                                <p>
+                                    Find{" "}
+                                    <strong>
+                                        {participant.firstName}{" "}
+                                        {participant.lastName}
+                                    </strong>
+                                    's sticker. Hand over welcome packet.
+                                </p>
+                            </div>
+
+                            <p>
+                                Please wear your sticker. It contains your table
+                                numbers. You can use the map in the packet to
+                                find your team table.
                             </p>
                         </div>
-
-                        <p>
-                            Please wear your sticker. It contains your table
-                            numbers. You can use the map in the packet to find
-                            your team table.
-                        </p>
                     </div>
-                </div>
+                )}
+                {participant.checkedIn && (
+                    <div className="flex flex-col gap-2">
+                        <p>
+                            Participant name: {participant.firstName}{" "}
+                            {participant.lastName}
+                        </p>
+                        <p>Team: {participant.team}</p>
+                        <p>Division: {participant.division}</p>
+                        <p>School: {participant.school}</p>
+                        <p>Grade: {participant.grade}</p>
+                    </div>
+                )}
             </div>
         </Modal>
     );

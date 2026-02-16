@@ -1,23 +1,36 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
 export default function Heading({
-    children,
+    className,
     level = 1,
+    ...props
 }: {
-    children?: React.ReactNode;
     level: 1 | 2 | 3;
-}) {
+} & React.ComponentProps<"h1" | "h2" | "h3">) {
     if (level == 3) {
-        return <h3 className="text-xl mt-1 font-bold font-sans">{children}</h3>;
+        return (
+            <h3
+                className={cn("text-xl mt-1 font-bold font-sans", className)}
+                {...props}
+            />
+        );
     } else if (level == 2) {
         return (
-            <h2 className="text-2xl mt-2 font-bold font-sans">{children}</h2>
+            <h2
+                className={cn("text-2xl mt-2 font-bold font-sans", className)}
+                {...props}
+            />
         );
     } else {
         return (
-            <h1 className="text-4xl mt-4 mb-2 font-bold font-sans">
-                {children}
-            </h1>
+            <h1
+                className={cn(
+                    "text-4xl mt-4 mb-2 font-bold font-sans",
+                    className
+                )}
+                {...props}
+            />
         );
     }
 }
