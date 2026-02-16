@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Table, {
     TableBody,
+    TableButton,
     TableCell,
     TableHead,
     TableHeader,
@@ -12,6 +13,7 @@ import { HiOutlinePencil, HiCheck } from "react-icons/hi2";
 import Link from "next/link";
 import { ParticipantDisplay } from "@/lib/schema/participant";
 import CheckInModal from "./CheckInModal";
+import { redirect } from "next/navigation";
 
 export default function ParticipantsTable({
     participants,
@@ -32,12 +34,12 @@ export default function ParticipantsTable({
     };
 
     return (
-        <div className="border rounded-md">
+        <>
             <Table>
                 <TableHeader>
                     <TableRow>
                         {!readonly && <TableHead className="w-20"></TableHead>}
-                        <TableHead>Check In</TableHead>
+                        <TableHead>Checked In</TableHead>
                         <TableHead>ID</TableHead>
                         <TableHead>First Name</TableHead>
                         <TableHead>Last Name</TableHead>
@@ -67,23 +69,25 @@ export default function ParticipantsTable({
                         </TableRow>
                     ) : (
                         participants.map((p) => (
-                            <TableRow
-                                key={p.id}
-                                className="group hover:bg-gray-50">
+                            <TableRow key={p.id} className="group">
                                 {!readonly && (
                                     <TableCell className="p-2">
                                         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button
-                                                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:cursor-pointer"
-                                                title="Edit">
-                                                <HiOutlinePencil className="w-4 h-4" />
-                                            </button>
-                                            <button
+                                            <TableButton title="Edit">
+                                                <HiOutlinePencil
+                                                    className="w-4 h-4"
+                                                    onClick={() =>
+                                                        redirect(
+                                                            `/staff/participants/${p.id}`
+                                                        )
+                                                    }
+                                                />
+                                            </TableButton>
+                                            <TableButton
                                                 onClick={() => handleCheckIn(p)}
-                                                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:cursor-pointer"
                                                 title="Check In">
                                                 <HiCheck className="w-4 h-4" />
-                                            </button>
+                                            </TableButton>
                                         </div>
                                     </TableCell>
                                 )}
@@ -119,6 +123,6 @@ export default function ParticipantsTable({
                 onClose={() => setIsCheckInModalOpen(false)}
                 participant={selectedParticipant}
             />
-        </div>
+        </>
     );
 }

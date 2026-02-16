@@ -6,6 +6,7 @@ import { DIVISIONS } from "@/lib/settings";
 import { TeamDisplay, TeamWithCount } from "@/lib/schema/team";
 import Heading from "@/components/Heading";
 import TeamsTable from "@/components/TeamsTable";
+import HeaderButton from "@/components/HeaderButton";
 
 export default function TeamsPage() {
     const [teams, setTeams] = useState<TeamDisplay[]>([]);
@@ -51,12 +52,10 @@ export default function TeamsPage() {
     }, [supabase]);
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-center">
                 <Heading level={1}>Teams</Heading>
-                <button className="bg-rose-800 text-white px-4 py-2 rounded-md hover:bg-rose-700 hover:cursor-pointer">
-                    Add
-                </button>
+                <HeaderButton onClick={() => {}}>Add</HeaderButton>
             </div>
 
             <TeamsTable teams={teams} loading={loading} />

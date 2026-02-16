@@ -1,4 +1,3 @@
-import Cell from "@/components/Cell";
 import Main from "@/components/Main";
 import Heading from "@/components/Heading";
 import Image from "next/image";
@@ -21,19 +20,19 @@ export default function Page() {
             <table className="text-center text-xl">
                 <tbody>
                     <tr>
-                        <Cell>Mahilan Guha</Cell>
-                        <Cell>Yunyi Ling</Cell>
-                        <Cell>Michelle Gao</Cell>
+                        <td className="text-xl pb-2">Mahilan Guha</td>
+                        <td className="text-xl pb-2">Yunyi Ling</td>
+                        <td className="text-xl pb-2">Michelle Gao</td>
                     </tr>
                     <tr>
-                        <Cell>Evan Zhang</Cell>
-                        <Cell>Reanna Jin</Cell>
-                        <Cell>Alex Zhao</Cell>
+                        <td className="text-xl pb-2">Evan Zhang</td>
+                        <td className="text-xl pb-2">Reanna Jin</td>
+                        <td className="text-xl pb-2">Alex Zhao</td>
                     </tr>
                     <tr>
-                        <Cell>Kele Zhang</Cell>
-                        <Cell>Ashley Zhang</Cell>
-                        <Cell>Jesse Jing</Cell>
+                        <td className="text-xl pb-2">Kele Zhang</td>
+                        <td className="text-xl pb-2">Ashley Zhang</td>
+                        <td className="text-xl pb-2">Jesse Jing</td>
                     </tr>
                 </tbody>
             </table>
@@ -53,8 +52,8 @@ export default function Page() {
             <p>
                 This website was developed by Alex Zhao &apos;26 (Github:
                 @zeyuanzhao) and Kiran Oliver &apos;28 (Github: @penguen01). A
-                majority of the content on these webpages was written by Noah
-                Singer &apos;18 (Github: @singerng) and Noah Kim &apos;18
+                large portion of the content on these webpages was written by
+                Noah Singer &apos;18 (Github: @singerng) and Noah Kim &apos;18
                 (Github: @noahbkim). Both this website and the grading server
                 are hosted on <Link2 href="https://vercel.com">Vercel</Link2>.{" "}
                 The code is not currently on GitHub, but will be in the future.
@@ -63,9 +62,9 @@ export default function Page() {
             <Heading level={2}>Sponsors</Heading>
             <p>
                 MBMT is sponsored by the Montgomery Blair Magnet Foundation,
-                Wolfram Mathematica, Art of Problem Solving, MCPS Food &
-                Nutrition Services, AwesomeMath, Jane Street, Desmos, and LIVE
-                by Po-Shen Loh.
+                Hudson River Trading, Art of Problem Solving, Wolfram, Jane
+                Street, MCPS Food & Nutrition Services, AwesomeMath, Jump
+                Trading, and Citadel/Citadel Securities.
             </p>
             <div className="flex flex-wrap justify-around gap-2 items-center">
                 {sponsorList.map(({ name, image, link, width }) => (

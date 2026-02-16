@@ -1,5 +1,6 @@
 import Table, {
     TableBody,
+    TableButton,
     TableCell,
     TableHead,
     TableHeader,
@@ -17,63 +18,57 @@ export default function TeamsTable({
     loading: boolean;
 }) {
     return (
-        <div className="border rounded-md">
-            <Table>
-                <TableHeader>
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    <TableHead className="w-20"></TableHead>
+                    <TableHead>ID</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>School</TableHead>
+                    <TableHead>Chaperone</TableHead>
+                    <TableHead>Division</TableHead>
+                    <TableHead>Players</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {loading ? (
                     <TableRow>
-                        <TableHead className="w-20"></TableHead>
-                        <TableHead>ID</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>School</TableHead>
-                        <TableHead>Chaperone</TableHead>
-                        <TableHead>Division</TableHead>
-                        <TableHead>Size</TableHead>
+                        <TableCell colSpan={7} className="text-center h-24">
+                            Loading...
+                        </TableCell>
                     </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {loading ? (
-                        <TableRow>
-                            <TableCell colSpan={7} className="text-center h-24">
-                                Loading...
+                ) : teams.length === 0 ? (
+                    <TableRow>
+                        <TableCell colSpan={7} className="text-center h-24">
+                            No teams found.
+                        </TableCell>
+                    </TableRow>
+                ) : (
+                    teams.map((t) => (
+                        <TableRow key={t.id} className="group">
+                            <TableCell>
+                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <TableButton title="Edit">
+                                        <HiOutlinePencil className="w-4 h-4" />
+                                    </TableButton>
+                                </div>
                             </TableCell>
-                        </TableRow>
-                    ) : teams.length === 0 ? (
-                        <TableRow>
-                            <TableCell colSpan={7} className="text-center h-24">
-                                No teams found.
+                            <TableCell>
+                                <Link
+                                    href={`/staff/teams/${t.id}`}
+                                    className="hover:underline text-rose-600 hover:text-rose-800">
+                                    {t.displayId}
+                                </Link>
                             </TableCell>
+                            <TableCell>{t.name}</TableCell>
+                            <TableCell>{t.school}</TableCell>
+                            <TableCell>{t.chaperone}</TableCell>
+                            <TableCell>{t.division}</TableCell>
+                            <TableCell>{t.size}</TableCell>
                         </TableRow>
-                    ) : (
-                        teams.map((t) => (
-                            <TableRow
-                                key={t.id}
-                                className="group hover:bg-gray-50">
-                                <TableCell className="p-2">
-                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button
-                                            className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:cursor-pointer"
-                                            title="Edit">
-                                            <HiOutlinePencil className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <Link
-                                        href={`/staff/teams/${t.id}`}
-                                        className="hover:underline text-rose-600 hover:text-rose-800">
-                                        {t.displayId}
-                                    </Link>
-                                </TableCell>
-                                <TableCell>{t.name}</TableCell>
-                                <TableCell>{t.school}</TableCell>
-                                <TableCell>{t.chaperone}</TableCell>
-                                <TableCell>{t.division}</TableCell>
-                                <TableCell>{t.size}</TableCell>
-                            </TableRow>
-                        ))
-                    )}
-                </TableBody>
-            </Table>
-        </div>
+                    ))
+                )}
+            </TableBody>
+        </Table>
     );
 }

@@ -2,6 +2,7 @@ import Heading from "@/components/Heading";
 import Link2 from "@/components/Link2";
 import Main from "@/components/Main";
 import RegistrationFormIframe from "@/components/RegistrationFormIframe";
+import { REGISTRATION_FORM_LINK } from "@/lib/settings";
 
 export default function Page() {
     return (
@@ -13,11 +14,8 @@ export default function Page() {
                 chairs to act as sponsors; however, any adult who is willing to
                 supervise the team is fine.
                 <br />
-                {/* <Link2 href={process.env.NEXT_PUBLIC_FORM_LINK!}>
-                    Click me to open the registration form...
-                </Link2> */}
                 Register below, or{" "}
-                <Link2 href={process.env.NEXT_PUBLIC_FORM_LINK ?? "#"}>
+                <Link2 href={REGISTRATION_FORM_LINK} target="_blank">
                     open in a new tab
                 </Link2>
                 :
