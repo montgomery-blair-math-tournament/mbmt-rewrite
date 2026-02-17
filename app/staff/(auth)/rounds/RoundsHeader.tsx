@@ -3,7 +3,7 @@
 import Heading from "@/components/Heading";
 import { HiPlus } from "react-icons/hi2";
 import { useState } from "react";
-import CreateRoundModal from "@/components/CreateRoundModal";
+import CreateRoundModal from "./CreateRoundModal";
 import HeaderButton from "@/components/HeaderButton";
 
 export default function RoundsHeader() {
@@ -12,11 +12,9 @@ export default function RoundsHeader() {
     return (
         <div className="flex items-center justify-between">
             <Heading level={1}>Rounds</Heading>
-            <HeaderButton
-                onClick={() => setIsCreateModalOpen(true)}
-                className="inline-flex text-sm gap-2 leading-4">
+            <HeaderButton onClick={() => setIsCreateModalOpen(true)}>
                 <HiPlus className="h-4 w-4" />
-                Add Round
+                Add
             </HeaderButton>
             <CreateRoundModal
                 isOpen={isCreateModalOpen}

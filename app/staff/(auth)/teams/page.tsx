@@ -5,8 +5,9 @@ import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/settings";
 import { TeamDisplay, TeamWithCount } from "@/lib/schema/team";
 import Heading from "@/components/Heading";
-import TeamsTable from "@/components/TeamsTable";
+import TeamsTable from "./TeamsTable";
 import HeaderButton from "@/components/HeaderButton";
+import { HiPlus } from "react-icons/hi2";
 
 export default function TeamsPage() {
     const [teams, setTeams] = useState<TeamDisplay[]>([]);
@@ -55,7 +56,9 @@ export default function TeamsPage() {
         <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
                 <Heading level={1}>Teams</Heading>
-                <HeaderButton onClick={() => {}}>Add</HeaderButton>
+                <HeaderButton onClick={() => {}}>
+                    <HiPlus className="w-4 h-4" /> Add
+                </HeaderButton>
             </div>
 
             <TeamsTable teams={teams} loading={loading} />

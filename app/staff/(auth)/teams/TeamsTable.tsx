@@ -9,6 +9,7 @@ import Table, {
 import { HiOutlinePencil } from "react-icons/hi2";
 import { TeamDisplay } from "@/lib/schema/team";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default function TeamsTable({
     teams,
@@ -44,27 +45,34 @@ export default function TeamsTable({
                         </TableCell>
                     </TableRow>
                 ) : (
-                    teams.map((t) => (
-                        <TableRow key={t.id} className="group">
+                    teams.map((team) => (
+                        <TableRow key={team.id} className="group">
                             <TableCell>
                                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <TableButton title="Edit">
-                                        <HiOutlinePencil className="w-4 h-4" />
+                                        <HiOutlinePencil
+                                            className="w-4 h-4"
+                                            onClick={() =>
+                                                redirect(
+                                                    `/staff/teams/${team.id}`
+                                                )
+                                            }
+                                        />
                                     </TableButton>
                                 </div>
                             </TableCell>
                             <TableCell>
                                 <Link
-                                    href={`/staff/teams/${t.id}`}
+                                    href={`/staff/teams/${team.id}`}
                                     className="hover:underline text-rose-600 hover:text-rose-800">
-                                    {t.displayId}
+                                    {team.displayId}
                                 </Link>
                             </TableCell>
-                            <TableCell>{t.name}</TableCell>
-                            <TableCell>{t.school}</TableCell>
-                            <TableCell>{t.chaperone}</TableCell>
-                            <TableCell>{t.division}</TableCell>
-                            <TableCell>{t.size}</TableCell>
+                            <TableCell>{team.name}</TableCell>
+                            <TableCell>{team.school}</TableCell>
+                            <TableCell>{team.chaperone}</TableCell>
+                            <TableCell>{team.division}</TableCell>
+                            <TableCell>{team.size}</TableCell>
                         </TableRow>
                     ))
                 )}

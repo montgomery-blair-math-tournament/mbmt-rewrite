@@ -59,21 +59,31 @@ export default function Modal({
 export function ModalButton({
     variant,
     className,
+    disabled,
     ...props
 }: {
     variant: "primary" | "secondary" | "themed";
+    disabled?: boolean;
 } & React.ComponentProps<"button">) {
     return (
         <button
             className={cn(
-                "px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer",
+                "px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none",
                 {
-                    "text-white bg-rose-600 dark:bg-rose-800 hover:bg-rose-700 ":
+                    "opacity-50": disabled,
+                    "focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer":
+                        !disabled,
+                    "text-white bg-rose-600 dark:bg-rose-800":
                         variant === "themed",
-                    "text-gray-700 dark:text-gray-200 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700":
+                    "hover:bg-rose-700": variant === "themed" && !disabled,
+                    "text-gray-700 dark:text-gray-200 bg-gray-200 dark:bg-gray-800":
                         variant === "primary",
-                    "text-gray-200 dark:text-gray-700 bg-gray-800 dark:bg-gray-300 hover:bg-gray-700 dark:hover:bg-gray-200":
+                    "hover:bg-gray-300 dark:hover:bg-gray-700":
+                        variant === "primary" && !disabled,
+                    "text-gray-200 dark:text-gray-700 bg-gray-800 dark:bg-gray-300":
                         variant === "secondary",
+                    "hover:bg-gray-700 dark:hover:bg-gray-200":
+                        variant === "secondary" && !disabled,
                 },
                 className
             )}

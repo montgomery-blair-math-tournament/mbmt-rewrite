@@ -25,6 +25,7 @@ export async function upsertProblem(data: Partial<Problem>) {
         .from("problem")
         .upsert(data)
         .select()
+        .limit(1)
         .single();
 
     if (error) {

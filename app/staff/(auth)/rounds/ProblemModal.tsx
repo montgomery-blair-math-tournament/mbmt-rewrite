@@ -3,7 +3,7 @@
 import Modal from "@/components/ui/Modal";
 import { Problem } from "@/lib/schema/problem";
 import { useState, useEffect } from "react";
-import { upsertProblem } from "@/app/staff/(auth)/rounds/[id]/actions";
+import { upsertProblem } from "./[id]/actions";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
 import Label from "@/components/ui/Label";
 import { toast } from "sonner";
@@ -73,7 +73,7 @@ export default function ProblemModal({
             isOpen={isOpen}
             onClose={onClose}
             title={isEditing ? "Edit Problem" : "Add Problem"}
-            className="w-[600px] h-auto"
+            className="w-150 h-auto"
             footer={
                 <>
                     <button
@@ -89,7 +89,7 @@ export default function ProblemModal({
                     </button>
                 </>
             }>
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
                 <div>
                     <Label className="mb-2 block">Number</Label>
                     <input
@@ -104,7 +104,7 @@ export default function ProblemModal({
                 <div>
                     <Label className="mb-2 block">Type</Label>
                     <RadioGroup value={type} onValueChange={setType}>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center gap-2">
                             <RadioGroupItem
                                 value="boolean"
                                 id="ptype-boolean"
@@ -113,7 +113,7 @@ export default function ProblemModal({
                                 Correct/Incorrect
                             </Label>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center gap-2">
                             <RadioGroupItem value="custom" id="ptype-custom" />
                             <Label htmlFor="ptype-custom">Custom</Label>
                         </div>

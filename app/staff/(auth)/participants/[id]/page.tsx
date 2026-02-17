@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/settings";
 import Heading from "@/components/Heading";
 
-import { HiCheck, HiXMark } from "react-icons/hi2";
 import Link from "next/link";
 import RoundCard from "@/components/RoundCard";
 import { toast } from "sonner";
@@ -13,7 +12,7 @@ import { toast } from "sonner";
 import { ParticipantDetail } from "@/lib/schema/participant";
 import { Round } from "@/lib/schema/round";
 import CheckInModal from "@/components/CheckInModal";
-import { cn } from "@/lib/utils";
+import SuccessBadge from "@/components/SuccessBadge";
 
 export default function ParticipantPage({
     params,
@@ -36,6 +35,7 @@ export default function ParticipantPage({
                 .from("participant")
                 .select("*")
                 .eq("id", id)
+                .limit(1)
                 .single();
 
             if (pError || !pData) {
@@ -51,6 +51,7 @@ export default function ParticipantPage({
                     .from("team")
                     .select("id, name, school, division, chaperone")
                     .eq("id", pData.team_id)
+                    .limit(1)
                     .single();
 
                 if (!tError) {
@@ -140,9 +141,14 @@ export default function ParticipantPage({
                         {participant.firstName} {participant.lastName}
                     </h1>
 
-                    <CheckedInButton
-                        onClick={() => setIsCheckInModalOpen(true)}
-                        checkedIn={participant.checkedIn}
+                    <SuccessBadge
+                        success={participant.checkedIn}
+                        onClick={() =>
+                            !participant.checkedIn &&
+                            setIsCheckInModalOpen(true)
+                        }
+                        successText="Checked In"
+                        failText="Not Checked In"
                     />
                 </div>
                 <div className="text-gray-700 dark:text-gray-300 flex gap-4 mt-2">
@@ -164,7 +170,7 @@ export default function ParticipantPage({
 
             {/* Individual rounds */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                     <Heading level={2}>Individual Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">
                         {participant.individualRounds.length === 0 ? (
@@ -180,7 +186,7 @@ export default function ParticipantPage({
                 </div>
 
                 {/* Team rounds */}
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                     <Heading level={2}>Team Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">
                         {participant.teamRounds.length === 0 ? (
@@ -202,35 +208,5 @@ export default function ParticipantPage({
                 participant={participant}
             />
         </div>
-    );
-}
-
-function CheckedInButton({
-    checkedIn = false,
-    className,
-    ...props
-}: { checkedIn: boolean } & React.ComponentProps<"button">) {
-    return (
-        <button
-            className={cn(
-                {
-                    "bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-400 flex items-center gap-1 hover:bg-green-200 hover:cursor-pointer transition-colors":
-                        checkedIn,
-                    "bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-400 flex items-center gap-1 hover:bg-gray-300 hover:cursor-pointer transition-colors":
-                        !checkedIn,
-                },
-                className
-            )}
-            {...props}>
-            {checkedIn ? (
-                <>
-                    <HiCheck className="w-3 h-3" /> Checked In
-                </>
-            ) : (
-                <>
-                    <HiXMark className="w-3 h-3" /> Not Checked In
-                </>
-            )}
-        </button>
     );
 }

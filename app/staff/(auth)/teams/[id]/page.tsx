@@ -31,37 +31,39 @@ export default function TeamPage({
 
             setLoading(true);
 
-            const { data: tData, error: tError } = await supabase
+            const { data: teamData, error: teamError } = await supabase
                 .from("team")
                 .select("*")
                 .eq("id", id)
+                .limit(1)
                 .single();
 
-            if (tError || !tData) {
-                console.error("Error fetching team:", tError);
+            if (teamError || !teamData) {
+                console.error("Error fetching team:", teamError);
                 toast.error("Error fetching team");
                 setLoading(false);
                 return;
             }
 
-            const { data: mData, error: mError } = await supabase
-                .from("participant")
-                .select("*")
-                .eq("team_id", id);
+            const { data: participantData, error: participantError } =
+                await supabase
+                    .from("participant")
+                    .select("*")
+                    .eq("team_id", id);
 
-            if (mError) {
-                console.error("Error fetching members:", mError);
+            if (participantError) {
+                console.error("Error fetching members:", participantError);
                 toast.error("Error fetching members");
             }
 
-            const { data: trData } = await supabase
+            const { data: teamRoundData } = await supabase
                 .from("team_round")
                 .select("round_id")
                 .eq("team_id", id);
 
             let rounds: Round[] = [];
-            if (trData && trData.length > 0) {
-                const roundIds = trData.map((r) => r.round_id);
+            if (teamRoundData && teamRoundData.length > 0) {
+                const roundIds = teamRoundData.map((r) => r.round_id);
                 const { data: rData } = await supabase
                     .from("round")
                     .select("id, name, division, type")
@@ -72,35 +74,37 @@ export default function TeamPage({
                 }
             }
 
-            const divisionInfo = DIVISIONS[tData.division] || DIVISIONS[0];
+            const divisionInfo = DIVISIONS[teamData.division] || DIVISIONS[0];
 
             setTeam({
-                id: tData.id,
-                name: tData.name,
-                school: tData.school,
-                division: tData.division,
-                chaperone: tData.chaperone,
-                chaperoneEmail: tData.chaperone_email,
-                chaperonePhone: tData.chaperone_phone,
-                displayId: `T${divisionInfo.prefix}${tData.id}`,
+                id: teamData.id,
+                name: teamData.name,
+                school: teamData.school,
+                division: teamData.division,
+                chaperone: teamData.chaperone,
+                chaperoneEmail: teamData.chaperone_email,
+                chaperonePhone: teamData.chaperone_phone,
+                displayId: `T${divisionInfo.prefix}${teamData.id}`,
             });
 
-            if (mData) {
-                const mappedMembers: ParticipantDisplay[] = mData.map((m) => {
-                    return {
-                        id: m.id,
-                        displayId: `${divisionInfo.prefix}${m.id}`,
-                        firstName: m.first_name,
-                        lastName: m.last_name,
-                        division: divisionInfo.name,
-                        grade: m.grade,
-                        school: tData.school,
-                        team: tData.name,
-                        chaperone: tData.chaperone,
-                        checkedIn: m.checked_in,
-                        teamId: tData.id,
-                    };
-                });
+            if (participantData) {
+                const mappedMembers: ParticipantDisplay[] = participantData.map(
+                    (m) => {
+                        return {
+                            id: m.id,
+                            displayId: `${divisionInfo.prefix}${m.id}`,
+                            firstName: m.first_name,
+                            lastName: m.last_name,
+                            division: divisionInfo.name,
+                            grade: m.grade,
+                            school: teamData.school,
+                            team: teamData.name,
+                            chaperone: teamData.chaperone,
+                            checkedIn: m.checked_in,
+                            teamId: teamData.id,
+                        };
+                    }
+                );
                 setMembers(mappedMembers);
             }
 
@@ -117,7 +121,7 @@ export default function TeamPage({
     const divisionInfo = DIVISIONS[team.division] || DIVISIONS[0];
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
             <div>
                 <div className="mb-2">
                     <Link
@@ -140,12 +144,12 @@ export default function TeamPage({
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-4">
+                <div className="lg:col-span-2 flex flex-col gap-4">
                     <Heading level={2}>Members</Heading>
                     <ParticipantsTable participants={members} loading={false} />
                 </div>
 
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                     <Heading level={2}>Team Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">
                         {teamRounds.length === 0 ? (

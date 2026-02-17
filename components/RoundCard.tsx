@@ -50,7 +50,7 @@ export default function RoundCard({
                         </div>
                     )}
                     {showDetails && (
-                        <div className="space-y-2 mt-2">
+                        <div className="flex flex-col gap-2 mt-2">
                             {numQuestions !== undefined && (
                                 <div className="flex justify-between items-center">
                                     <span className="text-sm font-medium text-gray-500">

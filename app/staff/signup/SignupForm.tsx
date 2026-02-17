@@ -14,8 +14,11 @@ import {
 import Input from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import Link2 from "@/components/Link2";
+import { signUp } from "./actions";
 
 export default function SignupForm() {
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -23,18 +26,20 @@ export default function SignupForm() {
     const router = useRouter();
     const supabase = createClient();
 
-    const handleSignup = async (e: React.FormEvent) => {
+    const handleSignup = async (e: React.SubmitEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
-        const { error } = await supabase.auth.signUp({
+        const { error: signUpError } = await signUp({
             email,
             password,
+            firstName,
+            lastName,
         });
 
-        if (error) {
-            setError(error.message);
+        if (signUpError) {
+            setError(signUpError.message);
             setLoading(false);
         } else {
             const { error: signInError } =
@@ -61,13 +66,15 @@ export default function SignupForm() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleSignup} className="space-y-4">
+                    <form
+                        onSubmit={handleSignup}
+                        className="flex flex-col gap-4">
                         {error && (
                             <div className="text-sm font-medium text-destructive text-center p-2 rounded bg-destructive/10">
                                 {error}
                             </div>
                         )}
-                        <div className="space-y-2">
+                        <div className="flex flex-col gap-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
                                 id="email"
@@ -78,7 +85,35 @@ export default function SignupForm() {
                                 disabled={loading}
                             />
                         </div>
-                        <div className="space-y-2">
+                        <div className="flex gap-4">
+                            <div className="flex flex-col gap-2">
+                                <Label htmlFor="firstName">First Name</Label>
+                                <Input
+                                    id="firstName"
+                                    type="text"
+                                    required
+                                    value={firstName}
+                                    onChange={(e) =>
+                                        setFirstName(e.target.value)
+                                    }
+                                    disabled={loading}
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Label htmlFor="lastName">Last Name</Label>
+                                <Input
+                                    id="lastName"
+                                    type="text"
+                                    required
+                                    value={lastName}
+                                    onChange={(e) =>
+                                        setLastName(e.target.value)
+                                    }
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
                             <Label htmlFor="password">Password</Label>
                             <Input
                                 id="password"

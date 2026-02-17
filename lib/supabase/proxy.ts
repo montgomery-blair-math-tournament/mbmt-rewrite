@@ -37,6 +37,7 @@ export async function updateSession(request: NextRequest) {
     if (
         !user &&
         !request.nextUrl.pathname.startsWith("/staff/login") &&
+        !request.nextUrl.pathname.startsWith("/staff/signup") && // Remove this line to disable signing up (competition day)
         request.nextUrl.pathname.startsWith("/staff")
     ) {
         // no user, potentially respond by redirecting the user to the login page

@@ -1,36 +1,42 @@
 "use client";
 
-import Modal from "@/components/ui/Modal";
-import { Round } from "@/lib/schema/round";
+import Modal, { ModalButton } from "@/components/ui/Modal";
 import { useState } from "react";
-import { updateRound } from "@/app/staff/(auth)/rounds/[id]/actions";
+import { createRound } from "./actions";
 import { DIVISIONS } from "@/lib/settings";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
 import Label from "@/components/ui/Label";
 
-export default function EditRoundModal({
-    round,
+export default function CreateRoundModal({
     isOpen,
     onClose,
 }: {
-    round: Round;
     isOpen: boolean;
     onClose: () => void;
 }) {
-    const [name, setName] = useState(round.name);
-    const [division, setDivision] = useState(round.division);
-    const [type, setType] = useState(round.type);
+    const [name, setName] = useState("");
+    const [division, setDivision] = useState<number | null>(null);
+    const [type, setType] = useState<string>("individual");
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
+        if (!name || division === null) {
+            toast.error("Please fill in name and division");
+            return;
+        }
+
         setLoading(true);
         try {
-            await updateRound(round.id, { name, division, type });
+            await createRound({ name, division, type });
+            toast.success("Round created");
+            setName("");
+            setDivision(null);
+            setType("individual");
             onClose();
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
-            toast.error("Failed to update round");
+            toast.error("Failed to create round: " + e.message);
         } finally {
             setLoading(false);
         }
@@ -40,48 +46,45 @@ export default function EditRoundModal({
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title={`Edit Round: ${round.name}`}
+            title="Create New Round"
             className="w-125 h-auto"
             footer={
                 <>
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
+                    <ModalButton onClick={onClose} variant="primary">
                         Cancel
-                    </button>
-                    <button
+                    </ModalButton>
+                    <ModalButton
                         onClick={handleSubmit}
                         disabled={loading}
-                        className="px-4 py-2 text-sm font-medium text-white bg-rose-600 border border-transparent rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 disabled:opacity-50 hover:cursor-pointer">
-                        {loading ? "Saving..." : "Edit"}
-                    </button>
+                        variant="themed">
+                        {loading ? "Creating..." : "Create"}
+                    </ModalButton>
                 </>
             }>
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
                 <div>
                     <Label className="mb-2 block">Name</Label>
                     <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500 sm:text-sm border p-2"
+                        placeholder="e.g. Algebra"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 outline-none sm:text-sm border p-2"
                     />
                 </div>
 
                 <div>
                     <Label className="mb-2 block">Division</Label>
                     <RadioGroup
-                        value={division.toString()}
+                        value={division?.toString() || ""}
                         onValueChange={(val) => setDivision(parseInt(val))}>
                         {Object.entries(DIVISIONS).map(([key, div]) => (
-                            <div
-                                key={key}
-                                className="flex items-center space-x-2">
+                            <div key={key} className="flex items-center gap-2">
                                 <RadioGroupItem
                                     value={key}
-                                    id={`division-${key}`}
+                                    id={`new-division-${key}`}
                                 />
-                                <Label htmlFor={`division-${key}`}>
+                                <Label htmlFor={`new-division-${key}`}>
                                     {div.name}
                                 </Label>
                             </div>
@@ -93,12 +96,13 @@ export default function EditRoundModal({
                     <Label className="mb-2 block">Type</Label>
                     <RadioGroup value={type} onValueChange={setType}>
                         {["individual", "team", "guts"].map((t) => (
-                            <div
-                                key={t}
-                                className="flex items-center space-x-2">
-                                <RadioGroupItem value={t} id={`type-${t}`} />
+                            <div key={t} className="flex items-center gap-2">
+                                <RadioGroupItem
+                                    value={t}
+                                    id={`new-type-${t}`}
+                                />
                                 <Label
-                                    htmlFor={`type-${t}`}
+                                    htmlFor={`new-type-${t}`}
                                     className="capitalize">
                                     {t}
                                 </Label>

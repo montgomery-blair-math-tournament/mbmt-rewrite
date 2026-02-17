@@ -68,8 +68,8 @@ export default function ParticipantsTable({
                             </TableCell>
                         </TableRow>
                     ) : (
-                        participants.map((p) => (
-                            <TableRow key={p.id} className="group">
+                        participants.map((participant) => (
+                            <TableRow key={participant.id} className="group">
                                 {!readonly && (
                                     <TableCell className="p-2">
                                         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -78,13 +78,15 @@ export default function ParticipantsTable({
                                                     className="w-4 h-4"
                                                     onClick={() =>
                                                         redirect(
-                                                            `/staff/participants/${p.id}`
+                                                            `/staff/participants/${participant.id}`
                                                         )
                                                     }
                                                 />
                                             </TableButton>
                                             <TableButton
-                                                onClick={() => handleCheckIn(p)}
+                                                onClick={() =>
+                                                    handleCheckIn(participant)
+                                                }
                                                 title="Check In">
                                                 <HiCheck className="w-4 h-4" />
                                             </TableButton>
@@ -92,26 +94,26 @@ export default function ParticipantsTable({
                                     </TableCell>
                                 )}
                                 <TableCell>
-                                    {p.checkedIn ? "Yes" : "No"}
+                                    {participant.checkedIn ? "Yes" : "No"}
                                 </TableCell>
                                 <TableCell>
                                     {readonly ? (
-                                        p.displayId
+                                        participant.displayId
                                     ) : (
                                         <Link
-                                            href={`/staff/participants/${p.id}`}
+                                            href={`/staff/participants/${participant.id}`}
                                             className="hover:underline text-rose-600 hover:text-rose-800">
-                                            {p.displayId}
+                                            {participant.displayId}
                                         </Link>
                                     )}
                                 </TableCell>
-                                <TableCell>{p.firstName}</TableCell>
-                                <TableCell>{p.lastName}</TableCell>
-                                <TableCell>{p.division}</TableCell>
-                                <TableCell>{p.grade}</TableCell>
-                                <TableCell>{p.school}</TableCell>
-                                <TableCell>{p.team}</TableCell>
-                                <TableCell>{p.chaperone}</TableCell>
+                                <TableCell>{participant.firstName}</TableCell>
+                                <TableCell>{participant.lastName}</TableCell>
+                                <TableCell>{participant.division}</TableCell>
+                                <TableCell>{participant.grade}</TableCell>
+                                <TableCell>{participant.school}</TableCell>
+                                <TableCell>{participant.team}</TableCell>
+                                <TableCell>{participant.chaperone}</TableCell>
                             </TableRow>
                         ))
                     )}

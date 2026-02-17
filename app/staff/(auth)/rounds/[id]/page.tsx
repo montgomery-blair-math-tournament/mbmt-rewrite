@@ -14,6 +14,7 @@ export default async function RoundPage({
         .from("round")
         .select("*")
         .eq("id", parseInt(id))
+        .limit(1)
         .single();
 
     if (roundError || !round) {
