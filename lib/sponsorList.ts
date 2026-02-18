@@ -25,7 +25,7 @@ const sponsorList: {
     {
         name: "HRT",
         image: HRTImage,
-        link: "https://hrt.com/",
+        link: "https://www.hudsonrivertrading.com/",
         width: 600,
     },
     {
