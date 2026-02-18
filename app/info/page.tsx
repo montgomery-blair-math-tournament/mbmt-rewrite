@@ -1,8 +1,8 @@
 import Main from "@/components/Main";
 import { DIVISIONS } from "@/lib/settings";
-import Cell from "@/components/Cell";
 import Link2 from "@/components/Link2";
 import Heading from "@/components/Heading";
+import { cn } from "@/lib/utils";
 
 export default function Page() {
     const lower = DIVISIONS[0].name;
@@ -10,7 +10,7 @@ export default function Page() {
         <Main>
             <Heading level={1}>Contest Information</Heading>
             <p>
-                <i>Last updated 02/09/2026</i>
+                <i>Last updated 02/15/2026</i>
             </p>
 
             <p>
@@ -93,36 +93,68 @@ export default function Page() {
             <table className="border-collapse w-fit">
                 <tbody>
                     <tr>
-                        <Cell side="left">11:00 AM - 12:00 PM</Cell>
-                        <Cell side="right">Registration + Lunch</Cell>
+                        <td className="px-2 py-1 align-top border-r text-right">
+                            11:00 AM - 12:00 PM
+                        </td>
+                        <td className="px-2 py-1 align-top border-l text-left">
+                            Registration + Lunch
+                        </td>
                     </tr>
                     <tr>
-                        <Cell side="left">12:15 - 12:45 PM</Cell>
-                        <Cell side="right">Subject Test #1</Cell>
+                        <td className="px-2 py-1 align-top border-r text-right">
+                            12:15 - 12:45 PM
+                        </td>
+                        <td className="px-2 py-1 align-top border-l text-left">
+                            Subject Test #1
+                        </td>
                     </tr>
                     <tr>
-                        <Cell side="left">12:55 - 1:25 PM</Cell>
-                        <Cell side="right">Subject Test #2</Cell>
+                        <td className="px-2 py-1 align-top border-r text-right">
+                            12:55 - 1:25 PM
+                        </td>
+                        <td className="px-2 py-1 align-top border-l text-left">
+                            Subject Test #2
+                        </td>
                     </tr>
                     <tr>
-                        <Cell side="left">1:25 - 1:40 PM</Cell>
-                        <Cell side="right">Break</Cell>
+                        <td className="px-2 py-1 align-top border-r text-right">
+                            1:25 - 1:40 PM
+                        </td>
+                        <td className="px-2 py-1 align-top border-l text-left">
+                            Break
+                        </td>
                     </tr>
                     <tr>
-                        <Cell side="left">1:45 - 2:30 PM</Cell>
-                        <Cell side="right">Team Round</Cell>
+                        <td className="px-2 py-1 align-top border-r text-right">
+                            1:45 - 2:30 PM
+                        </td>
+                        <td className="px-2 py-1 align-top border-l text-left">
+                            Team Round
+                        </td>
                     </tr>
                     <tr>
-                        <Cell side="left">2:40 - 3:40 PM</Cell>
-                        <Cell side="right">Guts Round</Cell>
+                        <td className="px-2 py-1 align-top border-r text-right">
+                            2:40 - 3:40 PM
+                        </td>
+                        <td className="px-2 py-1 align-top border-l text-left">
+                            Guts Round
+                        </td>
                     </tr>
                     <tr>
-                        <Cell side="left">3:40 - 4:20 PM</Cell>
-                        <Cell side="right">Fun Round + Tiebreakers</Cell>
+                        <td className="px-2 py-1 align-top border-r text-right">
+                            3:40 - 4:20 PM
+                        </td>
+                        <td className="px-2 py-1 align-top border-l text-left">
+                            Fun Round + Tiebreakers
+                        </td>
                     </tr>
                     <tr>
-                        <Cell side="left">4:30 - 5:00 PM</Cell>
-                        <Cell side="right">Awards Ceremony</Cell>
+                        <td className="px-2 py-1 align-top border-r text-right">
+                            4:30 - 5:00 PM
+                        </td>
+                        <td className="px-2 py-1 align-top border-l text-left">
+                            Awards Ceremony
+                        </td>
                     </tr>
                 </tbody>
             </table>

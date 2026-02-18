@@ -10,7 +10,7 @@ import { HiPencil, HiPlus } from "react-icons/hi2";
 import { useState } from "react";
 import EditRoundModal from "@/components/EditRoundModal";
 import ProblemModal from "@/components/ProblemModal";
-import Modal from "@/components/Modal";
+import Modal from "@/components/ui/Modal";
 
 import { Stats } from "@/lib/schema/stats";
 import { deleteProblem } from "./actions";

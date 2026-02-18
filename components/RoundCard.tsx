@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/Card";
 import Link from "next/link";
 import { DIVISIONS } from "@/lib/settings";
-
 import { Round } from "@/lib/schema/round";
 
 export default function RoundCard({
@@ -30,12 +29,11 @@ export default function RoundCard({
 }) {
     const divisionInfo = DIVISIONS[round.division] || DIVISIONS[0];
     const divisionName = divisionInfo.name;
-
     const linkHref = href || `/staff/rounds/${round.id}`;
 
     return (
         <Link href={linkHref} className="block h-full">
-            <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
+            <Card className="h-full hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors cursor-pointer">
                 <CardHeader className="pb-2">
                     <CardTitle className="text-lg">{round.name}</CardTitle>
                     <CardDescription>{divisionName} Division</CardDescription>
