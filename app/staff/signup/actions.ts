@@ -22,6 +22,7 @@ export async function signUp({
                 data: {
                     first_name: firstName.trim(),
                     last_name: lastName.trim(),
+                    role: "staff",
                 },
             },
         }

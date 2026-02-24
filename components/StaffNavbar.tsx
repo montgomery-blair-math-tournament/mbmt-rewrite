@@ -12,13 +12,6 @@ export default async function StaffNavbar() {
         redirect("/staff/login");
     }
 
-    const { data: userData } = await supabase
-        .from("user")
-        .select("first_name")
-        .eq("id", user.id)
-        .limit(1)
-        .single();
-
     const links = [
         { label: "Grading", href: "/staff/grading" },
         { label: "Participants", href: "/staff/participants" },
@@ -46,7 +39,7 @@ export default async function StaffNavbar() {
             ))}
             {user && (
                 <div className="ml-auto font-medium px-2 flex items-center">
-                    <span>Hi, {userData?.first_name || "User"}!</span>
+                    <span>Hi, {user.user_metadata.first_name}!</span>
                     <form action="/staff/auth/signout" method="POST">
                         <button
                             type="submit"
