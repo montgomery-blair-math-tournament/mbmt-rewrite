@@ -31,11 +31,15 @@ export default function SignupForm() {
         setLoading(true);
         setError(null);
 
-        const { error: signUpError } = await signUp({
+        const { error: signUpError } = await supabase.auth.signUp({
             email,
             password,
-            firstName,
-            lastName,
+            options: {
+                data: {
+                    first_name: firstName.trim(),
+                    last_name: lastName.trim(),
+                },
+            },
         });
 
         if (signUpError) {

@@ -1,6 +1,6 @@
 "use client";
 
-import Modal from "@/components/ui/Modal";
+import Modal, { ModalButton } from "@/components/ui/Modal";
 import { Problem } from "@/lib/schema/problem";
 import { useState, useEffect } from "react";
 import { upsertProblem } from "./[id]/actions";
@@ -21,7 +21,7 @@ export default function ProblemModal({
 }) {
     const isEditing = !!problem;
 
-    const [number, setNumber] = useState("");
+    const [number, setNumber] = useState(0);
     const [type, setType] = useState("boolean");
     const [probText, setProbText] = useState("");
     const [answer, setAnswer] = useState("");
@@ -35,7 +35,7 @@ export default function ProblemModal({
                 setProbText(problem.problem);
                 setAnswer(problem.answer);
             } else {
-                setNumber("");
+                setNumber(0);
                 setType("boolean");
                 setProbText("");
                 setAnswer("");
@@ -76,26 +76,29 @@ export default function ProblemModal({
             className="w-150 h-auto"
             footer={
                 <>
-                    <button
+                    <ModalButton
                         onClick={onClose}
+                        variant="primary"
                         className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
                         Cancel
-                    </button>
-                    <button
+                    </ModalButton>
+                    <ModalButton
                         onClick={handleSubmit}
+                        variant="themed"
                         disabled={loading}
                         className="px-4 py-2 text-sm font-medium text-white bg-rose-600 border border-transparent rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 disabled:opacity-50 hover:cursor-pointer">
                         {loading ? "Saving..." : isEditing ? "Edit" : "Add"}
-                    </button>
+                    </ModalButton>
                 </>
             }>
             <div className="flex flex-col gap-4">
                 <div>
                     <Label className="mb-2 block">Number</Label>
                     <input
-                        type="text"
+                        type="number"
+                        min={1}
                         value={number}
-                        onChange={(e) => setNumber(e.target.value)}
+                        onChange={(e) => setNumber(parseInt(e.target.value))}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500 sm:text-sm border p-2"
                         placeholder="e.g. 1"
                     />

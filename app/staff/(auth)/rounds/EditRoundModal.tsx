@@ -1,7 +1,7 @@
 "use client";
 
-import Modal from "@/components/ui/Modal";
-import { Round } from "@/lib/schema/round";
+import Modal, { ModalButton } from "@/components/ui/Modal";
+import { Round, RoundType } from "@/lib/schema/round";
 import { useState } from "react";
 import { updateRound } from "./[id]/actions";
 import { DIVISIONS } from "@/lib/settings";
@@ -20,7 +20,7 @@ export default function EditRoundModal({
 }) {
     const [name, setName] = useState(round.name);
     const [division, setDivision] = useState(round.division);
-    const [type, setType] = useState(round.type);
+    const [type, setType] = useState<RoundType>(round.type);
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
@@ -44,17 +44,19 @@ export default function EditRoundModal({
             className="w-125 h-auto"
             footer={
                 <>
-                    <button
+                    <ModalButton
                         onClick={onClose}
+                        variant="primary"
                         className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
                         Cancel
-                    </button>
-                    <button
+                    </ModalButton>
+                    <ModalButton
                         onClick={handleSubmit}
+                        variant="themed"
                         disabled={loading}
                         className="px-4 py-2 text-sm font-medium text-white bg-rose-600 border border-transparent rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 disabled:opacity-50 hover:cursor-pointer">
                         {loading ? "Saving..." : "Edit"}
-                    </button>
+                    </ModalButton>
                 </>
             }>
             <div className="flex flex-col gap-4">
@@ -89,7 +91,9 @@ export default function EditRoundModal({
 
                 <div>
                     <Label className="mb-2 block">Type</Label>
-                    <RadioGroup value={type} onValueChange={setType}>
+                    <RadioGroup
+                        value={type}
+                        onValueChange={(e) => setType(e as RoundType)}>
                         {["individual", "team", "guts"].map((t) => (
                             <div key={t} className="flex items-center gap-2">
                                 <RadioGroupItem value={t} id={`type-${t}`} />

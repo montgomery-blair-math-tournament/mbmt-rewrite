@@ -8,10 +8,14 @@ export default async function AdminPage() {
         data: { user },
     } = await supabase.auth.getUser();
 
+    if (!user) {
+        redirect("/staff/login");
+    }
+
     const { data: roleData, error } = await supabase
-        .from("users")
+        .from("user")
         .select("role")
-        .eq("id", user?.id)
+        .eq("id", user.id)
         .limit(1)
         .single();
 

@@ -47,7 +47,7 @@ export default function ProblemCard({
                             Problem
                         </div>
                         <div className="text-gray-900 dark:text-gray-300">
-                            <Math eq={problem.problem} raw />
+                            <Math eq={problem.problem} />
                         </div>
                     </div>
                     <div>

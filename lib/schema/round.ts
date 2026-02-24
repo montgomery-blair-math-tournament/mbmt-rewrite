@@ -11,6 +11,6 @@ export const roundSchema = z.object({
     ]),
 });
 
-export type RoundType = z.infer<typeof roundSchema.type>;
+export type RoundType = "team" | "guts" | "individual";
 
 export type Round = z.infer<typeof roundSchema>;
