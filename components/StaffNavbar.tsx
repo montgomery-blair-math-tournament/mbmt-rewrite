@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function StaffNavbar() {
     const supabase = await createClient();
@@ -7,10 +8,14 @@ export default async function StaffNavbar() {
         data: { user },
     } = await supabase.auth.getUser();
 
+    if (!user) {
+        redirect("/staff/login");
+    }
+
     const { data: userData } = await supabase
         .from("user")
         .select("first_name")
-        .eq("id", user?.id)
+        .eq("id", user.id)
         .limit(1)
         .single();
 

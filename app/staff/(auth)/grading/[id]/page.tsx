@@ -1,6 +1,8 @@
 import Heading from "@/components/Heading";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import GradingForm from "./GradingForm";
+import { Problem, problemSchema } from "@/lib/schema/problem";
 
 export default async function RoundGradingPage({
     params,
@@ -8,16 +10,20 @@ export default async function RoundGradingPage({
     params: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
     const supabase = await createClient();
+    const searchParams = await params;
     const { data: roundData } = await supabase
         .from("round")
         .select("*")
-        .eq("id", (await params).id)
+        .eq("id", searchParams.id)
         .limit(1)
         .single();
 
-    const { data: questionsData } = await supabase
-        .from("questions")
-        .select("*");
+    const { data: questionsData }: { data: Problem[] | null } = await supabase
+        .from("problem")
+        .select("*")
+        .eq("round_id", roundData.id);
+
+    questionsData?.sort((a, b) => a.number - b.number);
 
     return (
         <div className="flex flex-col gap-6">
@@ -29,11 +35,12 @@ export default async function RoundGradingPage({
                         ← Back to Grading
                     </Link>
                 </div>
-                <div className="flex items-center gap-4">
-                    <Heading level={1}>Grading</Heading>
-                    <p className="text-xl font-bold">
-                        {JSON.stringify(roundData)}
-                    </p>
+                <div className="flex flex-col justify-center gap-4">
+                    <Heading level={1}>Grading - {roundData.name}</Heading>
+                    <GradingForm
+                        roundId={roundData.id}
+                        problems={questionsData ?? []}
+                    />
                 </div>
             </div>
         </div>

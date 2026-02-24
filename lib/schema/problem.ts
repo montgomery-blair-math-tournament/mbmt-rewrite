@@ -3,7 +3,7 @@ import { z } from "zod";
 export const problemSchema = z.object({
     id: z.number(),
     round_id: z.number(),
-    number: z.string(),
+    number: z.number(),
     problem: z.string(),
     answer: z.string(),
     type: z.string(),

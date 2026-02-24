@@ -18,22 +18,28 @@ export async function signUp({
         {
             email,
             password,
-            options: { data: { first_name: firstName, last_name: lastName } },
+            options: {
+                data: {
+                    first_name: firstName.trim(),
+                    last_name: lastName.trim(),
+                },
+            },
         }
     );
 
+    console.log(signUpData);
+
     if (
-        signUpData &&
-        signUpData.user &&
-        signUpData.user.id &&
+        signUpData.user?.id &&
         firstName.trim().length > 0 &&
         lastName.trim().length > 0
     ) {
-        await supabase.from("user").upsert(
+        await supabase.from("user").insert(
             {
                 id: signUpData.user.id,
                 first_name: firstName.trim(),
                 last_name: lastName.trim(),
+                role: "staff",
             }
             // { onConflict: "id", ignoreDuplicates: true }
         );

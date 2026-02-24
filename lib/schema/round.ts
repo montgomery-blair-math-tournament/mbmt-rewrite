@@ -4,7 +4,13 @@ export const roundSchema = z.object({
     id: z.number(),
     name: z.string(),
     division: z.number(),
-    type: z.string(),
+    type: z.union([
+        z.literal("team"),
+        z.literal("guts"),
+        z.literal("individual"),
+    ]),
 });
+
+export type RoundType = z.infer<typeof roundSchema.type>;
 
 export type Round = z.infer<typeof roundSchema>;
