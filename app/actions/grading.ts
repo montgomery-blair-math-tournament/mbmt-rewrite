@@ -20,7 +20,6 @@ async function calculateRoundScore(
         type === "participant" ? "participant_score" : "team_score";
     const foreignKey = type === "participant" ? "participant_id" : "team_id";
 
-    // Fetch Round Type
     const { data: round } = await supabase
         .from("round")
         .select("type")
@@ -28,19 +27,16 @@ async function calculateRoundScore(
         .single();
     const isGuts = round?.type?.toLowerCase().includes("guts");
 
-    // Fetch Problems
     const { data: roundProblems } = await supabase
         .from("problem")
         .select("id, points, type")
         .eq("round_id", roundId);
 
-    // Fetch All Grades
     const { data: allGrades } = await supabase
         .from(table)
         .select("*")
         .eq(foreignKey, participantId);
 
-    // Group grades
     const { status, totalScore } = computeRoundScore(
         roundProblems || [],
         allGrades || [],
@@ -65,7 +61,7 @@ async function calculateRoundScore(
 }
 
 export async function submitGrades(
-    rawSubmissions: GradeSubmission[], // Now a correctly inferred type from Zod
+    rawSubmissions: GradeSubmission[],
     confirm: boolean = false
 ) {
     const supabase = await createClient();
@@ -75,7 +71,6 @@ export async function submitGrades(
 
     if (!user) return { error: "Unauthorized" };
 
-    // Validate incoming data
     const parseResult = z
         .array(gradeSubmissionSchema)
         .safeParse(rawSubmissions);
@@ -95,7 +90,6 @@ export async function submitGrades(
     const foreignKey = type === "participant" ? "participant_id" : "team_id";
 
     try {
-        // 1. Conflict Detection (Pre-Check)
         if (!confirm) {
             const problemIds = submissions.map((s) => s.problemId);
             const { data: existingData } = await supabase
@@ -120,7 +114,6 @@ export async function submitGrades(
             }
         }
 
-        // 2. Prepare Inserts
         const inserts = submissions.map((s) => {
             let answer = s.answer;
             if (answer) answer = answer.trim();
@@ -134,14 +127,12 @@ export async function submitGrades(
             };
         });
 
-        // 3. Insert
         const { error } = await supabase.from(table).insert(inserts);
         if (error) {
             console.error("Submission error:", error);
             return { error: "Failed to submit grades" };
         }
 
-        // 4. Update Scores (Recalculate)
         const { status, totalScore } = await calculateRoundScore(
             supabase,
             roundId,
@@ -176,7 +167,6 @@ export async function resetGrades(
     const foreignKey = type === "participant" ? "participant_id" : "team_id";
 
     try {
-        // 1. Fetch round problems to know what to delete
         const { data: roundProblems } = await supabase
             .from("problem")
             .select("id")
@@ -185,7 +175,6 @@ export async function resetGrades(
         if (roundProblems && roundProblems.length > 0) {
             const problemIds = roundProblems.map((p) => p.id);
 
-            // 2. Delete grades
             const { error: gradeError } = await supabase
                 .from(table)
                 .delete()
@@ -198,7 +187,6 @@ export async function resetGrades(
             }
         }
 
-        // 3. Delete score
         const { error: scoreError } = await supabase
             .from(scoreTable)
             .delete()

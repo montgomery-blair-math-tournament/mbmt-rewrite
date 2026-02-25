@@ -50,7 +50,6 @@ export default function GradingClient({
     const [localParticipants, setLocalParticipants] =
         useState<ParticipantRow[]>(participants);
 
-    // Sync state when props change
     useEffect(() => {
         setLocalParticipants(participants);
     }, [participants]);

@@ -13,16 +13,6 @@ import { toast } from "sonner";
 
 import { Switch } from "@/components/ui/Switch";
 
-type ConflictProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    type: "participant" | "team";
-    id: number;
-    roundId: number;
-    problems: Problem[];
-    onResolve?: (status?: string, score?: number) => void;
-};
-
 type GradeOption = {
     graderName: string;
     graderRole?: string;
@@ -48,7 +38,15 @@ export default function ConflictResolutionModal({
     roundId,
     problems,
     onResolve,
-}: ConflictProps) {
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+    type: "participant" | "team";
+    id: number;
+    roundId: number;
+    problems: Problem[];
+    onResolve?: (status?: string, score?: number) => void;
+}) {
     const [conflicts, setConflicts] = useState<Record<number, GradeOption[]>>(
         {}
     );
@@ -114,7 +112,6 @@ export default function ConflictResolutionModal({
         if (isOpen && id) {
             fetchConflicts();
         } else {
-            // Reset state when closed
             setConflicts({});
             setResolutions({});
         }
@@ -158,14 +155,12 @@ export default function ConflictResolutionModal({
         } else {
             toast.success("Resolved");
 
-            // Remove the resolved conflict from the UI efficiently
             setConflicts((prev) => {
                 const next = { ...prev };
                 delete next[problemId];
                 return next;
             });
 
-            // If it was the last one, close the modal
             if (Object.keys(conflicts).length <= 1) {
                 onClose();
             }
