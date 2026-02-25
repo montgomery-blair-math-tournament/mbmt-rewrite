@@ -28,7 +28,7 @@ export default function TeamsTable({
                     <TableHead>School</TableHead>
                     <TableHead>Chaperone</TableHead>
                     <TableHead>Division</TableHead>
-                    <TableHead>Players</TableHead>
+                    <TableHead>Participants</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
