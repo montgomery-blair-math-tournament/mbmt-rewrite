@@ -12,6 +12,7 @@ import ParticipantsTable from "@/components/ParticipantsTable";
 import AddParticipantsModal from "@/components/AddParticipantsModal";
 import { toast } from "sonner";
 import HeaderButton from "@/components/HeaderButton";
+import { HiPlus } from "react-icons/hi2";
 
 export default function ParticipantsPage() {
     const [participants, setParticipants] = useState<ParticipantDisplay[]>([]);
@@ -65,6 +66,7 @@ export default function ParticipantsPage() {
             <div className="flex justify-between items-center">
                 <Heading level={1}>Participants</Heading>
                 <HeaderButton onClick={() => setIsAddModalOpen(true)}>
+                    <HiPlus className="w-4 h-4" />
                     Add
                 </HeaderButton>
             </div>
