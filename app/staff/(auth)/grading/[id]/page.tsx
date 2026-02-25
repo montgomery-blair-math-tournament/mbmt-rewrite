@@ -1,7 +1,151 @@
+import { createClient } from "@/lib/supabase/server";
+import GradingClient from "@/components/grading/GradingClient";
 import Heading from "@/components/Heading";
 import Link from "next/link";
+import { Round } from "@/lib/schema/round";
+import { Problem } from "@/lib/schema/problem";
+import { GradingStatus } from "@/lib/schema/score";
 
-export default function RoundGradingPage() {
+export default async function RoundGradingPage({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params;
+    const roundId = parseInt(id);
+    const supabase = await createClient();
+
+    // 1. Fetch Round
+    const { data: roundData } = await supabase
+        .from("round")
+        .select("*")
+        .eq("id", roundId)
+        .single();
+
+    if (!roundData) {
+        return <div>Round not found</div>;
+    }
+    const round = roundData as Round;
+
+    // 2. Fetch Problems
+    const { data: problemsData } = await supabase
+        .from("problem")
+        .select("*")
+        .eq("round_id", roundId)
+        .order("number", { ascending: true });
+
+    const problems = (problemsData || []) as Problem[];
+
+    // 3. Fetch Participants/Teams and Scores
+    let rows: {
+        id: number;
+        displayId: string;
+        name: string;
+        status: string;
+        score: number | null;
+        roundId: number;
+    }[] = [];
+    const isTeam = round.type === "team" || round.type === "guts";
+
+    if (isTeam) {
+        // Fetch Teams in this round
+        const { data: teamRoundsData } = await supabase
+            .from("team_round")
+            .select(
+                `
+                team:team_id (id, name, displayId)
+            `
+            )
+            .eq("round_id", roundId);
+
+        type TeamRoundType = {
+            team:
+                | { id: number; name: string; displayId: string }
+                | { id: number; name: string; displayId: string }[]
+                | null;
+        }[];
+        const teamRounds = teamRoundsData as unknown as TeamRoundType | null;
+
+        // Fetch Scores
+        const { data: scores } = await supabase
+            .from("team_score")
+            .select("*")
+            .eq("round_id", roundId);
+
+        const scoreMap = new Map();
+        scores?.forEach((s) => scoreMap.set(s.team_id, s));
+
+        rows = (teamRounds || [])
+            .map((tr: TeamRoundType[0]) => {
+                let t = tr.team;
+                if (Array.isArray(t)) t = t[0];
+                if (!t) return null;
+                const s = scoreMap.get(t.id);
+                return {
+                    id: t.id,
+                    displayId: t.name,
+                    name: t.name,
+                    status: s?.status || GradingStatus.NOT_STARTED,
+                    score: s?.score ?? null,
+                    roundId,
+                };
+            })
+            .filter((x): x is (typeof rows)[0] => x !== null);
+    } else {
+        // Individual
+        // Fetch Participants in this round
+        const { data: participantRoundsData } = await supabase
+            .from("participant_round")
+            .select(
+                `
+                participant:participant_id (id, first_name, last_name)
+            `
+            )
+            .eq("round_id", roundId);
+
+        type ParticipantRoundType = {
+            participant:
+                | { id: number; first_name: string; last_name: string }
+                | { id: number; first_name: string; last_name: string }[]
+                | null;
+        }[];
+        const participantRounds =
+            participantRoundsData as unknown as ParticipantRoundType | null;
+
+        // Fetch Scores
+        const { data: scores } = await supabase
+            .from("participant_score")
+            .select("*")
+            .eq("round_id", roundId);
+
+        const scoreMap = new Map();
+        scores?.forEach((s) => scoreMap.set(s.participant_id, s));
+
+        rows = (participantRounds || [])
+            .map((pr: ParticipantRoundType[0]) => {
+                let p = pr.participant;
+                if (Array.isArray(p)) p = p[0];
+                if (!p) return null;
+                const s = scoreMap.get(p.id);
+                return {
+                    id: p.id,
+                    displayId: p.id.toString(),
+                    name: `${p.first_name} ${p.last_name}`,
+                    status: s?.status || GradingStatus.NOT_STARTED,
+                    score: s?.score ?? null,
+                    roundId,
+                };
+            })
+            .filter((x): x is (typeof rows)[0] => x !== null);
+    }
+
+    // Stats
+    const total = rows.length;
+    const completed = rows.filter(
+        (r) => r.status === GradingStatus.COMPLETED
+    ).length;
+    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+
     return (
         <div className="space-y-6">
             <div>
@@ -12,10 +156,21 @@ export default function RoundGradingPage() {
                         ← Back to Grading
                     </Link>
                 </div>
-                <div className="flex items-center gap-4">
-                    <Heading level={1}>Grading</Heading>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <Heading level={1}>Grading: {round.name}</Heading>
+                        <p className="text-gray-500">
+                            {completed} / {total} Graded ({progress}%)
+                        </p>
+                    </div>
                 </div>
             </div>
+
+            <GradingClient
+                round={round}
+                problems={problems}
+                participants={rows}
+            />
         </div>
     );
 }

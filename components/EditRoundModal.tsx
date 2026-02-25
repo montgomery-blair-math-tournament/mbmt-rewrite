@@ -8,6 +8,8 @@ import { DIVISIONS } from "@/lib/settings";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
 import Label from "@/components/ui/Label";
+import { Input } from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
 
 export default function EditRoundModal({
     round,
@@ -44,27 +46,25 @@ export default function EditRoundModal({
             className="w-125 h-auto"
             footer={
                 <>
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer">
+                    <Button variant="outline" onClick={onClose}>
                         Cancel
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         onClick={handleSubmit}
                         disabled={loading}
-                        className="px-4 py-2 text-sm font-medium text-white bg-rose-600 border border-transparent rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 disabled:opacity-50 hover:cursor-pointer">
+                        className="bg-rose-600 hover:bg-rose-700 text-white">
                         {loading ? "Saving..." : "Edit"}
-                    </button>
+                    </Button>
                 </>
             }>
             <div className="space-y-4">
                 <div>
                     <Label className="mb-2 block">Name</Label>
-                    <input
+                    <Input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500 sm:text-sm border p-2"
+                        className="mt-1"
                     />
                 </div>
 

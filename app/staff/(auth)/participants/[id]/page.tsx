@@ -9,7 +9,6 @@ import { HiCheck, HiXMark } from "react-icons/hi2";
 import Link from "next/link";
 import RoundCard from "@/components/RoundCard";
 import { toast } from "sonner";
-
 import { ParticipantDetail } from "@/lib/schema/participant";
 import { Round } from "@/lib/schema/round";
 import CheckInModal from "@/components/CheckInModal";
@@ -136,8 +135,24 @@ export default function ParticipantPage({
                 </div>
                 <div className="flex items-center gap-4">
                     {/* Participant name */}
-                    <h1 className="font-bold font-sans text-4xl my-4">
+                    <Heading level={1}>
                         {participant.firstName} {participant.lastName}
+                    </Heading>
+                    {participant.checkedIn ? (
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsCheckInModalOpen(true)}
+                            className="bg-green-100 text-green-800 border-green-400 hover:bg-green-200 h-6 px-2.5 text-xs">
+                            <HiCheck className="w-3 h-3 mr-1" /> Checked In
+                        </Button>
+                    ) : (
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsCheckInModalOpen(true)}
+                            className="bg-gray-100 text-gray-800 border-gray-400 hover:bg-gray-200 h-6 px-2.5 text-xs">
+                            <HiXMark className="w-3 h-3 mr-1" /> Not Checked In
+                        </Button>
+                    )}
                     </h1>
 
                     <CheckedInButton

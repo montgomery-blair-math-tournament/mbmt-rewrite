@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 export default async function StaffNavbar() {
     const supabase = await createClient();
@@ -49,11 +50,12 @@ export default async function StaffNavbar() {
                 <div className="ml-auto font-medium px-2 flex items-center">
                     <span>Hi, {username || "User"}!</span>
                     <form action="/staff/auth/signout" method="POST">
-                        <button
+                        <Button
                             type="submit"
-                            className="ml-4 rounded-md text-center align-center duration-200 hover:bg-gray-400 dark:hover:bg-gray-600 py-1.5 px-2 md:px-3 text-sm md:text-base hover:cursor-pointer">
+                            variant="ghost"
+                            className="ml-4 hover:bg-gray-400 dark:hover:bg-gray-600 py-1.5 px-2 md:px-3 text-sm md:text-base h-auto">
                             Logout
-                        </button>
+                        </Button>
                     </form>
                 </div>
             )}
