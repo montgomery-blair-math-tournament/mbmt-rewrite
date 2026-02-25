@@ -117,7 +117,7 @@ export default function TeamPage({
     const divisionInfo = DIVISIONS[team.division] || DIVISIONS[0];
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
             <div>
                 <div className="mb-2">
                     <Link
@@ -140,12 +140,12 @@ export default function TeamPage({
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-4">
+                <div className="lg:col-span-2 flex flex-col gap-4">
                     <Heading level={2}>Members</Heading>
                     <ParticipantsTable participants={members} loading={false} />
                 </div>
 
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                     <Heading level={2}>Team Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">
                         {teamRounds.length === 0 ? (

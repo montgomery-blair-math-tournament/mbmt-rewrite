@@ -97,7 +97,7 @@ export default function GradingClient({
     };
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
             <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg shadow-sm">
                 <div className="flex items-center gap-4 w-full md:w-auto">
                     <Input

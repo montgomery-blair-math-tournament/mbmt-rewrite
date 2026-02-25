@@ -179,7 +179,7 @@ export default function ParticipantPage({
 
             {/* Individual rounds */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                     <Heading level={2}>Individual Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">
                         {participant.individualRounds.length === 0 ? (
@@ -195,7 +195,7 @@ export default function ParticipantPage({
                 </div>
 
                 {/* Team rounds */}
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                     <Heading level={2}>Team Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">
                         {participant.teamRounds.length === 0 ? (
