@@ -138,7 +138,7 @@ export default async function RoundGradingPage({
     const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
             <div>
                 <div className="mb-2">
                     <Link

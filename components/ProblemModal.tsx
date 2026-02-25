@@ -91,7 +91,7 @@ export default function ProblemModal({
                     </>
                 </>
             }>
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
                 <div>
                     <Label className="mb-2 block">Number</Label>
                     <Input

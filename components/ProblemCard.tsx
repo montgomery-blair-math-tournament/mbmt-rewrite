@@ -16,7 +16,7 @@ export default function ProblemCard({
 }) {
     return (
         <Card className="hover:shadow-md transition-shadow">
-            <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+            <CardHeader className="pb-2 flex flex-row items-center justify-between gap-0">
                 <CardTitle className="text-lg">
                     Problem {problem.number}
                 </CardTitle>
@@ -49,7 +49,7 @@ export default function ProblemCard({
                 </div>
             </CardHeader>
             <CardContent>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                     <div>
                         <div className="text-sm font-medium text-gray-500 mb-1">
                             Problem

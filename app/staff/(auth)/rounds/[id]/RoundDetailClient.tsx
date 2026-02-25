@@ -70,7 +70,7 @@ export default function RoundDetailClient({
     };
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
             <div>
                 <div className="mb-2">
                     <Link
@@ -117,7 +117,7 @@ export default function RoundDetailClient({
                 </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
                 <Heading level={2}>Problems</Heading>
                 <div className="grid grid-cols-1 gap-4">
                     {problems.map((problem) => (
