@@ -36,9 +36,9 @@ export default function CreateRoundModal({
             setDivision(null);
             setType("individual");
             onClose();
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error(e);
-            toast.error("Failed to create round: " + e.message);
+            toast.error("Failed to create round: " + (e as Error).message);
         } finally {
             setLoading(false);
         }

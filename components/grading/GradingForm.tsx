@@ -53,7 +53,7 @@ export default function GradingForm({
     );
     const [conflictData, setConflictData] = useState<{
         isOpen: boolean;
-        conflicts: any[];
+        conflicts: { problemId: number }[];
     }>({ isOpen: false, conflicts: [] });
     const [regradeModalOpen, setRegradeModalOpen] = useState(false);
 
@@ -68,7 +68,7 @@ export default function GradingForm({
         const fetchStatus = async () => {
             setLoading(true);
             try {
-                const res = await getGradingStatus(type, id, roundId);
+                const res = await getGradingStatus(type, id);
 
                 if (!res) {
                     throw new Error("Failed to load status");

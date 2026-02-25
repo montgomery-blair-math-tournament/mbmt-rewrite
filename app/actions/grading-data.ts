@@ -2,11 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 
-export async function getMyGrades(
-    type: "participant" | "team",
-    id: number,
-    roundId: number
-) {
+export async function getMyGrades(type: "participant" | "team", id: number) {
     const supabase = await createClient();
     const {
         data: { user },
@@ -36,11 +32,7 @@ export async function getMyGrades(
     return Array.from(latestMap.values());
 }
 
-export async function getAllGrades(
-    type: "participant" | "team",
-    id: number,
-    roundId: number
-) {
+export async function getAllGrades(type: "participant" | "team", id: number) {
     const supabase = await createClient();
 
     const table =
@@ -71,8 +63,7 @@ export async function getAllGrades(
 
 export async function getGradingStatus(
     type: "participant" | "team",
-    id: number,
-    roundId: number
+    id: number
 ) {
     const supabase = await createClient();
 
@@ -108,9 +99,16 @@ export async function getGradingStatus(
     const hasGradedMap: Record<number, boolean> = {};
 
     data?.forEach(
-        (row: { problem_id: number; grader_id: string; grader: any }) => {
+        (row: {
+            problem_id: number;
+            grader_id: string;
+            grader: { username: string }[] | { username: string } | null;
+        }) => {
             const pId = row.problem_id;
-            const name = row.grader?.username || "Unknown";
+            const graderObj = Array.isArray(row.grader)
+                ? row.grader[0]
+                : row.grader;
+            const name = graderObj?.username || "Unknown";
             const graderId = row.grader_id;
 
             if (!statusMap[pId]) {

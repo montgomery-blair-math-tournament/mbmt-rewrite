@@ -37,12 +37,19 @@ export default async function RoundGradingPage({
     const problems = (problemsData || []) as Problem[];
 
     // 3. Fetch Participants/Teams and Scores
-    let rows: any[] = [];
-    let isTeam = round.type === "team" || round.type === "guts";
+    let rows: {
+        id: number;
+        displayId: string;
+        name: string;
+        status: string;
+        score: number | null;
+        roundId: number;
+    }[] = [];
+    const isTeam = round.type === "team" || round.type === "guts";
 
     if (isTeam) {
         // Fetch Teams in this round
-        const { data: teamRounds } = await supabase
+        const { data: teamRoundsData } = await supabase
             .from("team_round")
             .select(
                 `
@@ -50,6 +57,14 @@ export default async function RoundGradingPage({
             `
             )
             .eq("round_id", roundId);
+
+        type TeamRoundType = {
+            team:
+                | { id: number; name: string; displayId: string }
+                | { id: number; name: string; displayId: string }[]
+                | null;
+        }[];
+        const teamRounds = teamRoundsData as unknown as TeamRoundType | null;
 
         // Fetch Scores
         const { data: scores } = await supabase
@@ -61,8 +76,9 @@ export default async function RoundGradingPage({
         scores?.forEach((s) => scoreMap.set(s.team_id, s));
 
         rows = (teamRounds || [])
-            .map((tr: any) => {
-                const t = tr.team;
+            .map((tr: TeamRoundType[0]) => {
+                let t = tr.team;
+                if (Array.isArray(t)) t = t[0];
                 if (!t) return null;
                 const s = scoreMap.get(t.id);
                 return {
@@ -70,15 +86,15 @@ export default async function RoundGradingPage({
                     displayId: t.name,
                     name: t.name,
                     status: s?.status || GradingStatus.NOT_STARTED,
-                    score: s?.score,
+                    score: s?.score ?? null,
                     roundId,
                 };
             })
-            .filter(Boolean);
+            .filter((x): x is (typeof rows)[0] => x !== null);
     } else {
         // Individual
         // Fetch Participants in this round
-        const { data: participantRounds } = await supabase
+        const { data: participantRoundsData } = await supabase
             .from("participant_round")
             .select(
                 `
@@ -86,6 +102,15 @@ export default async function RoundGradingPage({
             `
             )
             .eq("round_id", roundId);
+
+        type ParticipantRoundType = {
+            participant:
+                | { id: number; first_name: string; last_name: string }
+                | { id: number; first_name: string; last_name: string }[]
+                | null;
+        }[];
+        const participantRounds =
+            participantRoundsData as unknown as ParticipantRoundType | null;
 
         // Fetch Scores
         const { data: scores } = await supabase
@@ -97,8 +122,9 @@ export default async function RoundGradingPage({
         scores?.forEach((s) => scoreMap.set(s.participant_id, s));
 
         rows = (participantRounds || [])
-            .map((pr: any) => {
-                const p = pr.participant;
+            .map((pr: ParticipantRoundType[0]) => {
+                let p = pr.participant;
+                if (Array.isArray(p)) p = p[0];
                 if (!p) return null;
                 const s = scoreMap.get(p.id);
                 return {
@@ -106,11 +132,11 @@ export default async function RoundGradingPage({
                     displayId: p.id.toString(),
                     name: `${p.first_name} ${p.last_name}`,
                     status: s?.status || GradingStatus.NOT_STARTED,
-                    score: s?.score,
+                    score: s?.score ?? null,
                     roundId,
                 };
             })
-            .filter(Boolean);
+            .filter((x): x is (typeof rows)[0] => x !== null);
     }
 
     // Stats

@@ -80,7 +80,6 @@ export function computeRoundScore(
         const numGraders = uniqueGrades.length;
 
         let isConflict = false;
-        let isConfirmed = false;
         let problemScore = 0;
 
         const threshold = isGuts ? 1 : 2;
@@ -99,7 +98,6 @@ export function computeRoundScore(
             conflictCount++;
         } else {
             if (numGraders >= threshold) {
-                isConfirmed = true;
                 completedProblemsCount++;
             }
 

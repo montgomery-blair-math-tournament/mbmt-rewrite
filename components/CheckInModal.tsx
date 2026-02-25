@@ -159,7 +159,7 @@ export default function CheckInModal({
                                     {participant.firstName}{" "}
                                     {participant.lastName}
                                 </strong>
-                                's sticker. Hand over welcome packet.
+                                &apos;s sticker. Hand over welcome packet.
                             </p>
                         </div>
 

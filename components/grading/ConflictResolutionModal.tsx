@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getAllGrades } from "@/app/actions/grading-data";
 import { submitGrades } from "@/app/actions/grading";
 import { Problem } from "@/lib/schema/problem";
@@ -31,6 +31,15 @@ type GradeOption = {
     id: number;
 };
 
+type GradeRow = {
+    problem_id: number;
+    is_force?: boolean;
+    is_correct: boolean | null;
+    answer: string | null;
+    grader?: { username: string; role: string } | null;
+    id: number;
+};
+
 export default function ConflictResolutionModal({
     isOpen,
     onClose,
@@ -55,22 +64,12 @@ export default function ConflictResolutionModal({
         >
     >({});
 
-    useEffect(() => {
-        if (isOpen && id) {
-            fetchConflicts();
-        } else {
-            // Reset state when closed
-            setConflicts({});
-            setResolutions({});
-        }
-    }, [isOpen, id]);
-
-    const fetchConflicts = async () => {
+    const fetchConflicts = useCallback(async () => {
         setLoading(true);
         try {
-            const allGrades = await getAllGrades(type, id, roundId);
-            const grouped: Record<number, any[]> = {};
-            allGrades.forEach((g: any) => {
+            const allGrades = await getAllGrades(type, id);
+            const grouped: Record<number, GradeRow[]> = {};
+            allGrades.forEach((g: GradeRow) => {
                 if (!grouped[g.problem_id]) grouped[g.problem_id] = [];
                 grouped[g.problem_id].push(g);
             });
@@ -93,7 +92,7 @@ export default function ConflictResolutionModal({
                 );
 
                 if (mismatch && grades.length > 1) {
-                    conflictMap[p.id] = grades.map((g: any) => ({
+                    conflictMap[p.id] = grades.map((g: GradeRow) => ({
                         graderName: g.grader?.username || "Unknown",
                         graderRole: g.grader?.role,
                         answer: g.answer,
@@ -109,7 +108,17 @@ export default function ConflictResolutionModal({
         } finally {
             setLoading(false);
         }
-    };
+    }, [type, id, problems]);
+
+    useEffect(() => {
+        if (isOpen && id) {
+            fetchConflicts();
+        } else {
+            // Reset state when closed
+            setConflicts({});
+            setResolutions({});
+        }
+    }, [isOpen, id, fetchConflicts]);
 
     const handleResolve = async (problemId: number) => {
         const res = resolutions[problemId];
@@ -216,7 +225,7 @@ export default function ConflictResolutionModal({
                                         }))
                                     }
                                     className="space-y-3">
-                                    {options.map((opt, idx) => (
+                                    {options.map((opt) => (
                                         <div
                                             key={opt.id}
                                             className="flex items-center space-x-2">
