@@ -1,7 +1,5 @@
 "use client";
 
-import Heading from "@/components/Heading";
-import Math from "@/components/Math";
 import Button from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
@@ -10,6 +8,7 @@ import { Participant } from "@/lib/schema/participant";
 import { Problem } from "@/lib/schema/problem";
 import { ProblemResponse } from "@/lib/schema/problemResponse";
 import { createClient } from "@/lib/supabase/client";
+import { Newsreader } from "next/font/google";
 import { redirect } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -150,10 +149,12 @@ export default function GradingForm({
                                     type="text"
                                     required
                                     value={
-                                        !responsesLoading &&
-                                        responses.length >= problem.number
-                                            ? responses[problem.number - 1]
-                                                  .response
+                                        !responsesLoading
+                                            ? responses.find(
+                                                  (p) =>
+                                                      p.problem.number ===
+                                                      problem.number
+                                              )?.response
                                             : ""
                                     }
                                     disabled={loading}
@@ -161,9 +162,13 @@ export default function GradingForm({
                                     onChange={(e) => {
                                         const newResponses =
                                             structuredClone(responses);
-                                        newResponses[
-                                            problem.number - 1
-                                        ].response = e.target.value;
+                                        const element = newResponses.find(
+                                            (p) =>
+                                                p.problem.number ===
+                                                problem.number
+                                        );
+                                        if (!element) return;
+                                        element.response = e.target.value;
                                         setResponses(newResponses);
                                     }}
                                 />

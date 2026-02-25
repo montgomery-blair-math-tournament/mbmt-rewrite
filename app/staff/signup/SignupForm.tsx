@@ -14,7 +14,6 @@ import {
 import Input from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import Link2 from "@/components/Link2";
-import { signUp } from "./actions";
 
 export default function SignupForm() {
     const [firstName, setFirstName] = useState("");
@@ -45,20 +44,21 @@ export default function SignupForm() {
         if (signUpError) {
             setError(signUpError.message);
             setLoading(false);
-        } else {
-            const { error: signInError } =
-                await supabase.auth.signInWithPassword({
-                    email,
-                    password,
-                });
-            if (signInError) {
-                setError(signInError.message);
-                setLoading(false);
-            } else {
-                router.push("/staff");
-                router.refresh();
-            }
+            return;
         }
+
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+        if (signInError) {
+            setError(signInError.message);
+            setLoading(false);
+            return;
+        }
+
+        router.push("/staff");
+        router.refresh();
     };
 
     return (

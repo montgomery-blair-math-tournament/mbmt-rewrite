@@ -14,7 +14,9 @@ export default function AnnouncementsPage() {
             <div className="flex flex-col gap-6">
                 <div className="flex justify-between items-center">
                     <Heading level={1}>Announcements</Heading>
-                    <HeaderButton onClick={() => setIsAddModalOpen(true)}>
+                    <HeaderButton
+                        disabled={true}
+                        onClick={() => setIsAddModalOpen(true)}>
                         <HiPlus className="w-4 h-4" /> Add
                     </HeaderButton>
                 </div>
