@@ -13,6 +13,7 @@ import { ParticipantDetail } from "@/lib/schema/participant";
 import { Round } from "@/lib/schema/round";
 import CheckInModal from "@/components/CheckInModal";
 import { cn } from "@/lib/utils";
+import Button from "@/components/ui/Button";
 
 export default function ParticipantPage({
     params,
@@ -153,28 +154,27 @@ export default function ParticipantPage({
                             <HiXMark className="w-3 h-3 mr-1" /> Not Checked In
                         </Button>
                     )}
-                    </h1>
+                </div>
 
-                    <CheckedInButton
-                        onClick={() => setIsCheckInModalOpen(true)}
-                        checkedIn={participant.checkedIn}
-                    />
-                </div>
-                <div className="text-gray-700 dark:text-gray-300 flex gap-4 mt-2">
-                    <span className="font-mono dark:text-gray-700 text-gray-300 bg-gray-700 dark:bg-gray-300 px-2 py-0.5 rounded text-sm">
-                        {participant.displayId}
-                    </span>
-                    <span>
-                        <Link
-                            href={`/staff/teams/${participant.teamId}`}
-                            className="text-rose-600 hover:underline hover:text-rose-800">
-                            {participant.team}
-                        </Link>
-                    </span>
-                    <span>{participant.school}</span>
-                    <span>{participant.division} Division</span>
-                    <span>Grade {participant.grade}</span>
-                </div>
+                <CheckedInButton
+                    onClick={() => setIsCheckInModalOpen(true)}
+                    checkedIn={participant.checkedIn}
+                />
+            </div>
+            <div className="text-gray-700 dark:text-gray-300 flex gap-4 mt-2">
+                <span className="font-mono dark:text-gray-700 text-gray-300 bg-gray-700 dark:bg-gray-300 px-2 py-0.5 rounded text-sm">
+                    {participant.displayId}
+                </span>
+                <span>
+                    <Link
+                        href={`/staff/teams/${participant.teamId}`}
+                        className="text-rose-600 hover:underline hover:text-rose-800">
+                        {participant.team}
+                    </Link>
+                </span>
+                <span>{participant.school}</span>
+                <span>{participant.division} Division</span>
+                <span>Grade {participant.grade}</span>
             </div>
 
             {/* Individual rounds */}

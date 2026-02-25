@@ -2,7 +2,6 @@ import Main from "@/components/Main";
 import { DIVISIONS } from "@/lib/settings";
 import Link2 from "@/components/Link2";
 import Heading from "@/components/Heading";
-import { cn } from "@/lib/utils";
 
 export default function Page() {
     const lower = DIVISIONS[0].name;

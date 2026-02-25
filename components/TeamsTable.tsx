@@ -9,7 +9,6 @@ import Table, {
 import { HiOutlinePencil } from "react-icons/hi2";
 import { TeamDisplay } from "@/lib/schema/team";
 import Link from "next/link";
-import Button from "@/components/ui/Button";
 
 export default function TeamsTable({
     teams,
