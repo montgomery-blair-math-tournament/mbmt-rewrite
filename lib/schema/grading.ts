@@ -25,3 +25,15 @@ export const teamGradingSchema = z.object({
 });
 
 export type TeamGrading = z.infer<typeof teamGradingSchema>;
+
+export const gradeSubmissionSchema = z.object({
+    type: z.enum(["participant", "team"]),
+    id: z.number(),
+    roundId: z.number(),
+    problemId: z.number(),
+    answer: z.string().nullable(),
+    isCorrect: z.boolean().nullable(),
+    isForce: z.boolean().optional(),
+});
+
+export type GradeSubmission = z.infer<typeof gradeSubmissionSchema>;

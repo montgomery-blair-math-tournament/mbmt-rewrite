@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Problem } from "@/lib/schema/problem";
 import { Round } from "@/lib/schema/round";
 import { GradingStatus } from "@/lib/schema/score";
@@ -15,15 +15,14 @@ import Table, {
 } from "@/components/ui/Table";
 import GradingModal from "./GradingModal";
 import ConflictResolutionModal from "./ConflictResolutionModal";
+import ResetConfirmModal from "./ResetConfirmModal";
 import { toast } from "sonner";
 
-// Define a unified type for rows
-// We need id, displayId, name, status, score
 type ParticipantRow = {
     id: number;
     displayId: string;
     name: string;
-    status: string; // IN_PROGRESS, CONFLICT, COMPLETED
+    status: string;
     score: number | null;
     roundId: number;
 };
@@ -42,13 +41,21 @@ export default function GradingClient({
     const [search, setSearch] = useState("");
     const [gradingId, setGradingId] = useState<string>("");
 
-    // Modal States
     const [gradingItem, setGradingItem] = useState<ParticipantRow | null>(null);
     const [conflictItem, setConflictItem] = useState<ParticipantRow | null>(
         null
     );
+    const [resetItem, setResetItem] = useState<ParticipantRow | null>(null);
 
-    const filteredParticipants = participants.filter(
+    const [localParticipants, setLocalParticipants] =
+        useState<ParticipantRow[]>(participants);
+
+    // Sync state when props change
+    useEffect(() => {
+        setLocalParticipants(participants);
+    }, [participants]);
+
+    const filteredParticipants = localParticipants.filter(
         (p) =>
             p.name.toLowerCase().includes(search.toLowerCase()) ||
             p.displayId.toLowerCase().includes(search.toLowerCase())
@@ -60,9 +67,7 @@ export default function GradingClient({
             : "team";
 
     const handleGradeById = () => {
-        // Find participant by ID or DisplayID
-        // DisplayID is usually what they type
-        const found = participants.find(
+        const found = localParticipants.find(
             (p) => p.displayId === gradingId || p.id.toString() === gradingId
         );
         if (found) {
@@ -71,6 +76,25 @@ export default function GradingClient({
         } else {
             toast.error("Participant not found");
         }
+    };
+
+    const handleConflictResolve = (
+        id: number,
+        status?: string,
+        score?: number
+    ) => {
+        setLocalParticipants((prev) =>
+            prev.map((p) => {
+                if (p.id === id) {
+                    return {
+                        ...p,
+                        status: status ?? p.status,
+                        score: score ?? p.score,
+                    };
+                }
+                return p;
+            })
+        );
     };
 
     return (
@@ -158,12 +182,24 @@ export default function GradingClient({
                                             {p.status ===
                                                 GradingStatus.CONFLICT && (
                                                 <Button
-                                                    variant="destructive"
+                                                    variant="secondary"
+                                                    className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
                                                     size="sm"
                                                     onClick={() =>
                                                         setConflictItem(p)
                                                     }>
                                                     Resolve
+                                                </Button>
+                                            )}
+                                            {p.status !==
+                                                GradingStatus.NOT_STARTED && (
+                                                <Button
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        setResetItem(p)
+                                                    }>
+                                                    Reset
                                                 </Button>
                                             )}
                                         </div>
@@ -195,6 +231,20 @@ export default function GradingClient({
                     id={conflictItem.id}
                     roundId={round.id}
                     problems={problems}
+                    onResolve={(status, score) =>
+                        handleConflictResolve(conflictItem.id, status, score)
+                    }
+                />
+            )}
+
+            {resetItem && (
+                <ResetConfirmModal
+                    isOpen={!!resetItem}
+                    onClose={() => setResetItem(null)}
+                    type={type}
+                    id={resetItem.id}
+                    roundId={round.id}
+                    participantName={resetItem.name}
                 />
             )}
         </div>

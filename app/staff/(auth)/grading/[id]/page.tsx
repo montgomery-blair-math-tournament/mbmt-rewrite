@@ -32,18 +32,13 @@ export default async function RoundGradingPage({
         .from("problem")
         .select("*")
         .eq("round_id", roundId)
-        .order("number", { ascending: true }); // Assuming number is sortable, but it is string in schema? "1", "1a".
-    // Logic for sorting string numbers: "1", "2", "10" alpha sort is "1", "10", "2".
-    // Hopefully user inputs are sortable or we use another column.
-    // Schema update Step 129: added points, section. number is still string.
-    // We will just order by number for now.
+        .order("number", { ascending: true });
 
     const problems = (problemsData || []) as Problem[];
 
     // 3. Fetch Participants/Teams and Scores
-    // We need to map to ParticipantRow: id, displayId, name, status, score, roundId
     let rows: any[] = [];
-    let isTeam = round.type === "team" || round.type === "guts"; // Guts is team based too.
+    let isTeam = round.type === "team" || round.type === "guts";
 
     if (isTeam) {
         // Fetch Teams in this round
@@ -51,14 +46,7 @@ export default async function RoundGradingPage({
             .from("team_round")
             .select(
                 `
-                team:team_id (id, name, displayId) -- displayId exists in mapped type but maybe not in DB? 
-                                                  -- Team schema in Step 29: displayId is NOT in DB schema. It's in mapped type.
-                                                  -- We might need to compute displayId or use name.
-                                                  -- Checking schema Step 26: team table: created_at, name, division, school, chaperone...
-                                                  -- NO displayId.
-                                                  -- Participant has NO displayId in DB Schema either.
-                                                  -- ParticipantDisplay type uses "displayId".
-                                                  -- Usually it's derived.
+                team:team_id (id, name, displayId)
             `
             )
             .eq("round_id", roundId);
@@ -79,7 +67,7 @@ export default async function RoundGradingPage({
                 const s = scoreMap.get(t.id);
                 return {
                     id: t.id,
-                    displayId: t.name, // Use Name as displayId for team? Or ID.
+                    displayId: t.name,
                     name: t.name,
                     status: s?.status || GradingStatus.NOT_STARTED,
                     score: s?.score,
@@ -115,7 +103,7 @@ export default async function RoundGradingPage({
                 const s = scoreMap.get(p.id);
                 return {
                     id: p.id,
-                    displayId: p.id.toString(), // ID as displayId
+                    displayId: p.id.toString(),
                     name: `${p.first_name} ${p.last_name}`,
                     status: s?.status || GradingStatus.NOT_STARTED,
                     score: s?.score,

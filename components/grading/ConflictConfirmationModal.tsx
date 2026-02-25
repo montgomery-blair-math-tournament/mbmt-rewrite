@@ -8,7 +8,7 @@ type ConflictConfirmationModalProps = {
     onClose: () => void;
     onConfirm: () => void;
     conflicts: { problemId: number }[];
-    problems: { id: number; number: string | number }[]; // Minimal problem info needed
+    problems: { id: number; number: string | number }[];
 };
 
 export default function ConflictConfirmationModal({

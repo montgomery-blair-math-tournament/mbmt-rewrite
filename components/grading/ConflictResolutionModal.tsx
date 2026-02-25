@@ -11,6 +11,8 @@ import Label from "@/components/ui/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
 import { toast } from "sonner";
 
+import { Switch } from "@/components/ui/Switch";
+
 type ConflictProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -18,6 +20,7 @@ type ConflictProps = {
     id: number;
     roundId: number;
     problems: Problem[];
+    onResolve?: (status?: string, score?: number) => void;
 };
 
 type GradeOption = {
@@ -25,7 +28,7 @@ type GradeOption = {
     graderRole?: string;
     answer: string | null;
     isCorrect: boolean | null;
-    id: number; // grading row id
+    id: number;
 };
 
 export default function ConflictResolutionModal({
@@ -35,6 +38,7 @@ export default function ConflictResolutionModal({
     id,
     roundId,
     problems,
+    onResolve,
 }: ConflictProps) {
     const [conflicts, setConflicts] = useState<Record<number, GradeOption[]>>(
         {}
@@ -54,6 +58,10 @@ export default function ConflictResolutionModal({
     useEffect(() => {
         if (isOpen && id) {
             fetchConflicts();
+        } else {
+            // Reset state when closed
+            setConflicts({});
+            setResolutions({});
         }
     }, [isOpen, id]);
 
@@ -61,7 +69,6 @@ export default function ConflictResolutionModal({
         setLoading(true);
         try {
             const allGrades = await getAllGrades(type, id, roundId);
-            // Group by problem
             const grouped: Record<number, any[]> = {};
             allGrades.forEach((g: any) => {
                 if (!grouped[g.problem_id]) grouped[g.problem_id] = [];
@@ -72,23 +79,12 @@ export default function ConflictResolutionModal({
 
             problems.forEach((p) => {
                 const grades = grouped[p.id] || [];
-                // Detect Conflict:
-                // If any force -> No conflict (resolved)
-                // If < 2 grades -> No conflict (waiting)
-                // If consensus -> No conflict
-                // Else -> Conflict
 
                 const hasForce = grades.some((g) => g.is_force);
                 if (hasForce) return;
 
                 if (grades.length < 2 && p.type !== "custom") return;
-                // Wait, logic in updateRoundStatus says:
-                // Standard: < 2 is waiting (not conflict).
-                // Custom/Guts: 1 is verified.
-                // So if Custom/Guts and 1 grade -> No conflict.
-                // If Custom/Guts and >1 grade and mismatch -> Conflict.
 
-                // Let's rely on mismatch logic.
                 const first = grades[0];
                 const mismatch = grades.some(
                     (g) =>
@@ -124,12 +120,8 @@ export default function ConflictResolutionModal({
 
         if (res.choice === "new") {
             finalAnswer = res.customAnswer;
-            // For custom problems, isCorrect might be null/derived.
-            // For standard, it's boolean.
-            // But we need to know problem type here.
             finalIsCorrect = res.customIsCorrect;
         } else {
-            // Find the selected grade
             const options = conflicts[problemId];
             const selected = options.find(
                 (o) => o.id.toString() === res.choice
@@ -156,7 +148,22 @@ export default function ConflictResolutionModal({
             toast.error(result.error);
         } else {
             toast.success("Resolved");
-            fetchConflicts(); // Refresh to remove resolved item
+
+            // Remove the resolved conflict from the UI efficiently
+            setConflicts((prev) => {
+                const next = { ...prev };
+                delete next[problemId];
+                return next;
+            });
+
+            // If it was the last one, close the modal
+            if (Object.keys(conflicts).length <= 1) {
+                onClose();
+            }
+
+            if (onResolve) {
+                onResolve(result.status, result.score);
+            }
         }
     };
 
@@ -249,13 +256,14 @@ export default function ConflictResolutionModal({
                                         {isStandard ? (
                                             <div className="flex items-center gap-2">
                                                 <Label>Correct?</Label>
-                                                <input
-                                                    type="checkbox"
+                                                <Switch
                                                     checked={
                                                         res.customIsCorrect ===
                                                         true
                                                     }
-                                                    onChange={(e) =>
+                                                    onCheckedChange={(
+                                                        checked
+                                                    ) =>
                                                         setResolutions(
                                                             (prev) => ({
                                                                 ...prev,
@@ -264,13 +272,11 @@ export default function ConflictResolutionModal({
                                                                         problemId
                                                                     ],
                                                                     customIsCorrect:
-                                                                        e.target
-                                                                            .checked,
+                                                                        checked,
                                                                 },
                                                             })
                                                         )
                                                     }
-                                                    className="w-4 h-4"
                                                 />
                                             </div>
                                         ) : (

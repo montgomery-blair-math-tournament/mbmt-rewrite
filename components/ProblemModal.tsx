@@ -24,7 +24,7 @@ export default function ProblemModal({
     const isEditing = !!problem;
 
     const [number, setNumber] = useState("");
-    const [type, setType] = useState("boolean");
+    const [type, setType] = useState<Problem["type"]>("boolean");
     const [probText, setProbText] = useState("");
     const [answer, setAnswer] = useState("");
     const [loading, setLoading] = useState(false);
@@ -105,7 +105,11 @@ export default function ProblemModal({
 
                 <div>
                     <Label className="mb-2 block">Type</Label>
-                    <RadioGroup value={type} onValueChange={setType}>
+                    <RadioGroup
+                        value={type}
+                        onValueChange={(val) =>
+                            setType(val as Problem["type"])
+                        }>
                         <div className="flex items-center space-x-2">
                             <RadioGroupItem
                                 value="boolean"
