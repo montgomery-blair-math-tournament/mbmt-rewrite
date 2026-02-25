@@ -1,6 +1,7 @@
 "use client";
 
 import Heading from "@/components/Heading";
+import Math from "@/components/Math";
 import Button from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
@@ -28,6 +29,7 @@ export default function GradingForm({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // populate responses array
     useEffect(() => {
         (async () => {
             const { data: problems, error: problemFetchError } = await supabase
@@ -148,7 +150,8 @@ export default function GradingForm({
                                     type="text"
                                     required
                                     value={
-                                        !responsesLoading
+                                        !responsesLoading &&
+                                        responses.length >= problem.number
                                             ? responses[problem.number - 1]
                                                   .response
                                             : ""
