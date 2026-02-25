@@ -45,10 +45,10 @@ export default function SignupForm() {
             if (signInError) {
                 setError(signInError.message);
                 setLoading(false);
-            } else {
-                router.push("/staff");
-                router.refresh();
+                return;
             }
+            router.push("/staff");
+            router.refresh();
         }
     };
 
