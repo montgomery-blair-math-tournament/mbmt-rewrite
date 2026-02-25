@@ -25,24 +25,25 @@ export default function TeamsPage() {
                 return;
             }
 
-            const formattedData: TeamDisplay[] = (
-                data as unknown as TeamWithCount[]
-            ).map((t) => {
-                const divisionCode = t.division ?? 0;
-                const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
+            const formattedData: TeamDisplay[] = (data as TeamWithCount[]).map(
+                (t) => {
+                    const divisionCode = t.division ?? 0;
+                    const divisionInfo =
+                        DIVISIONS[divisionCode] || DIVISIONS[0];
 
-                const displayId = `${divisionInfo.prefix}${t.id}`;
+                    const displayId = `${divisionInfo.prefix}${t.id}`;
 
-                return {
-                    id: t.id,
-                    displayId: displayId,
-                    name: t.name,
-                    school: t.school,
-                    chaperone: t.chaperone,
-                    division: divisionInfo.name,
-                    size: t.participant?.[0]?.count,
-                };
-            });
+                    return {
+                        id: t.id,
+                        displayId: displayId,
+                        name: t.name,
+                        school: t.school,
+                        chaperone: t.chaperone,
+                        division: divisionInfo.name,
+                        size: t.participant?.[0]?.count,
+                    };
+                }
+            );
 
             setTeams(formattedData);
             setLoading(false);
