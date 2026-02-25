@@ -23,49 +23,37 @@ export default async function GradingPage() {
         rounds.map(async (round) => {
             let registered = 0;
             let graded = 0;
+            const isTeam = round.type === "team" || round.type === "guts";
 
-            if (round.type === "individual") {
-                const { count: regCount } = await supabase
-                    .from("participant_round")
-                    .select("*", { count: "exact", head: true })
-                    .eq("round_id", round.id);
-
-                const { count: gradCount } = await supabase
-                    .from("score")
-                    .select("*", { count: "exact", head: true })
-                    .eq("round_id", round.id);
-
-                registered = regCount || 0;
-                graded = gradCount || 0;
-            } else if (round.type === "team") {
+            if (isTeam) {
                 const { count: regCount } = await supabase
                     .from("team_round")
                     .select("*", { count: "exact", head: true })
                     .eq("round_id", round.id);
 
-                registered = regCount || 0;
+                const { count: gradedCount } = await supabase
+                    .from("team_score")
+                    .select("*", { count: "exact", head: true })
+                    .eq("round_id", round.id)
+                    .eq("status", "COMPLETED");
 
-                const { data: problems } = await supabase
-                    .from("problem")
-                    .select("id")
+                registered = regCount || 0;
+                graded = gradedCount || 0;
+            } else {
+                // Individual
+                const { count: regCount } = await supabase
+                    .from("participant_round")
+                    .select("*", { count: "exact", head: true })
                     .eq("round_id", round.id);
 
-                if (problems && problems.length > 0) {
-                    const pIds = problems.map((p) => p.id);
+                const { count: gradedCount } = await supabase
+                    .from("participant_score")
+                    .select("*", { count: "exact", head: true })
+                    .eq("round_id", round.id)
+                    .eq("status", "COMPLETED");
 
-                    const { data: answers } = await supabase
-                        .from("team_answer")
-                        .select("team_id")
-                        .in("problem_id", pIds)
-                        .not("score", "is", null);
-
-                    if (answers) {
-                        const uniqueTeams = new Set(
-                            answers.map((a) => a.team_id)
-                        );
-                        graded = uniqueTeams.size;
-                    }
-                }
+                registered = regCount || 0;
+                graded = gradedCount || 0;
             }
 
             return { ...round, stats: { graded, total: registered } };
@@ -82,6 +70,7 @@ export default async function GradingPage() {
                         round={round}
                         showProgress={true}
                         stats={round.stats}
+                        showDetails={false} // Don't show generic details, focusing on grading
                         href={`/staff/grading/${round.id}`}
                     />
                 ))}

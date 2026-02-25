@@ -31,7 +31,7 @@ export default function TeamsPage() {
                 const divisionCode = t.division ?? 0;
                 const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
 
-                const displayId = `T${divisionInfo.prefix}${t.id}`;
+                const displayId = `${divisionInfo.prefix}${t.id}`;
 
                 return {
                     id: t.id,

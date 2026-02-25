@@ -6,7 +6,11 @@ export const problemSchema = z.object({
     number: z.string(),
     problem: z.string(),
     answer: z.string(),
-    type: z.string(),
+    type: z
+        .enum(["standard", "custom", "boolean", "numeric"])
+        .default("standard"),
+    points: z.number().default(1),
+    section: z.number().nullable(),
 });
 
 export type Problem = z.infer<typeof problemSchema>;

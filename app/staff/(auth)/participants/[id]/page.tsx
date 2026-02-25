@@ -9,11 +9,11 @@ import { HiCheck, HiXMark } from "react-icons/hi2";
 import Link from "next/link";
 import RoundCard from "@/components/RoundCard";
 import { toast } from "sonner";
-
 import { ParticipantDetail } from "@/lib/schema/participant";
 import { Round } from "@/lib/schema/round";
 import CheckInModal from "@/components/CheckInModal";
 import { cn } from "@/lib/utils";
+import Button from "@/components/ui/Button";
 
 export default function ParticipantPage({
     params,
@@ -136,30 +136,45 @@ export default function ParticipantPage({
                 </div>
                 <div className="flex items-center gap-4">
                     {/* Participant name */}
-                    <h1 className="font-bold font-sans text-4xl my-4">
+                    <Heading level={1}>
                         {participant.firstName} {participant.lastName}
-                    </h1>
+                    </Heading>
+                    {participant.checkedIn ? (
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsCheckInModalOpen(true)}
+                            className="bg-green-100 text-green-800 border-green-400 hover:bg-green-200 h-6 px-2.5 text-xs">
+                            <HiCheck className="w-3 h-3 mr-1" /> Checked In
+                        </Button>
+                    ) : (
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsCheckInModalOpen(true)}
+                            className="bg-gray-100 text-gray-800 border-gray-400 hover:bg-gray-200 h-6 px-2.5 text-xs">
+                            <HiXMark className="w-3 h-3 mr-1" /> Not Checked In
+                        </Button>
+                    )}
+                </div>
 
-                    <CheckedInButton
-                        onClick={() => setIsCheckInModalOpen(true)}
-                        checkedIn={participant.checkedIn}
-                    />
-                </div>
-                <div className="text-gray-700 dark:text-gray-300 flex gap-4 mt-2">
-                    <span className="font-mono dark:text-gray-700 text-gray-300 bg-gray-700 dark:bg-gray-300 px-2 py-0.5 rounded text-sm">
-                        {participant.displayId}
-                    </span>
-                    <span>
-                        <Link
-                            href={`/staff/teams/${participant.teamId}`}
-                            className="text-rose-600 hover:underline hover:text-rose-800">
-                            {participant.team}
-                        </Link>
-                    </span>
-                    <span>{participant.school}</span>
-                    <span>{participant.division} Division</span>
-                    <span>Grade {participant.grade}</span>
-                </div>
+                <CheckedInButton
+                    onClick={() => setIsCheckInModalOpen(true)}
+                    checkedIn={participant.checkedIn}
+                />
+            </div>
+            <div className="text-gray-700 dark:text-gray-300 flex gap-4 mt-2">
+                <span className="font-mono dark:text-gray-700 text-gray-300 bg-gray-700 dark:bg-gray-300 px-2 py-0.5 rounded text-sm">
+                    {participant.displayId}
+                </span>
+                <span>
+                    <Link
+                        href={`/staff/teams/${participant.teamId}`}
+                        className="text-rose-600 hover:underline hover:text-rose-800">
+                        {participant.team}
+                    </Link>
+                </span>
+                <span>{participant.school}</span>
+                <span>{participant.division} Division</span>
+                <span>Grade {participant.grade}</span>
             </div>
 
             {/* Individual rounds */}
