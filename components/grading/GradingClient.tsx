@@ -182,7 +182,7 @@ export default function GradingClient({
                                                 GradingStatus.CONFLICT && (
                                                 <Button
                                                     variant="secondary"
-                                                    className="bg-warning text-warning-foreground hover:bg-warning/80"
+                                                    className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
                                                     size="sm"
                                                     onClick={() =>
                                                         setConflictItem(p)
