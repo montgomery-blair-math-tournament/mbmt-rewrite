@@ -21,7 +21,6 @@ export async function getMyGrades(type: "participant" | "team", id: number) {
         .eq("grader_id", user.id)
         .order("created_at", { ascending: false });
 
-    // Dedup to get latest per problem
     const latestMap = new Map();
     data?.forEach((d) => {
         if (!latestMap.has(d.problem_id)) {
@@ -71,7 +70,6 @@ export async function getGradingStatus(
         type === "participant" ? "participant_grading" : "team_grading";
     const foreignKey = type === "participant" ? "participant_id" : "team_id";
 
-    // Fetch relevant columns only: problem_id and grader info
     const { data, error } = await supabase
         .from(table)
         .select(
@@ -94,7 +92,6 @@ export async function getGradingStatus(
         data: { user },
     } = await supabase.auth.getUser();
 
-    // Group by problem_id -> string[] (grader names)
     const statusMap: Record<number, string[]> = {};
     const hasGradedMap: Record<number, boolean> = {};
 

@@ -15,7 +15,6 @@ export default async function RoundGradingPage({
     const roundId = parseInt(id);
     const supabase = await createClient();
 
-    // 1. Fetch Round
     const { data: roundData } = await supabase
         .from("round")
         .select("*")
@@ -27,7 +26,6 @@ export default async function RoundGradingPage({
     }
     const round = roundData as Round;
 
-    // 2. Fetch Problems
     const { data: problemsData } = await supabase
         .from("problem")
         .select("*")
@@ -36,7 +34,6 @@ export default async function RoundGradingPage({
 
     const problems = (problemsData || []) as Problem[];
 
-    // 3. Fetch Participants/Teams and Scores
     let rows: {
         id: number;
         displayId: string;
@@ -48,7 +45,6 @@ export default async function RoundGradingPage({
     const isTeam = round.type === "team" || round.type === "guts";
 
     if (isTeam) {
-        // Fetch Teams in this round
         const { data: teamRoundsData } = await supabase
             .from("team_round")
             .select(
@@ -66,7 +62,6 @@ export default async function RoundGradingPage({
         }[];
         const teamRounds = teamRoundsData as unknown as TeamRoundType | null;
 
-        // Fetch Scores
         const { data: scores } = await supabase
             .from("team_score")
             .select("*")
@@ -92,8 +87,6 @@ export default async function RoundGradingPage({
             })
             .filter((x): x is (typeof rows)[0] => x !== null);
     } else {
-        // Individual
-        // Fetch Participants in this round
         const { data: participantRoundsData } = await supabase
             .from("participant_round")
             .select(
@@ -112,7 +105,6 @@ export default async function RoundGradingPage({
         const participantRounds =
             participantRoundsData as unknown as ParticipantRoundType | null;
 
-        // Fetch Scores
         const { data: scores } = await supabase
             .from("participant_score")
             .select("*")
@@ -139,7 +131,6 @@ export default async function RoundGradingPage({
             .filter((x): x is (typeof rows)[0] => x !== null);
     }
 
-    // Stats
     const total = rows.length;
     const completed = rows.filter(
         (r) => r.status === GradingStatus.COMPLETED

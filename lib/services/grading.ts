@@ -10,9 +10,6 @@ type GradeLike = {
     is_force?: boolean;
 };
 
-/**
- * Checks if two grades have a mismatch based on the problem type.
- */
 export function checkMismatch(
     g1: GradeLike,
     g2: GradeLike,
@@ -28,10 +25,6 @@ export function checkMismatch(
     }
 }
 
-/**
- * Computes the total score and overall grading status for a participant/team in a round.
- * This is a pure function that takes the raw fetched data.
- */
 export function computeRoundScore(
     roundProblems: { id: number; points: number; type: string }[],
     allGrades: (ParticipantGrading | TeamGrading)[],
@@ -69,7 +62,6 @@ export function computeRoundScore(
         if (validGrades.length === 0) continue;
         gradedProblemsCount++;
 
-        // Sort by LATEST
         validGrades.sort(
             (a, b) =>
                 new Date(b.created_at).getTime() -
@@ -124,10 +116,6 @@ export function computeRoundScore(
     return { status, totalScore };
 }
 
-/**
- * Detects conflicts between new submissions and existing grades.
- * Returns an array of conflicts found.
- */
 export function detectConflicts(
     submissions: GradeSubmission[],
     existingData: (ParticipantGrading | TeamGrading)[],

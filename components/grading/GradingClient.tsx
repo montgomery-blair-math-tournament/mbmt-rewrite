@@ -50,7 +50,6 @@ export default function GradingClient({
     const [localParticipants, setLocalParticipants] =
         useState<ParticipantRow[]>(participants);
 
-    // Sync state when props change
     useEffect(() => {
         setLocalParticipants(participants);
     }, [participants]);
@@ -183,7 +182,7 @@ export default function GradingClient({
                                                 GradingStatus.CONFLICT && (
                                                 <Button
                                                     variant="secondary"
-                                                    className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                                    className="bg-warning text-warning-foreground hover:bg-warning/80"
                                                     size="sm"
                                                     onClick={() =>
                                                         setConflictItem(p)

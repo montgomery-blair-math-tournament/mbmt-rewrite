@@ -84,7 +84,7 @@ export default function GradingForm({
 
                 problems.forEach((p) => {
                     initialGrades[p.id.toString()] = {
-                        isCorrect: false, // Automatically mark for submission
+                        isCorrect: false,
                         answer: "",
                     };
                 });
@@ -112,7 +112,6 @@ export default function GradingForm({
             if (g) {
                 const isStandard =
                     p.type === "standard" || p.type === "boolean";
-                // Only push if marked (isCorrect != null or answer has content)
                 const isUnmarked =
                     g.isCorrect === null && (!g.answer || g.answer === "");
                 if (!isUnmarked) {

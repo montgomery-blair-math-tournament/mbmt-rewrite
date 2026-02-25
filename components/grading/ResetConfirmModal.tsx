@@ -6,15 +6,6 @@ import Button from "@/components/ui/Button";
 import { resetGrades } from "@/app/actions/grading";
 import { toast } from "sonner";
 
-interface ResetConfirmModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    id: number;
-    participantName: string;
-    roundId: number;
-    type: "participant" | "team";
-}
-
 export default function ResetConfirmModal({
     isOpen,
     onClose,
@@ -22,7 +13,14 @@ export default function ResetConfirmModal({
     participantName,
     roundId,
     type,
-}: ResetConfirmModalProps) {
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+    id: number;
+    participantName: string;
+    roundId: number;
+    type: "participant" | "team";
+}) {
     const [loading, setLoading] = useState(false);
 
     const handleReset = async () => {
