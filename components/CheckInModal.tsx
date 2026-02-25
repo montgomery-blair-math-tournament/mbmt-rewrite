@@ -53,8 +53,9 @@ export default function CheckInModal({
         Router.reload();
     }
 
+    // Load participant rounds
     useEffect(() => {
-        const fetchRounds = async () => {
+        (async () => {
             if (!participant || !isOpen) return;
 
             if ("individualRounds" in participant) {
@@ -62,31 +63,26 @@ export default function CheckInModal({
                 return;
             }
             setLoadingRounds(true);
-            const { data: pRoundIds } = await supabase
+
+            const { data: participantRoundIds } = await supabase
                 .from("participant_round")
                 .select("round_id")
                 .eq("participant_id", participant.id);
 
-            const roundIds = pRoundIds?.map((x) => x.round_id) || [];
+            const roundIds = participantRoundIds?.map((x) => x.round_id) || [];
 
             if (roundIds.length > 0) {
-                const { data: rounds } = await supabase
+                const { data: roundData } = await supabase
                     .from("round")
                     .select("id, name, division, type")
                     .in("id", roundIds);
 
-                if (rounds) {
-                    setIndividualRounds(rounds);
-                } else {
-                    setIndividualRounds([]);
-                }
+                setIndividualRounds(roundData || []);
             } else {
                 setIndividualRounds([]);
             }
             setLoadingRounds(false);
-        };
-
-        fetchRounds();
+        })();
     }, [participant, isOpen, supabase]);
 
     if (!participant) return null;
@@ -132,18 +128,16 @@ export default function CheckInModal({
 
                     <p>
                         Your participant ID is{" "}
-                        <strong>{participant.displayId}</strong> and your team
-                        ID is{" "}
-                        <strong>
-                            T{participant.division[0]}
-                            {participant.teamId}
-                        </strong>
-                        .
+                        <strong>{participant.code}</strong> and your team ID is{" "}
+                        <strong>{participant.teamCode}</strong>.
                     </p>
 
                     <p>
                         You are on <strong>{participant.team}</strong> in the{" "}
-                        <strong>{participant.division}</strong> division.
+                        <strong>
+                            {participant.division === "A" ? "Abel" : "Jacobi"}
+                        </strong>{" "}
+                        division.
                     </p>
 
                     <p>

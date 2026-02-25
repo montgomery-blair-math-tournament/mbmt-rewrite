@@ -3,8 +3,9 @@ interface Division {
     prefix: string;
 }
 
-export const CURRENT_YEAR: number = 2025;
+export const CURRENT_YEAR: number = 2026;
 
+// Phasing out use of this object in favor of "J" or "A" to denote Jacobi/Abel in the database
 export const DIVISIONS: Record<number, Division> = {
     0: {
         name: "Abel",

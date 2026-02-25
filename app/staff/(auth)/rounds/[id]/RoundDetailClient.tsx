@@ -12,7 +12,7 @@ import EditRoundModal from "../EditRoundModal";
 import ProblemModal from "../ProblemModal";
 import Modal from "@/components/ui/Modal";
 
-import { Stats } from "@/lib/schema/stats";
+import { GradedStats } from "@/lib/schema/stats";
 import { deleteProblem } from "./actions";
 import { deleteRound } from "../actions";
 import { toast } from "sonner";
@@ -24,7 +24,7 @@ export default function RoundDetailClient({
 }: {
     round: Round;
     problems: Problem[];
-    stats: Stats;
+    stats: GradedStats;
 }) {
     const [isEditRoundOpen, setIsEditRoundOpen] = useState(false);
     const [isProblemModalOpen, setIsProblemModalOpen] = useState(false);

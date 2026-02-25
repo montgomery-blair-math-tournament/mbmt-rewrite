@@ -98,18 +98,22 @@ export default function ParticipantsTable({
                                 </TableCell>
                                 <TableCell>
                                     {readonly ? (
-                                        participant.displayId
+                                        participant.code
                                     ) : (
                                         <Link
                                             href={`/staff/participants/${participant.id}`}
                                             className="hover:underline text-rose-600 hover:text-rose-800">
-                                            {participant.displayId}
+                                            {participant.code}
                                         </Link>
                                     )}
                                 </TableCell>
                                 <TableCell>{participant.firstName}</TableCell>
                                 <TableCell>{participant.lastName}</TableCell>
-                                <TableCell>{participant.division}</TableCell>
+                                <TableCell>
+                                    {participant.division === "A"
+                                        ? "Abel"
+                                        : "Jacobi"}
+                                </TableCell>
                                 <TableCell>{participant.grade}</TableCell>
                                 <TableCell>{participant.school}</TableCell>
                                 <TableCell>{participant.team}</TableCell>

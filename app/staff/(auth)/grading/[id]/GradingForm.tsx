@@ -23,12 +23,13 @@ export default function GradingForm({
 }) {
     const supabase = createClient();
     const [participantName, setParticipantName] = useState("");
-    const [responses, setResponses] = useState<ProblemResponse[]>([]);
+    const [problemResponses, setProblemResponses] = useState<ProblemResponse[]>(
+        []
+    );
     const [responsesLoading, setResponsesLoading] = useState(true);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // populate responses array
     useEffect(() => {
         (async () => {
             const { data: problems, error: problemFetchError } = await supabase
@@ -41,7 +42,7 @@ export default function GradingForm({
                 redirect("/staff/grading");
             }
             problems.sort((a, b) => a.number - b.number);
-            setResponses(
+            setProblemResponses(
                 problems.map((problem) => ({ problem, response: "" }))
             );
             setResponsesLoading(false);
@@ -53,14 +54,12 @@ export default function GradingForm({
         setLoading(true);
         setError(null);
         setParticipantName(participantName.trimEnd());
-        console.log(responses);
         const {
             data: { user: staffData },
         } = await supabase.auth.getUser();
         if (!staffData) {
             redirect("/staff/login");
         }
-        console.log(staffData);
 
         const participant = await findParticipantByName(participantName);
         if (!participant) {
@@ -70,14 +69,12 @@ export default function GradingForm({
             const { error: upsertError } = await supabase
                 .from("participant_grading")
                 .upsert(
-                    responses.map((response) => ({
-                        problem_id: response.problem.id,
+                    problemResponses.map((r) => ({
+                        problem_id: r.problem.id,
                         participant_id: participant.id,
                         grader_id: staffData.id,
-                        answer: response.response.trimEnd(),
-                        is_correct:
-                            response.response.trimEnd() ===
-                            response.problem.answer,
+                        answer: r.response.trimEnd(),
+                        is_correct: r.response.trimEnd() === r.problem.answer,
                     }))
                 );
             if (upsertError) {
@@ -99,7 +96,6 @@ export default function GradingForm({
                 .eq("last_name", name.split(" ")[1])
                 .limit(1)
                 .single();
-        console.log(participants);
         if (participantFetchError) {
             console.error(participantFetchError);
         }
@@ -150,7 +146,7 @@ export default function GradingForm({
                                     required
                                     value={
                                         !responsesLoading
-                                            ? responses.find(
+                                            ? problemResponses.find(
                                                   (p) =>
                                                       p.problem.number ===
                                                       problem.number
@@ -161,7 +157,7 @@ export default function GradingForm({
                                     placeholder={problem.problem}
                                     onChange={(e) => {
                                         const newResponses =
-                                            structuredClone(responses);
+                                            structuredClone(problemResponses);
                                         const element = newResponses.find(
                                             (p) =>
                                                 p.problem.number ===
@@ -169,7 +165,7 @@ export default function GradingForm({
                                         );
                                         if (!element) return;
                                         element.response = e.target.value;
-                                        setResponses(newResponses);
+                                        setProblemResponses(newResponses);
                                     }}
                                 />
                             </div>

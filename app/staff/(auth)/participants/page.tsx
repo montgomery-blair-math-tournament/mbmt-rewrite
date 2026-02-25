@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { DIVISIONS } from "@/lib/settings";
 import Heading from "@/components/Heading";
 import {
     ParticipantDisplay,
@@ -36,24 +35,22 @@ export default function ParticipantsPage() {
             }
 
             const formattedData = (data as ParticipantWithTeam[]).map((p) => {
-                const teamData = p.team;
-                const divisionCode = teamData?.division ?? 0;
-                const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
-
                 return {
                     id: p.id,
-                    displayId: `${divisionInfo.prefix}${p.id}`,
+                    code: p.code,
+                    teamCode: p.team.code,
                     firstName: p.first_name,
                     lastName: p.last_name,
-                    division: divisionInfo.name,
+                    division: p.team.division,
                     grade: p.grade,
-                    school: teamData?.school || "N/A",
-                    team: teamData?.name || "N/A",
-                    chaperone: teamData?.chaperone || "N/A",
+                    school: p.team.school,
+                    team: p.team.name,
+                    chaperone: p.team.chaperone || "N/A",
                     checkedIn: p.checked_in,
                     teamId: p.team_id,
                 };
             });
+
             setParticipants(formattedData);
             setLoading(false);
         };

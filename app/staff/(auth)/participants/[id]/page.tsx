@@ -13,6 +13,7 @@ import { ParticipantDetail } from "@/lib/schema/participant";
 import { Round } from "@/lib/schema/round";
 import CheckInModal from "@/components/CheckInModal";
 import SuccessBadge from "@/components/SuccessBadge";
+import { TeamDetail } from "@/lib/schema/team";
 
 export default function ParticipantPage({
     params,
@@ -28,35 +29,41 @@ export default function ParticipantPage({
     const supabase = createClient();
 
     useEffect(() => {
-        const fetchData = async () => {
+        (async () => {
             if (!id) return;
 
-            const { data: pData, error: pError } = await supabase
-                .from("participant")
-                .select("*")
-                .eq("id", id)
-                .limit(1)
-                .single();
+            const { data: participantData, error: participantFetchError } =
+                await supabase
+                    .from("participant")
+                    .select("*")
+                    .eq("id", id)
+                    .limit(1)
+                    .single();
 
-            if (pError || !pData) {
-                console.error("Error fetching participant:", pError);
+            if (
+                participantFetchError ||
+                !participantData ||
+                !participantData.team_id
+            ) {
+                console.error(
+                    "Error fetching participant:",
+                    participantFetchError
+                );
                 toast.error("Error fetching participant");
                 setLoading(false);
                 return;
             }
 
-            let teamData = null;
-            if (pData.team_id) {
-                const { data: tData, error: tError } = await supabase
-                    .from("team")
-                    .select("id, name, school, division, chaperone")
-                    .eq("id", pData.team_id)
-                    .limit(1)
-                    .single();
+            const { data: teamData, error: tError } = await supabase
+                .from("team")
+                .select("id, name, school, division, chaperone")
+                .eq("id", participantData.team_id)
+                .limit(1)
+                .single();
 
-                if (!tError) {
-                    teamData = tData;
-                }
+            if (tError) {
+                console.error(tError);
+                toast.error("An error occurred while fetching team data");
             }
 
             const { data: pRoundIds } = await supabase
@@ -64,11 +71,11 @@ export default function ParticipantPage({
                 .select("round_id")
                 .eq("participant_id", id);
             let tRoundIds: { round_id: number }[] = [];
-            if (pData.team_id) {
+            if (participantData.team_id) {
                 const { data: trRes } = await supabase
                     .from("team_round")
                     .select("round_id")
-                    .eq("team_id", pData.team_id);
+                    .eq("team_id", participantData.team_id);
 
                 if (trRes) tRoundIds = trRes;
             }
@@ -89,9 +96,6 @@ export default function ParticipantPage({
                 }
             }
 
-            const divisionCode = teamData?.division ?? 0;
-            const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
-
             const individualRounds = pRIds
                 .map((rid) => roundsMap.get(rid))
                 .filter((r) => r !== undefined) as Round[];
@@ -100,25 +104,26 @@ export default function ParticipantPage({
                 .map((rid) => roundsMap.get(rid))
                 .filter((r) => r !== undefined) as Round[];
 
+            const tData = teamData! as TeamDetail;
+
             setParticipant({
-                id: pData.id,
-                displayId: `${divisionInfo.prefix}${pData.id}`,
-                firstName: pData.first_name,
-                lastName: pData.last_name,
-                division: divisionInfo.name,
-                grade: pData.grade,
-                school: teamData?.school,
-                team: teamData?.name,
-                chaperone: teamData?.chaperone,
-                checkedIn: pData.checked_in,
+                id: participantData.id,
+                code: participantData.code,
+                teamCode: tData.code,
+                firstName: participantData.first_name,
+                lastName: participantData.last_name,
+                division: participantData.division,
+                grade: participantData.grade,
+                school: tData.school,
+                team: tData.name,
+                chaperone: tData.chaperone || "N/A",
+                checkedIn: participantData.checked_in,
                 individualRounds,
                 teamRounds,
-                teamId: pData.team_id ?? 0,
+                teamId: tData.id,
             });
             setLoading(false);
-        };
-
-        fetchData();
+        })();
     }, [id, supabase]);
 
     if (loading) return <div className="p-6">Loading...</div>;
@@ -153,7 +158,7 @@ export default function ParticipantPage({
                 </div>
                 <div className="text-gray-700 dark:text-gray-300 flex gap-4 mt-2">
                     <span className="font-mono dark:text-gray-700 text-gray-300 bg-gray-700 dark:bg-gray-300 px-2 py-0.5 rounded text-sm">
-                        {participant.displayId}
+                        {participant.code}
                     </span>
                     <span>
                         <Link
@@ -163,7 +168,10 @@ export default function ParticipantPage({
                         </Link>
                     </span>
                     <span>{participant.school}</span>
-                    <span>{participant.division} Division</span>
+                    <span>
+                        {participant.division === "A" ? "Abel" : "Jacobi"}{" "}
+                        Division
+                    </span>
                     <span>Grade {participant.grade}</span>
                 </div>
             </div>
