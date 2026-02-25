@@ -1,6 +1,6 @@
 "use client";
 
-import Modal from "@/components/Modal";
+import Modal from "@/components/ui/Modal";
 import { useState } from "react";
 import { createRound } from "@/app/staff/(auth)/rounds/actions";
 import { DIVISIONS } from "@/lib/settings";
@@ -49,7 +49,7 @@ export default function CreateRoundModal({
             isOpen={isOpen}
             onClose={onClose}
             title="Create New Round"
-            className="w-[500px] h-auto"
+            className="w-125 h-auto"
             footer={
                 <>
                     <>

@@ -9,11 +9,10 @@ import { HiCheck, HiXMark } from "react-icons/hi2";
 import Link from "next/link";
 import RoundCard from "@/components/RoundCard";
 import { toast } from "sonner";
-import Button from "@/components/ui/Button";
-
 import { ParticipantDetail } from "@/lib/schema/participant";
 import { Round } from "@/lib/schema/round";
 import CheckInModal from "@/components/CheckInModal";
+import { cn } from "@/lib/utils";
 
 export default function ParticipantPage({
     params,
@@ -124,7 +123,8 @@ export default function ParticipantPage({
     if (!participant) return <div className="p-6">Participant not found</div>;
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
+            {/* Participant info */}
             <div>
                 <div className="mb-2">
                     <Link
@@ -134,6 +134,7 @@ export default function ParticipantPage({
                     </Link>
                 </div>
                 <div className="flex items-center gap-4">
+                    {/* Participant name */}
                     <Heading level={1}>
                         {participant.firstName} {participant.lastName}
                     </Heading>
@@ -152,9 +153,15 @@ export default function ParticipantPage({
                             <HiXMark className="w-3 h-3 mr-1" /> Not Checked In
                         </Button>
                     )}
+                    </h1>
+
+                    <CheckedInButton
+                        onClick={() => setIsCheckInModalOpen(true)}
+                        checkedIn={participant.checkedIn}
+                    />
                 </div>
-                <div className="text-gray-500 flex gap-4 mt-2">
-                    <span className="font-mono bg-gray-100 px-2 py-0.5 rounded text-sm">
+                <div className="text-gray-700 dark:text-gray-300 flex gap-4 mt-2">
+                    <span className="font-mono dark:text-gray-700 text-gray-300 bg-gray-700 dark:bg-gray-300 px-2 py-0.5 rounded text-sm">
                         {participant.displayId}
                     </span>
                     <span>
@@ -170,6 +177,7 @@ export default function ParticipantPage({
                 </div>
             </div>
 
+            {/* Individual rounds */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                     <Heading level={2}>Individual Rounds</Heading>
@@ -186,6 +194,7 @@ export default function ParticipantPage({
                     </div>
                 </div>
 
+                {/* Team rounds */}
                 <div className="space-y-4">
                     <Heading level={2}>Team Rounds</Heading>
                     <div className="grid grid-cols-1 gap-4">
@@ -201,11 +210,42 @@ export default function ParticipantPage({
                     </div>
                 </div>
             </div>
+
             <CheckInModal
                 isOpen={isCheckInModalOpen}
                 onClose={() => setIsCheckInModalOpen(false)}
                 participant={participant}
             />
         </div>
+    );
+}
+
+function CheckedInButton({
+    checkedIn = false,
+    className,
+    ...props
+}: { checkedIn: boolean } & React.ComponentProps<"button">) {
+    return (
+        <button
+            className={cn(
+                {
+                    "bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-400 flex items-center gap-1 hover:bg-green-200 hover:cursor-pointer transition-colors":
+                        checkedIn,
+                    "bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-400 flex items-center gap-1 hover:bg-gray-300 hover:cursor-pointer transition-colors":
+                        !checkedIn,
+                },
+                className
+            )}
+            {...props}>
+            {checkedIn ? (
+                <>
+                    <HiCheck className="w-3 h-3" /> Checked In
+                </>
+            ) : (
+                <>
+                    <HiXMark className="w-3 h-3" /> Not Checked In
+                </>
+            )}
+        </button>
     );
 }

@@ -19,7 +19,7 @@ export default async function StaffLayout({
     return (
         <div className="flex flex-col">
             <StaffNavbar />
-            <main className="flex flex-col flex-1 p-8">{children}</main>
+            <main className="flex flex-col flex-1 w-full p-8">{children}</main>
         </div>
     );
 }

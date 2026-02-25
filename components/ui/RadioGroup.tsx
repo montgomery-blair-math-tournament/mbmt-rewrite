@@ -5,8 +5,8 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { cn } from "@/lib/utils";
 import { HiCheckCircle } from "react-icons/hi2";
 
-const RadioGroup = React.forwardRef<
-    React.ElementRef<typeof RadioGroupPrimitive.Root>,
+export const RadioGroup = React.forwardRef<
+    React.ComponentRef<typeof RadioGroupPrimitive.Root>,
     React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
 >(({ className, ...props }, ref) => {
     return (
@@ -19,8 +19,8 @@ const RadioGroup = React.forwardRef<
 });
 RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
-const RadioGroupItem = React.forwardRef<
-    React.ElementRef<typeof RadioGroupPrimitive.Item>,
+export const RadioGroupItem = React.forwardRef<
+    React.ComponentRef<typeof RadioGroupPrimitive.Item>,
     React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
 >(({ className, ...props }, ref) => {
     return (
@@ -38,5 +38,3 @@ const RadioGroupItem = React.forwardRef<
     );
 });
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
-
-export { RadioGroup, RadioGroupItem };

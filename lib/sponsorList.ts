@@ -3,11 +3,12 @@ import { StaticImageData } from "next/image";
 import AwesomeMathImage from "@/public/images/amsp.png";
 import AOPSImage from "@/public/images/aopslogo.png";
 import JaneStreetImage from "@/public/images/jane-street.png";
-import JumpTradingImage from "@/public/images/jump.jpg";
+import JumpTradingImage from "@/public/images/jump.png";
 import MagnetImage from "@/public/images/magnet.jpg";
 import MCPSFoodImage from "@/public/images/mcpsfood.png";
 import WolframImage from "@/public/images/wolfram.png";
 import CitadelImage from "@/public/images/citadel.png";
+import HRTImage from "@/public/images/hrt.png";
 
 const sponsorList: {
     name: string;
@@ -19,7 +20,13 @@ const sponsorList: {
         name: "Montgomery Blair Magnet Foundation",
         image: MagnetImage,
         link: "http://www.mbhsmagnet.org/",
-        width: 150,
+        width: 200,
+    },
+    {
+        name: "HRT",
+        image: HRTImage,
+        link: "https://www.hudsonrivertrading.com/",
+        width: 600,
     },
     {
         name: "Art of Problem Solving",

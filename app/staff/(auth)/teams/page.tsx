@@ -6,7 +6,7 @@ import { DIVISIONS } from "@/lib/settings";
 import { TeamDisplay, TeamWithCount } from "@/lib/schema/team";
 import Heading from "@/components/Heading";
 import TeamsTable from "@/components/TeamsTable";
-import Button from "@/components/ui/Button";
+import HeaderButton from "@/components/HeaderButton";
 
 export default function TeamsPage() {
     const [teams, setTeams] = useState<TeamDisplay[]>([]);
@@ -31,7 +31,7 @@ export default function TeamsPage() {
                 const divisionCode = t.division ?? 0;
                 const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
 
-                const displayId = `T${divisionInfo.prefix}${t.id}`;
+                const displayId = `${divisionInfo.prefix}${t.id}`;
 
                 return {
                     id: t.id,
@@ -52,12 +52,10 @@ export default function TeamsPage() {
     }, [supabase]);
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-center">
                 <Heading level={1}>Teams</Heading>
-                <Button className="bg-rose-800 hover:bg-rose-700 text-white">
-                    Add
-                </Button>
+                <HeaderButton onClick={() => {}}>Add</HeaderButton>
             </div>
 
             <TeamsTable teams={teams} loading={loading} />

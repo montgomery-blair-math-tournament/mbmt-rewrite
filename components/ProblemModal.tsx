@@ -1,6 +1,6 @@
 "use client";
 
-import Modal from "@/components/Modal";
+import Modal from "@/components/ui/Modal";
 import { Problem } from "@/lib/schema/problem";
 import { useState, useEffect } from "react";
 import { upsertProblem } from "@/app/staff/(auth)/rounds/[id]/actions";

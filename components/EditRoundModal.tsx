@@ -1,6 +1,6 @@
 "use client";
 
-import Modal from "@/components/Modal";
+import Modal from "@/components/ui/Modal";
 import { Round } from "@/lib/schema/round";
 import { useState } from "react";
 import { updateRound } from "@/app/staff/(auth)/rounds/[id]/actions";
@@ -43,7 +43,7 @@ export default function EditRoundModal({
             isOpen={isOpen}
             onClose={onClose}
             title={`Edit Round: ${round.name}`}
-            className="w-[500px] h-auto"
+            className="w-125 h-auto"
             footer={
                 <>
                     <Button variant="outline" onClick={onClose}>
