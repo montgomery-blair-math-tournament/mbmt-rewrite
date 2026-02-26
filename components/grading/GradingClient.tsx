@@ -40,13 +40,11 @@ export default function GradingClient({
 }: GradingClientProps) {
     const [search, setSearch] = useState("");
     const [gradingId, setGradingId] = useState<string>("");
-
     const [gradingItem, setGradingItem] = useState<ParticipantRow | null>(null);
     const [conflictItem, setConflictItem] = useState<ParticipantRow | null>(
         null
     );
     const [resetItem, setResetItem] = useState<ParticipantRow | null>(null);
-
     const [localParticipants, setLocalParticipants] =
         useState<ParticipantRow[]>(participants);
 
@@ -98,7 +96,7 @@ export default function GradingClient({
 
     return (
         <div className="flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg shadow-sm">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center border bg-gray-200 dark:bg-gray-900 p-4 rounded-lg shadow-sm">
                 <div className="flex items-center gap-4 w-full md:w-auto">
                     <Input
                         placeholder="Search by name or ID..."
@@ -122,7 +120,7 @@ export default function GradingClient({
                 </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm border">
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg border">
                 <Table>
                     <TableHeader>
                         <TableRow>

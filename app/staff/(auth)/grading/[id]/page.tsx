@@ -60,7 +60,7 @@ export default async function RoundGradingPage({
                 | { id: number; name: string; displayId: string }[]
                 | null;
         }[];
-        const teamRounds = teamRoundsData as unknown as TeamRoundType | null;
+        const teamRounds = teamRoundsData as TeamRoundType | null;
 
         const { data: scores } = await supabase
             .from("team_score")

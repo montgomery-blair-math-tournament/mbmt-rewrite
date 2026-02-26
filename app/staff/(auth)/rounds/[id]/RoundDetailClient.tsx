@@ -17,6 +17,7 @@ import { Stats } from "@/lib/schema/stats";
 import { deleteProblem } from "./actions";
 import { deleteRound } from "../actions";
 import { toast } from "sonner";
+import Badge from "@/components/Badge";
 
 export default function RoundDetailClient({
     round,
@@ -29,8 +30,8 @@ export default function RoundDetailClient({
 }) {
     const [isEditRoundOpen, setIsEditRoundOpen] = useState(false);
     const [isProblemModalOpen, setIsProblemModalOpen] = useState(false);
-    const [selectedProblem, setSelectedProblem] = useState<Problem | undefined>(
-        undefined
+    const [selectedProblem, setSelectedProblem] = useState<Problem | null>(
+        null
     );
     const [problemToDelete, setProblemToDelete] = useState<Problem | null>(
         null
@@ -43,13 +44,13 @@ export default function RoundDetailClient({
     };
 
     const handleAddProblem = () => {
-        setSelectedProblem(undefined);
+        setSelectedProblem(null);
         setIsProblemModalOpen(true);
     };
 
     const handleCloseProblemModal = () => {
         setIsProblemModalOpen(false);
-        setSelectedProblem(undefined);
+        setSelectedProblem(null);
     };
 
     const handleDeleteClick = (problem: Problem) => {
@@ -79,16 +80,18 @@ export default function RoundDetailClient({
                         ← Back to Rounds
                     </Link>
                 </div>
-                <div className="flex items-start justify-between">
+                <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Heading level={1}>{round.name}</Heading>
-                        <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300 border border-gray-500">
+                        <Badge variant="secondary">
                             {DIVISIONS[round.division]?.name ||
                                 "Unknown Division"}
-                        </span>
-                        <span className="bg-rose-100 text-rose-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-rose-900 dark:text-rose-300 border border-rose-500 capitalize">
-                            {round.type} Round
-                        </span>
+                        </Badge>
+                        <Badge variant="failure">
+                            {round.type.charAt(0).toUpperCase() +
+                                round.type.substring(1)}{" "}
+                            Round
+                        </Badge>
                         <span className="text-gray-500 text-sm">
                             Progress: {stats.graded} / {stats.total}
                         </span>
