@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Modal from "@/components/Modal";
 import Button from "@/components/ui/Button";
-import { resetGrades } from "@/app/(frontend)/actions/grading";
+import { resetGrades } from "@/app/actions/grading";
 import { toast } from "sonner";
 
 export default function ResetConfirmModal({
