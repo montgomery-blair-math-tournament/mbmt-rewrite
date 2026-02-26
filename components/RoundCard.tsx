@@ -44,19 +44,19 @@ export default function RoundCard({
                             <span className="text-sm font-medium text-gray-500">
                                 Progress
                             </span>
-                            <span className="text-lg font-bold text-gray-900">
+                            <span className="text-lg font-bold text-gray-900 dark:text-gray-200">
                                 {stats.graded} / {stats.total}
                             </span>
                         </div>
                     )}
                     {showDetails && (
-                        <div className="space-y-2 mt-2">
+                        <div className="flex flex-col gap-2 mt-2">
                             {numQuestions !== undefined && (
                                 <div className="flex justify-between items-center">
                                     <span className="text-sm font-medium text-gray-500">
                                         Questions
                                     </span>
-                                    <span className="text-lg font-bold text-gray-900">
+                                    <span className="text-lg font-bold text-gray-800 dark:text-gray-200">
                                         {numQuestions}
                                     </span>
                                 </div>
@@ -66,7 +66,7 @@ export default function RoundCard({
                                     <span className="text-sm font-medium text-gray-500">
                                         Participants
                                     </span>
-                                    <span className="text-lg font-bold text-gray-900">
+                                    <span className="text-lg font-bold text-gray-800 dark:text-gray-200">
                                         {stats.total}
                                     </span>
                                 </div>

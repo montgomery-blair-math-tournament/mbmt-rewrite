@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/constants/settings";
 import { TeamDetail } from "@/lib/schema/team";
 import { Round } from "@/lib/schema/round";
-
 import Heading from "@/components/Heading";
 import ParticipantsTable from "@/components/ParticipantsTable";
 import RoundCard from "@/components/RoundCard";
@@ -117,7 +116,7 @@ export default function TeamPage({
     const divisionInfo = DIVISIONS[team.division] || DIVISIONS[0];
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
             <div>
                 <div className="mb-2">
                     <Link
@@ -130,24 +129,23 @@ export default function TeamPage({
                     <Heading level={1}>{team.name}</Heading>
                 </div>
                 <div className="text-gray-500 flex flex-wrap gap-4 mt-2">
-                    <span className="font-mono bg-gray-100 px-2 py-0.5 rounded text-sm">
+                    <span className="font-mono bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-2 py-0.5 rounded text-sm">
                         {team.displayId}
                     </span>
                     <span>{team.school}</span>
                     <span>{divisionInfo.name} Division</span>
-                    {team.chaperone && <span>Chaperone: {team.chaperone}</span>}
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-4">
+            <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-4">
                     <Heading level={2}>Members</Heading>
                     <ParticipantsTable participants={members} loading={false} />
                 </div>
 
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                     <Heading level={2}>Team Rounds</Heading>
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                         {teamRounds.length === 0 ? (
                             <p className="text-gray-500 italic">
                                 No team rounds assigned.

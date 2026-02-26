@@ -182,7 +182,7 @@ export default function ConflictResolutionModal({
             ) : Object.keys(conflicts).length === 0 ? (
                 <div className="text-center py-8">No conflicts found.</div>
             ) : (
-                <div className="space-y-8">
+                <div className="flex flex-col gap-8">
                     {Object.entries(conflicts).map(([pId, options]) => {
                         const problemId = parseInt(pId);
                         const problem = problems.find(
@@ -256,7 +256,7 @@ export default function ConflictResolutionModal({
                                 </RadioGroup>
 
                                 {res.choice === "new" && (
-                                    <div className="mt-3 ml-6 space-y-2">
+                                    <div className="mt-3 ml-6 flex flex-col gap-2">
                                         {isStandard ? (
                                             <div className="flex items-center gap-2">
                                                 <Label>Correct?</Label>

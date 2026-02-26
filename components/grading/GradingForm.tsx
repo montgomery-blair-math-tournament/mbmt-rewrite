@@ -172,8 +172,10 @@ export default function GradingForm({
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="space-y-4 max-h-[60vh] overflow-y-auto p-1">
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto p-1">
                     {problems.map((problem) => {
                         const pidStr = problem.id.toString();
                         const currentGrade = form.watch(`grades.${pidStr}`);
@@ -229,7 +231,7 @@ export default function GradingForm({
                                             control={form.control}
                                             name={`grades.${pidStr}.isCorrect`}
                                             render={({ field }) => (
-                                                <FormItem className="flex items-center gap-2 mb-0 space-y-0">
+                                                <FormItem className="flex items-center gap-2 mb-0 gap-0">
                                                     <Label
                                                         className={cn(
                                                             "cursor-pointer min-w-[4rem] text-right",
@@ -266,7 +268,7 @@ export default function GradingForm({
                                             control={form.control}
                                             name={`grades.${pidStr}.answer`}
                                             render={({ field }) => (
-                                                <FormItem className="mb-0 space-y-0">
+                                                <FormItem className="mb-0 gap-0">
                                                     <FormControl>
                                                         <Input
                                                             {...field}
