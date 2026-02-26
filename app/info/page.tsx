@@ -1,5 +1,5 @@
 import Main from "@/components/Main";
-import { DIVISIONS } from "@/lib/settings";
+import { DIVISIONS } from "@/lib/constants/settings";
 import Link2 from "@/components/Link2";
 import Heading from "@/components/Heading";
 

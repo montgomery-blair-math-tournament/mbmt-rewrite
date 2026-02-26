@@ -1,4 +1,4 @@
-const writers = [
+export const writers = [
     "Arjun Samavedam",
     "Tane Park",
     "Julian Kovalovsky",
@@ -47,4 +47,7 @@ const writers = [
     "Lewis Lau",
 ];
 
-export default writers;
+export const staff = [
+    ["Kele Zhang", "Reanna Jin", "Ashley Zhang", "Alex Zhao"],
+    ["Justin Jiang", "Jessica Hsieh", "Manil Singh-Prasad", "Sam Easaw"],
+];
