@@ -31,7 +31,7 @@ export default function ConflictConfirmationModal({
             onClose={onClose}
             title="Conflict Detected"
             className="w-full max-w-md">
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
                 <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md text-yellow-800">
                     <p className="font-medium">Conflicting Grades Found</p>
                     <p className="text-sm mt-1">

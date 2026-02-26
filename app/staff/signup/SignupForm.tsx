@@ -17,6 +17,8 @@ import Link2 from "@/components/Link2";
 
 export default function SignupForm() {
     const [email, setEmail] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -31,6 +33,7 @@ export default function SignupForm() {
         const { error } = await supabase.auth.signUp({
             email,
             password,
+            options: { data: { first_name: firstName, last_name: lastName } },
         });
 
         if (error) {
@@ -61,13 +64,15 @@ export default function SignupForm() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleSignup} className="space-y-4">
+                    <form
+                        onSubmit={handleSignup}
+                        className="flex flex-col gap-4">
                         {error && (
                             <div className="text-sm font-medium text-destructive text-center p-2 rounded bg-destructive/10">
                                 {error}
                             </div>
                         )}
-                        <div className="space-y-2">
+                        <div className="flex flex-col gap-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
                                 id="email"
@@ -78,7 +83,35 @@ export default function SignupForm() {
                                 disabled={loading}
                             />
                         </div>
-                        <div className="space-y-2">
+                        <div className="flex gap-2">
+                            <div className="flex flex-col gap-2">
+                                <Label htmlFor="firstName">First Name</Label>
+                                <Input
+                                    id="firstName"
+                                    type="text"
+                                    required
+                                    value={firstName}
+                                    onChange={(e) =>
+                                        setFirstName(e.target.value)
+                                    }
+                                    disabled={loading}
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Label htmlFor="lastName">Last Name</Label>
+                                <Input
+                                    id="lastName"
+                                    type="text"
+                                    required
+                                    value={lastName}
+                                    onChange={(e) =>
+                                        setLastName(e.target.value)
+                                    }
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
                             <Label htmlFor="password">Password</Label>
                             <Input
                                 id="password"

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Problem } from "@/lib/schema/problem";
 import { Round } from "@/lib/schema/round";
 import ProblemCard from "@/components/ProblemCard";
-import { DIVISIONS } from "@/lib/settings";
+import { DIVISIONS } from "@/lib/constants/settings";
 import { HiPencil, HiPlus } from "react-icons/hi2";
 import { useState } from "react";
 import EditRoundModal from "@/components/EditRoundModal";
@@ -17,6 +17,7 @@ import { Stats } from "@/lib/schema/stats";
 import { deleteProblem } from "./actions";
 import { deleteRound } from "../actions";
 import { toast } from "sonner";
+import Badge from "@/components/Badge";
 
 export default function RoundDetailClient({
     round,
@@ -29,8 +30,8 @@ export default function RoundDetailClient({
 }) {
     const [isEditRoundOpen, setIsEditRoundOpen] = useState(false);
     const [isProblemModalOpen, setIsProblemModalOpen] = useState(false);
-    const [selectedProblem, setSelectedProblem] = useState<Problem | undefined>(
-        undefined
+    const [selectedProblem, setSelectedProblem] = useState<Problem | null>(
+        null
     );
     const [problemToDelete, setProblemToDelete] = useState<Problem | null>(
         null
@@ -43,13 +44,13 @@ export default function RoundDetailClient({
     };
 
     const handleAddProblem = () => {
-        setSelectedProblem(undefined);
+        setSelectedProblem(null);
         setIsProblemModalOpen(true);
     };
 
     const handleCloseProblemModal = () => {
         setIsProblemModalOpen(false);
-        setSelectedProblem(undefined);
+        setSelectedProblem(null);
     };
 
     const handleDeleteClick = (problem: Problem) => {
@@ -70,7 +71,7 @@ export default function RoundDetailClient({
     };
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
             <div>
                 <div className="mb-2">
                     <Link
@@ -79,16 +80,18 @@ export default function RoundDetailClient({
                         ← Back to Rounds
                     </Link>
                 </div>
-                <div className="flex items-start justify-between">
+                <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Heading level={1}>{round.name}</Heading>
-                        <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300 border border-gray-500">
+                        <Badge variant="secondary">
                             {DIVISIONS[round.division]?.name ||
                                 "Unknown Division"}
-                        </span>
-                        <span className="bg-rose-100 text-rose-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-rose-900 dark:text-rose-300 border border-rose-500 capitalize">
-                            {round.type} Round
-                        </span>
+                        </Badge>
+                        <Badge variant="failure">
+                            {round.type.charAt(0).toUpperCase() +
+                                round.type.substring(1)}{" "}
+                            Round
+                        </Badge>
                         <span className="text-gray-500 text-sm">
                             Progress: {stats.graded} / {stats.total}
                         </span>
@@ -117,7 +120,7 @@ export default function RoundDetailClient({
                 </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
                 <Heading level={2}>Problems</Heading>
                 <div className="grid grid-cols-1 gap-4">
                     {problems.map((problem) => (

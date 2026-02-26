@@ -4,7 +4,7 @@ import Modal from "@/components/ui/Modal";
 import { Round } from "@/lib/schema/round";
 import { useState } from "react";
 import { updateRound } from "@/app/staff/(auth)/rounds/[id]/actions";
-import { DIVISIONS } from "@/lib/settings";
+import { DIVISIONS } from "@/lib/constants/settings";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
 import Label from "@/components/ui/Label";
@@ -57,7 +57,7 @@ export default function EditRoundModal({
                     </Button>
                 </>
             }>
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
                 <div>
                     <Label className="mb-2 block">Name</Label>
                     <Input

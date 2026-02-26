@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { DIVISIONS } from "@/lib/settings";
+import { DIVISIONS } from "@/lib/constants/settings";
 import Heading from "@/components/Heading";
 import {
     ParticipantDisplay,

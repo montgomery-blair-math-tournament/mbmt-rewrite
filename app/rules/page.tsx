@@ -2,7 +2,7 @@ import Link2 from "@/components/Link2";
 import Math from "@/components/Math";
 import Main from "@/components/Main";
 import RedBold from "@/components/RedBold";
-import { DIVISIONS } from "@/lib/settings";
+import { DIVISIONS } from "@/lib/constants/settings";
 import Heading from "@/components/Heading";
 
 export default function Page() {

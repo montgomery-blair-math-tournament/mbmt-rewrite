@@ -16,7 +16,7 @@ export default function ProblemModal({
     isOpen,
     onClose,
 }: {
-    problem?: Problem;
+    problem: Problem | null;
     roundId: number;
     isOpen: boolean;
     onClose: () => void;
@@ -75,7 +75,7 @@ export default function ProblemModal({
             isOpen={isOpen}
             onClose={onClose}
             title={isEditing ? "Edit Problem" : "Add Problem"}
-            className="w-[600px] h-auto"
+            className="w-150 h-auto"
             footer={
                 <>
                     <>
@@ -91,7 +91,7 @@ export default function ProblemModal({
                     </>
                 </>
             }>
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
                 <div>
                     <Label className="mb-2 block">Number</Label>
                     <Input
@@ -132,7 +132,7 @@ export default function ProblemModal({
                         value={probText}
                         onChange={(e) => setProbText(e.target.value)}
                         rows={3}
-                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+                        className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
                         placeholder="Problem statement (LaTeX supported)"
                     />
                 </div>
