@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Problem } from "@/lib/schema/problem";
 import { Round } from "@/lib/schema/round";
 import ProblemCard from "@/components/ProblemCard";
-import { DIVISIONS } from "@/lib/settings";
+import { DIVISIONS } from "@/lib/constants/settings";
 import { HiPencil, HiPlus } from "react-icons/hi2";
 import { useState } from "react";
 import EditRoundModal from "@/components/EditRoundModal";

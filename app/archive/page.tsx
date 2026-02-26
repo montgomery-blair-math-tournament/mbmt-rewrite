@@ -1,5 +1,5 @@
 import Main from "@/components/Main";
-import pastTests, { PastTest } from "../../lib/pastTests";
+import pastTests, { PastTest } from "../../lib/constants/pastTests";
 import Link2 from "@/components/Link2";
 import Heading from "@/components/Heading";
 

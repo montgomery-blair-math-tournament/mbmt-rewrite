@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { DIVISIONS } from "@/lib/settings";
+import { DIVISIONS } from "@/lib/constants/settings";
 import { TeamDetail } from "@/lib/schema/team";
 import { Round } from "@/lib/schema/round";
 import Heading from "@/components/Heading";
