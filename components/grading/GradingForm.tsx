@@ -209,7 +209,7 @@ export default function GradingForm({
                                             `(${problem.points} pts)`}
                                     </Label>
                                     <div className="flex flex-col sm:flex-row gap-2 mt-1">
-                                        <p className="text-xs text-muted-foreground truncate max-w-[200px]">
+                                        <p className="text-xs text-muted-foreground truncate max-w-50">
                                             {problem.problem}
                                         </p>
                                         {gradingStatus[problem.id] &&
@@ -231,10 +231,10 @@ export default function GradingForm({
                                             control={form.control}
                                             name={`grades.${pidStr}.isCorrect`}
                                             render={({ field }) => (
-                                                <FormItem className="flex items-center gap-2 mb-0 gap-0">
+                                                <FormItem className="flex items-center gap-2 mb-0">
                                                     <Label
                                                         className={cn(
-                                                            "cursor-pointer min-w-[4rem] text-right",
+                                                            "cursor-pointer min-w-16 text-right",
                                                             isUnmarked &&
                                                                 "text-gray-400"
                                                         )}>
