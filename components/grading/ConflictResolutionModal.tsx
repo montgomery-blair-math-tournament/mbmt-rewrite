@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { getAllGrades } from "@/app/actions/grading-data";
-import { submitGrades } from "@/app/actions/grading";
+import { getAllGrades } from "@/app/(frontend)/actions/grading-data";
+import { submitGrades } from "@/app/(frontend)/actions/grading";
 import { Problem } from "@/lib/schema/problem";
 import Modal from "@/components/Modal";
 import Button from "@/components/ui/Button";

@@ -2,8 +2,8 @@ import Main from "@/components/Main";
 import Heading from "@/components/Heading";
 import Image from "next/image";
 import Link from "next/link";
-import sponsorList from "../../lib/sponsorList";
-import problemWriters from "../../lib/problemWriters";
+import sponsorList from "../../../lib/sponsorList";
+import problemWriters from "../../../lib/problemWriters";
 import Link2 from "@/components/Link2";
 
 export default function Page() {
