@@ -1,5 +1,5 @@
 import Main from "@/components/Main";
-import pastTests, { PastTest } from "../../lib/constants/pastTests";
+import pastTests, { PastTest } from "@/lib/constants/pastTests";
 import Link2 from "@/components/Link2";
 import Heading from "@/components/Heading";
 
@@ -18,7 +18,7 @@ export default function Page() {
             <table className="border-collapse w-fill">
                 {/* header */}
                 <thead>
-                    <tr className="font-bold select-none bg-rose-300/80 dark:bg-rose-900">
+                    <tr className="font-bold select-none bg-accent/50">
                         <td className="p-2">Year</td>
                         <td className="p-2">Division</td>
                         <td className="p-2">Algebra</td>
@@ -35,7 +35,7 @@ export default function Page() {
                 {pastTests.map((p) => (
                     <tbody
                         key={p.year}
-                        className="odd:bg-gray-200 bg-gray-100 odd:dark:bg-gray-800 dark:bg-gray-900 hover:bg-rose-200 dark:hover:bg-rose-900 transition-colors">
+                        className="odd:bg-gray-200 bg-gray-100 odd:hover:bg-accent/30 hover:bg-accent/30 transition-colors">
                         <tr>
                             <td
                                 className="p-2 align-top"

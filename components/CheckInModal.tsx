@@ -10,6 +10,7 @@ import { Round } from "@/lib/schema/round";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
+import Heading from "./Heading";
 
 export default function CheckInModal({
     isOpen,
@@ -137,12 +138,12 @@ export default function CheckInModal({
             }>
             <div>
                 <div>
-                    <h3 className="text-rose-600 dark:text-rose-400 font-semibold mb-3">
+                    <p className="text-red-600 font-semibold mb-3 text-lg">
                         Read and follow the script:
-                    </h3>
+                    </p>
 
-                    <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-800 dark:text-gray-200">
-                        <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-600 text-yellow-900 dark:text-yellow-100 p-3 rounded-md">
+                    <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-800 ">
+                        <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md">
                             <p>
                                 Confirm they are{" "}
                                 <strong>
@@ -176,7 +177,7 @@ export default function CheckInModal({
                             <strong>{roundListContent}</strong>.
                         </p>
 
-                        <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-600 text-yellow-900 dark:text-yellow-100 p-3 rounded-md">
+                        <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md">
                             <p>
                                 Find{" "}
                                 <strong>

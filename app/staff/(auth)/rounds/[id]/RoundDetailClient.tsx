@@ -12,7 +12,6 @@ import EditRoundModal from "@/components/EditRoundModal";
 import ProblemModal from "@/components/ProblemModal";
 import Modal from "@/components/Modal";
 import Button from "@/components/ui/Button";
-
 import { Stats } from "@/lib/schema/stats";
 import { deleteProblem } from "./actions";
 import { deleteRound } from "../actions";
@@ -112,7 +111,7 @@ export default function RoundDetailClient({
                         </Button>
                         <Button
                             onClick={handleAddProblem}
-                            className="bg-rose-600 hover:bg-rose-700 text-white shadow-sm">
+                            className="bg-accent hover:bg-accent-hover text-white shadow-sm">
                             <HiPlus className="mr-2 h-4 w-4" />
                             Add Problem
                         </Button>

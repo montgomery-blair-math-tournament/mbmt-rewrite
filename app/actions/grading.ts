@@ -9,21 +9,20 @@ import { z } from "zod";
 import { computeRoundScore, detectConflicts } from "@/lib/services/grading";
 
 async function calculateRoundScore(
-    supabase: SupabaseClient,
     roundId: number,
-    participantId: number,
+    participantOrTeamId: number,
     type: "participant" | "team"
 ) {
-    const table =
-        type === "participant" ? "participant_grading" : "team_grading";
-    const scoreTable =
-        type === "participant" ? "participant_score" : "team_score";
-    const foreignKey = type === "participant" ? "participant_id" : "team_id";
+    const supabase = await createClient();
+    const table = `${type}_grading`;
+    const scoreTable = `${type}_score`;
+    const foreignKey = `${type}_id`;
 
     const { data: round } = await supabase
         .from("round")
         .select("type")
         .eq("id", roundId)
+        .limit(1)
         .single();
     const isGuts = round?.type?.toLowerCase().includes("guts");
 
@@ -35,7 +34,7 @@ async function calculateRoundScore(
     const { data: allGrades } = await supabase
         .from(table)
         .select("*")
-        .eq(foreignKey, participantId);
+        .eq(foreignKey, participantOrTeamId);
 
     const { status, totalScore } = computeRoundScore(
         roundProblems || [],
@@ -45,7 +44,7 @@ async function calculateRoundScore(
 
     const { error: upsertError } = await supabase.from(scoreTable).upsert(
         {
-            [foreignKey]: participantId,
+            [foreignKey]: participantOrTeamId,
             round_id: roundId,
             score: totalScore,
             status: status,
@@ -134,7 +133,6 @@ export async function submitGrades(
         }
 
         const { status, totalScore } = await calculateRoundScore(
-            supabase,
             roundId,
             participantId,
             type

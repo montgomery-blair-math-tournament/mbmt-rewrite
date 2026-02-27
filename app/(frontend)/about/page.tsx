@@ -2,8 +2,8 @@ import Main from "@/components/Main";
 import Heading from "@/components/Heading";
 import Image from "next/image";
 import Link from "next/link";
-import sponsorList from "../../lib/constants/sponsorList";
-import { writers, staff } from "../../lib/constants/people";
+import sponsorList from "@/lib/constants/sponsorList";
+import { writers, staff } from "@/lib/constants/people";
 import Link2 from "@/components/Link2";
 
 const getShuffledStaff = () =>

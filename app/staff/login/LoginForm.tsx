@@ -23,7 +23,7 @@ export default function LoginForm() {
     const router = useRouter();
     const supabase = createClient();
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
@@ -83,7 +83,7 @@ export default function LoginForm() {
                         </div>
                         <Button
                             type="submit"
-                            className="w-full bg-rose-900 hover:bg-rose-800 text-white"
+                            className="w-full bg-accent hover:bg-accent-hover text-white"
                             disabled={loading}>
                             {loading ? "Logging in..." : "Login"}
                         </Button>

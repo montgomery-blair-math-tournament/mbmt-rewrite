@@ -59,7 +59,7 @@ export default function CreateRoundModal({
                         <Button
                             onClick={handleSubmit}
                             disabled={loading}
-                            className="bg-rose-600 hover:bg-rose-700 text-white">
+                            className="bg-accent hover:bg-accent-hover text-white">
                             {loading ? "Creating..." : "Create"}
                         </Button>
                     </>
