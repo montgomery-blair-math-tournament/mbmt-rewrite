@@ -26,6 +26,7 @@ export default async function StaffNavbar() {
         { label: "Teams", href: "/staff/teams" },
         { label: "Rounds", href: "/staff/rounds" },
         { label: "Announcements", href: "/staff/announcements" },
+        { label: "Guts Grading", href: "/staff/guts-grading" },
         { label: "Admin", href: "/staff/admin" },
     ];
 
@@ -33,7 +34,7 @@ export default async function StaffNavbar() {
         <div className="flex gap-1 md:gap-2 w-full p-2 bg-gray-200 items-center">
             <Link
                 href="/staff"
-                className="select-none rounded-md text-center text-lg font-semibold align-center transition-colors hover:bg-gray-400 py-1.5 px-3 md:px-4">
+                className="select-none rounded-md text-center text-lg font-semibold align-center transition-colors hover:bg-gray-300 py-1.5 px-3 md:px-4">
                 Staff Panel
             </Link>
 
@@ -52,7 +53,7 @@ export default async function StaffNavbar() {
                         <Button
                             type="submit"
                             variant="ghost"
-                            className="ml-4 hover:bg-gray-400 py-1.5 px-2 md:px-3 text-sm md:text-base h-auto">
+                            className="ml-4 hover:bg-gray-300 select-none py-1.5 px-2 md:px-3 text-sm md:text-base h-auto">
                             Logout
                         </Button>
                     </form>
