@@ -2,7 +2,6 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { SupabaseClient } from "@supabase/supabase-js";
 import { GradeSubmission, gradeSubmissionSchema } from "@/lib/schema/grading";
 import { z } from "zod";
 

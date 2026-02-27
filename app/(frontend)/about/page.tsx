@@ -70,7 +70,11 @@ export default function Page() {
             </p>
             <div className="flex flex-wrap justify-around gap-2 items-center">
                 {sponsorList.map(({ name, image, link, width }) => (
-                    <Link key={name} href={link} className="h-fit bg-white">
+                    <Link
+                        key={name}
+                        href={link}
+                        className="h-fit bg-white"
+                        target="_blank">
                         <Image src={image} alt={`${name} logo`} width={width} />
                     </Link>
                 ))}
