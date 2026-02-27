@@ -29,7 +29,6 @@ export default function TeamsTable({
                     <TableHead>Chaperone</TableHead>
                     <TableHead>Division</TableHead>
                     <TableHead>Participants</TableHead>
-                    <TableHead>Participants checked in</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -72,7 +71,6 @@ export default function TeamsTable({
                             <TableCell>{t.chaperone}</TableCell>
                             <TableCell>{t.division}</TableCell>
                             <TableCell>{t.size}</TableCell>
-                            <TableCell>{t.numCheckedIn}</TableCell>
                         </TableRow>
                     ))
                 )}

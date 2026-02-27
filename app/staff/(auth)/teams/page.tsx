@@ -41,7 +41,6 @@ export default function TeamsPage() {
                         chaperone: t.chaperone,
                         division: divisionInfo.name,
                         size: t.participant?.[0]?.count,
-                        numCheckedIn: t,
                     };
                 }
             );
