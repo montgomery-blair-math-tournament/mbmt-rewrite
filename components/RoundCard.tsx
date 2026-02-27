@@ -6,7 +6,7 @@ import {
     CardTitle,
 } from "@/components/ui/Card";
 import Link from "next/link";
-import { DIVISIONS } from "@/lib/settings";
+import { DIVISIONS } from "@/lib/constants/settings";
 import { Round } from "@/lib/schema/round";
 
 export default function RoundCard({

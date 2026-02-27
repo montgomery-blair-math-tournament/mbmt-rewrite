@@ -2,11 +2,19 @@ import Main from "@/components/Main";
 import Heading from "@/components/Heading";
 import Image from "next/image";
 import Link from "next/link";
-import sponsorList from "../../../lib/sponsorList";
-import problemWriters from "../../../lib/problemWriters";
+import sponsorList from "../../lib/constants/sponsorList";
+import { writers, staff } from "../../lib/constants/people";
 import Link2 from "@/components/Link2";
 
+const getShuffledStaff = () =>
+    staff.map((row) => [...row].sort(() => Math.random() - 0.5));
+const getShuffledWriters = () => [...writers].sort(() => Math.random() - 0.5);
+
+export const dynamic = "force-dynamic";
+
 export default function Page() {
+    const shuffledStaff = getShuffledStaff();
+    const shuffledWriters = getShuffledWriters();
     return (
         <Main>
             <Heading level={1}>About Us</Heading>
@@ -17,23 +25,17 @@ export default function Page() {
             </p>
 
             <Heading level={2}>Contest Organizers</Heading>
-            <table className="text-center text-xl">
+            <table className="text-center text-xl w-full">
                 <tbody>
-                    <tr>
-                        <td className="text-xl pb-2">Mahilan Guha</td>
-                        <td className="text-xl pb-2">Yunyi Ling</td>
-                        <td className="text-xl pb-2">Michelle Gao</td>
-                    </tr>
-                    <tr>
-                        <td className="text-xl pb-2">Evan Zhang</td>
-                        <td className="text-xl pb-2">Reanna Jin</td>
-                        <td className="text-xl pb-2">Alex Zhao</td>
-                    </tr>
-                    <tr>
-                        <td className="text-xl pb-2">Kele Zhang</td>
-                        <td className="text-xl pb-2">Ashley Zhang</td>
-                        <td className="text-xl pb-2">Jesse Jing</td>
-                    </tr>
+                    {shuffledStaff.map((row, i) => (
+                        <tr key={i}>
+                            {row.map((person, j) => (
+                                <td key={j} className="text-xl pb-2">
+                                    {person}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
 
@@ -43,8 +45,8 @@ export default function Page() {
                 wouldn&apos;t have a contest:
             </p>
             <ul className="columns-5 text-center">
-                {Array.from({ length: problemWriters.length }).map((_, i) => (
-                    <li key={i}>{problemWriters[i]}</li>
+                {shuffledWriters.map((person, i) => (
+                    <li key={i}>{person}</li>
                 ))}
             </ul>
 
