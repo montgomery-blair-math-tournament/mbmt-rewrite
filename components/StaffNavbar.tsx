@@ -25,13 +25,13 @@ export default async function StaffNavbar() {
         { label: "Participants", href: "/staff/participants" },
         { label: "Teams", href: "/staff/teams" },
         { label: "Rounds", href: "/staff/rounds" },
-        { label: "Announcements", href: "/staff/announcements" },
+        // { label: "Announcements", href: "/staff/announcements" },
         { label: "Guts Grading", href: "/staff/guts-grading" },
         { label: "Admin", href: "/staff/admin" },
     ];
 
     return (
-        <div className="flex gap-1 md:gap-2 w-full p-2 bg-gray-200 items-center">
+        <div className="flex gap-1 md:gap-2 w-full p-2 bg-gray-200 items-center overflow-x-auto">
             <Link
                 href="/staff"
                 className="select-none rounded-md text-center text-lg font-semibold align-center transition-colors hover:bg-gray-300 py-1.5 px-3 md:px-4">

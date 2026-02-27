@@ -1,13 +1,18 @@
+"use client";
+
 import Heading from "@/components/Heading";
-import TeamsTable from "../teams/TeamsTable";
 import { useEffect, useState } from "react";
 import { TeamDisplay, TeamWithCount } from "@/lib/schema/team";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { DIVISIONS } from "@/lib/constants/settings";
+import { Input } from "@/components/ui/Input";
+import GutsTeamSelectionForm from "./TeamSelectionForm";
+// import TeamsTable from "../teams/TeamsTable";
 
 export default function GutsGradingPage() {
     const [teams, setTeams] = useState<TeamDisplay[]>([]);
+    const [currentTeam, setCurrentTeam] = useState<TeamDisplay>();
     const [loading, setLoading] = useState(false);
     const supabase = createClient();
 
@@ -53,15 +58,15 @@ export default function GutsGradingPage() {
                 setLoading(false);
             }
         })();
-    });
+    }, [supabase]);
 
     return (
         <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
                 <Heading level={1}>Guts Grading</Heading>
-
-                <TeamsTable teams={teams} loading={loading} />
             </div>
+            {/* <TeamsTable teams={teams} loading={loading} /> */}
+            <GutsTeamSelectionForm teams={teams} setTeam={setCurrentTeam} />
         </div>
     );
 }
