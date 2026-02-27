@@ -10,7 +10,6 @@ import { Round } from "@/lib/schema/round";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
-import Heading from "./Heading";
 
 export default function CheckInModal({
     isOpen,
