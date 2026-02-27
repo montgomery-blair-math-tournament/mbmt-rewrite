@@ -129,7 +129,7 @@ export default function TeamPage({
                     <Heading level={1}>{team.name}</Heading>
                 </div>
                 <div className="text-gray-500 flex flex-wrap gap-4 mt-2">
-                    <span className="font-mono bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-2 py-0.5 rounded text-sm">
+                    <span className="font-mono bg-gray-200 text-gray-700 px-2 py-0.5 rounded text-sm">
                         {team.displayId}
                     </span>
                     <span>{team.school}</span>

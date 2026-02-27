@@ -25,6 +25,7 @@ export type TeamDisplay = {
     chaperone: string | null;
     division: string;
     size: number;
+    numCheckedIn: number;
 };
 
 export type TeamDetail = {

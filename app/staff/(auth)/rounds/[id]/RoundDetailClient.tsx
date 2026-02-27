@@ -112,7 +112,7 @@ export default function RoundDetailClient({
                         </Button>
                         <Button
                             onClick={handleAddProblem}
-                            className="bg-rose-600 hover:bg-rose-700 text-white shadow-sm">
+                            className="bg-accent hover:bg-accent-hover text-white shadow-sm">
                             <HiPlus className="mr-2 h-4 w-4" />
                             Add Problem
                         </Button>

@@ -35,7 +35,7 @@ export default function Page() {
                 {pastTests.map((p) => (
                     <tbody
                         key={p.year}
-                        className="odd:bg-gray-200 bg-gray-100 odd:dark:bg-gray-800 dark:bg-gray-900 odd:hover:bg-accent/30 hover:bg-accent/30 transition-colors">
+                        className="odd:bg-gray-200 bg-gray-100 odd:hover:bg-accent/30 hover:bg-accent/30 transition-colors">
                         <tr>
                             <td
                                 className="p-2 align-top"

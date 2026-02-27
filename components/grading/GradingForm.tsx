@@ -215,7 +215,7 @@ export default function GradingForm({
                                         {gradingStatus[problem.id] &&
                                             gradingStatus[problem.id].length >
                                                 0 && (
-                                                <p className="text-xs text-rose-600 font-medium">
+                                                <p className="text-xs text-red-600 font-medium">
                                                     Graded by:{" "}
                                                     {gradingStatus[
                                                         problem.id
@@ -327,7 +327,7 @@ export default function GradingForm({
                                         className={cn(
                                             "h-8 px-2 text-xs",
                                             isUnmarked
-                                                ? "text-rose-600 hover:text-rose-800 hover:bg-rose-50"
+                                                ? "text-red-600 hover:text-red-800 hover:bg-red-50"
                                                 : "text-gray-400 hover:text-gray-600"
                                         )}>
                                         {isUnmarked ? "Mark" : "Unmark"}

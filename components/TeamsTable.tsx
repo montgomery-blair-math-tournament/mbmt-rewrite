@@ -9,6 +9,7 @@ import Table, {
 import { HiOutlinePencil } from "react-icons/hi2";
 import { TeamDisplay } from "@/lib/schema/team";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default function TeamsTable({
     teams,
@@ -28,6 +29,7 @@ export default function TeamsTable({
                     <TableHead>Chaperone</TableHead>
                     <TableHead>Division</TableHead>
                     <TableHead>Participants</TableHead>
+                    <TableHead>Participants checked in</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -49,14 +51,19 @@ export default function TeamsTable({
                             <TableCell>
                                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <TableButton title="Edit">
-                                        <HiOutlinePencil className="w-4 h-4" />
+                                        <HiOutlinePencil
+                                            className="w-4 h-4"
+                                            onClick={() =>
+                                                redirect(`/staff/teams/${t.id}`)
+                                            }
+                                        />
                                     </TableButton>
                                 </div>
                             </TableCell>
                             <TableCell>
                                 <Link
                                     href={`/staff/teams/${t.id}`}
-                                    className="hover:underline text-rose-600 hover:text-rose-800">
+                                    className="hover:underline text-red-600 hover:text-red-800">
                                     {t.displayId}
                                 </Link>
                             </TableCell>
@@ -65,6 +72,7 @@ export default function TeamsTable({
                             <TableCell>{t.chaperone}</TableCell>
                             <TableCell>{t.division}</TableCell>
                             <TableCell>{t.size}</TableCell>
+                            <TableCell>{t.numCheckedIn}</TableCell>
                         </TableRow>
                     ))
                 )}

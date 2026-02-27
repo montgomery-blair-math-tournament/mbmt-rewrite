@@ -28,7 +28,7 @@ export function TableHeader({
         <thead
             data-slot="table-header"
             className={cn(
-                "select-none [&>tr]:border-b [&>tr]:bg-rose-100 [&>tr]:dark:bg-rose-950",
+                "select-none [&>tr]:border-b [&>tr]:bg-red-100 [&>tr]:",
                 className
             )}
             {...props}
@@ -44,7 +44,7 @@ export function TableBody({
         <tbody
             data-slot="table-body"
             className={cn(
-                "[&>tr]:even:bg-gray-100 dark:[&>tr]:even:bg-gray-900 [&>tr]:hover:bg-gray-200 dark:[&>tr]:hover:bg-gray-800 [&>tr]:transition-colors",
+                "[&>tr]:even:bg-gray-100 [&>tr]:hover:bg-gray-200 [&>tr]:transition-colors",
                 className
             )}
             {...props}
@@ -118,7 +118,7 @@ export function TableButton({
     return (
         <button
             className={cn(
-                "p-1 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors rounded text-gray-700 dark:text-gray-200 hover:cursor-pointer",
+                "p-1 hover:bg-gray-300 transition-colors rounded text-gray-700 hover:cursor-pointer",
                 className
             )}
             {...props}

@@ -4,19 +4,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-    "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none",
+    "inline-flex items-center justify-center gap-2 rounded-md cursor-pointer text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none",
     {
         variants: {
             variant: {
-                default:
-                    "text-white bg-rose-600 hover:bg-rose-700 dark:bg-rose-700 dark:hover:bg-rose-800",
-                destructive:
-                    "dark:text-white text-black bg-red-300 hover:bg-red-400 dark:bg-red-700 dark:hover:bg-red-800",
-                outline:
-                    "border bg-white/0 hover:bg-gray-100 dark:hover:bg-gray-900",
-                secondary:
-                    "bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800",
-                ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+                default: "text-white bg-accent hover:bg-accent-hover ",
+                destructive: "text-black bg-red-300 hover:bg-red-400 ",
+                outline: "border bg-white/0 hover:bg-gray-100 ",
+                secondary: "bg-gray-100 hover:bg-gray-200 ",
+                ghost: "hover:bg-accent hover:text-accent-foreground",
                 link: "text-primary underline-offset-4 hover:underline",
             },
             size: {
