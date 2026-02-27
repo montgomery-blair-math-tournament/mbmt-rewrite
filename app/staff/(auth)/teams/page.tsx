@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/constants/settings";
 import { TeamDisplay, TeamWithCount } from "@/lib/schema/team";
 import Heading from "@/components/Heading";
-import TeamsTable from "@/components/TeamsTable";
+import TeamsTable from "@/app/staff/(auth)/teams/TeamsTable";
 import HeaderButton from "@/components/HeaderButton";
 
 export default function TeamsPage() {

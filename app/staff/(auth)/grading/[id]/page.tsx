@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import GradingClient from "@/components/grading/GradingClient";
+import GradingClient from "./GradingClient";
 import Heading from "@/components/Heading";
 import Link from "next/link";
 import { Round } from "@/lib/schema/round";

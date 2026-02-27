@@ -9,7 +9,7 @@ import {
     ParticipantWithTeam,
 } from "@/lib/schema/participant";
 import ParticipantsTable from "@/components/ParticipantsTable";
-import AddParticipantsModal from "@/components/AddParticipantsModal";
+import AddParticipantsModal from "@/app/staff/(auth)/participants/AddParticipantsModal";
 import { toast } from "sonner";
 import HeaderButton from "@/components/HeaderButton";
 import { HiPlus } from "react-icons/hi2";
