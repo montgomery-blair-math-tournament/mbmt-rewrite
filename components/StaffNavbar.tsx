@@ -30,10 +30,10 @@ export default async function StaffNavbar() {
     ];
 
     return (
-        <div className="flex gap-1 md:gap-2 w-full p-2 bg-gray-300 items-center">
+        <div className="flex gap-1 md:gap-2 w-full p-2 bg-gray-200 items-center">
             <Link
                 href="/staff"
-                className="select-none rounded-md text-center text-lg font-semibold align-center duration-200 hover:bg-gray-400 py-1.5 px-3 md:px-4">
+                className="select-none rounded-md text-center text-lg font-semibold align-center transition-colors hover:bg-gray-400 py-1.5 px-3 md:px-4">
                 Staff Panel
             </Link>
 
@@ -41,7 +41,7 @@ export default async function StaffNavbar() {
                 <Link
                     key={link.href}
                     href={link.href}
-                    className="select-none rounded-md text-center align-center duration-200 hover:bg-gray-400 py-1.5 px-2 md:px-3 text-sm md:text-base">
+                    className="select-none rounded-md text-center align-center transition-colors hover:bg-gray-300 py-1.5 px-2 md:px-3 text-sm md:text-base">
                     {link.label}
                 </Link>
             ))}

@@ -38,13 +38,15 @@ export function TableHeader({
 
 export function TableBody({
     className,
+    noHover = false,
     ...props
-}: React.ComponentProps<"tbody">) {
+}: { noHover?: boolean } & React.ComponentProps<"tbody">) {
     return (
         <tbody
             data-slot="table-body"
             className={cn(
-                "[&>tr]:even:bg-gray-100 [&>tr]:hover:bg-gray-200 [&>tr]:transition-colors",
+                "[&>tr]:even:bg-gray-100 [&>tr]:transition-colors",
+                { "[&>tr]:hover:bg-gray-200": !noHover },
                 className
             )}
             {...props}

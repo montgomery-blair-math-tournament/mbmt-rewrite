@@ -18,14 +18,6 @@ import { cn } from "@/lib/utils";
 import ConflictConfirmationModal from "./ConflictConfirmationModal";
 import Modal from "@/components/Modal";
 
-type GradingFormProps = {
-    type: "participant" | "team";
-    id: number;
-    roundId: number;
-    problems: Problem[];
-    onSuccess: () => void;
-};
-
 const formSchema = z.object({
     grades: z.record(
         z.string(),
@@ -42,10 +34,17 @@ export default function GradingForm({
     roundId,
     problems,
     onSuccess,
-}: GradingFormProps) {
+}: {
+    type: "participant" | "team";
+    id: number;
+    roundId: number;
+    problems: Problem[];
+    onSuccess: () => void;
+}) {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [gradingStatus, setGradingStatus] = useState<
+        // Problem id, grader name(s)
         Record<number, string[]>
     >({});
     const [hasGradedMap, setHasGradedMap] = useState<Record<number, boolean>>(
@@ -65,7 +64,7 @@ export default function GradingForm({
     });
 
     useEffect(() => {
-        const fetchStatus = async () => {
+        (async () => {
             setLoading(true);
             try {
                 const res = await getGradingStatus(type, id);
@@ -91,15 +90,12 @@ export default function GradingForm({
 
                 form.reset({ grades: initialGrades });
             } catch (error) {
+                toast.error("Failed to fetch grading status");
                 console.error("Failed to fetch grading status", error);
             } finally {
                 setLoading(false);
             }
-        };
-
-        if (id) {
-            fetchStatus();
-        }
+        })();
     }, [id, roundId, type, problems, form]);
 
     const performSubmit = async (confirm = false) => {
