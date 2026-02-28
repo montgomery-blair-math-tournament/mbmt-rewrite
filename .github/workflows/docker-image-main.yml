@@ -20,4 +20,4 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: git checkout main && ../../../../docker/mbhs/mbmt/rebuild.sh
+          script: cd /docker/mbhs/mbmt && git checkout main && bash rebuild.sh
