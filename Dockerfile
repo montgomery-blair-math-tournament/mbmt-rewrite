@@ -1,4 +1,4 @@
-FROM node:18-alpine AS deps
+FROM node:lts-alpine AS deps
 RUN apk add --no-cache libc6-compat
 RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
-FROM node:18-alpine AS builder
+FROM node:lts-alpine AS builder
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY --from=deps /app/node_modules ./node_modules
@@ -16,7 +16,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN pnpm build
 
-FROM node:18-alpine AS runner
+FROM node:lts-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
