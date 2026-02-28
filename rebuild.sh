@@ -2,7 +2,7 @@
 
 git pull
 
-old_container=$(docker ps -a -q --filter mbmt)
+old_container=$(docker ps -a -q --filter ancestor=mbmt)
 
 old_image=$(docker images -q mbmt)
 
