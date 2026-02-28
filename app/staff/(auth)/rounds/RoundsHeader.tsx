@@ -3,7 +3,7 @@
 import Heading from "@/components/Heading";
 import { HiPlus } from "react-icons/hi2";
 import { useState } from "react";
-import CreateRoundModal from "@/components/CreateRoundModal";
+import CreateRoundModal from "@/app/staff/(auth)/rounds/CreateRoundModal";
 import HeaderButton from "@/components/HeaderButton";
 
 export default function RoundsHeader() {

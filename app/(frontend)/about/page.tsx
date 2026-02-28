@@ -2,8 +2,8 @@ import Main from "@/components/Main";
 import Heading from "@/components/Heading";
 import Image from "next/image";
 import Link from "next/link";
-import sponsorList from "../../lib/constants/sponsorList";
-import { writers, staff } from "../../lib/constants/people";
+import sponsorList from "@/lib/constants/sponsorList";
+import { writers, staff } from "@/lib/constants/people";
 import Link2 from "@/components/Link2";
 
 const getShuffledStaff = () =>
@@ -70,7 +70,11 @@ export default function Page() {
             </p>
             <div className="flex flex-wrap justify-around gap-2 items-center">
                 {sponsorList.map(({ name, image, link, width }) => (
-                    <Link key={name} href={link} className="h-fit bg-white">
+                    <Link
+                        key={name}
+                        href={link}
+                        className="h-fit bg-white"
+                        target="_blank">
                         <Image src={image} alt={`${name} logo`} width={width} />
                     </Link>
                 ))}

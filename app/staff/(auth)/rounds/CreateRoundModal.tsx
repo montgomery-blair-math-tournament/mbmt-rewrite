@@ -1,9 +1,8 @@
 "use client";
 
 import Modal from "@/components/ui/Modal";
-import { Round } from "@/lib/schema/round";
 import { useState } from "react";
-import { updateRound } from "@/app/staff/(auth)/rounds/[id]/actions";
+import { createRound } from "@/app/staff/(auth)/rounds/actions";
 import { DIVISIONS } from "@/lib/constants/settings";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
@@ -11,28 +10,35 @@ import Label from "@/components/ui/Label";
 import { Input } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
-export default function EditRoundModal({
-    round,
+export default function CreateRoundModal({
     isOpen,
     onClose,
 }: {
-    round: Round;
     isOpen: boolean;
     onClose: () => void;
 }) {
-    const [name, setName] = useState(round.name);
-    const [division, setDivision] = useState(round.division);
-    const [type, setType] = useState(round.type);
+    const [name, setName] = useState("");
+    const [division, setDivision] = useState<number | null>(null);
+    const [type, setType] = useState<string>("individual");
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
+        if (!name || division === null) {
+            toast.error("Please fill in name and division");
+            return;
+        }
+
         setLoading(true);
         try {
-            await updateRound(round.id, { name, division, type });
+            await createRound({ name, division, type });
+            toast.success("Round created");
+            setName("");
+            setDivision(null);
+            setType("individual");
             onClose();
-        } catch (e) {
+        } catch (e: unknown) {
             console.error(e);
-            toast.error("Failed to update round");
+            toast.error("Failed to create round: " + (e as Error).message);
         } finally {
             setLoading(false);
         }
@@ -42,19 +48,21 @@ export default function EditRoundModal({
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title={`Edit Round: ${round.name}`}
+            title="Create New Round"
             className="w-125 h-auto"
             footer={
                 <>
-                    <Button variant="outline" onClick={onClose}>
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={handleSubmit}
-                        disabled={loading}
-                        className="bg-rose-600 hover:bg-rose-700 text-white">
-                        {loading ? "Saving..." : "Edit"}
-                    </Button>
+                    <>
+                        <Button variant="outline" onClick={onClose}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleSubmit}
+                            disabled={loading}
+                            className="bg-accent hover:bg-accent-hover text-white">
+                            {loading ? "Creating..." : "Create"}
+                        </Button>
+                    </>
                 </>
             }>
             <div className="flex flex-col gap-4">
@@ -64,6 +72,7 @@ export default function EditRoundModal({
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        placeholder="e.g. Algebra"
                         className="mt-1"
                     />
                 </div>
@@ -71,7 +80,7 @@ export default function EditRoundModal({
                 <div>
                     <Label className="mb-2 block">Division</Label>
                     <RadioGroup
-                        value={division.toString()}
+                        value={division?.toString() || ""}
                         onValueChange={(val) => setDivision(parseInt(val))}>
                         {Object.entries(DIVISIONS).map(([key, div]) => (
                             <div
@@ -79,9 +88,9 @@ export default function EditRoundModal({
                                 className="flex items-center space-x-2">
                                 <RadioGroupItem
                                     value={key}
-                                    id={`division-${key}`}
+                                    id={`new-division-${key}`}
                                 />
-                                <Label htmlFor={`division-${key}`}>
+                                <Label htmlFor={`new-division-${key}`}>
                                     {div.name}
                                 </Label>
                             </div>
@@ -96,9 +105,12 @@ export default function EditRoundModal({
                             <div
                                 key={t}
                                 className="flex items-center space-x-2">
-                                <RadioGroupItem value={t} id={`type-${t}`} />
+                                <RadioGroupItem
+                                    value={t}
+                                    id={`new-type-${t}`}
+                                />
                                 <Label
-                                    htmlFor={`type-${t}`}
+                                    htmlFor={`new-type-${t}`}
                                     className="capitalize">
                                     {t}
                                 </Label>

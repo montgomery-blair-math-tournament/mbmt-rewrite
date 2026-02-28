@@ -4,16 +4,6 @@ import Modal from "@/components/Modal";
 import GradingForm from "./GradingForm";
 import { Problem } from "@/lib/schema/problem";
 
-type GradingModalProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    type: "participant" | "team";
-    id: number;
-    roundId: number;
-    problems: Problem[];
-    participantName: string;
-};
-
 export default function GradingModal({
     isOpen,
     onClose,
@@ -22,7 +12,15 @@ export default function GradingModal({
     roundId,
     problems,
     participantName,
-}: GradingModalProps) {
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+    type: "participant" | "team";
+    id: number;
+    roundId: number;
+    problems: Problem[];
+    participantName: string;
+}) {
     return (
         <Modal
             isOpen={isOpen}

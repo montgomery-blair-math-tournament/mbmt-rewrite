@@ -96,7 +96,7 @@ export default function GradingClient({
 
     return (
         <div className="flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row gap-4 justify-between items-center border bg-gray-200 dark:bg-gray-900 p-4 rounded-lg shadow-sm">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center border p-4 rounded-lg shadow-sm">
                 <div className="flex items-center gap-4 w-full md:w-auto">
                     <Input
                         placeholder="Search by name or ID..."
@@ -120,36 +120,35 @@ export default function GradingClient({
                 </div>
             </div>
 
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg border">
-                <Table>
-                    <TableHeader>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>ID</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Score</TableHead>
+                        <TableHead>Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody noHover>
+                    {filteredParticipants.length === 0 ? (
                         <TableRow>
-                            <TableHead>ID</TableHead>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Score</TableHead>
-                            <TableHead>Actions</TableHead>
+                            <TableCell
+                                colSpan={5}
+                                className="text-center py-8 text-muted-foreground">
+                                No participants found.
+                            </TableCell>
                         </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {filteredParticipants.length === 0 ? (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={5}
-                                    className="text-center py-8 text-muted-foreground">
-                                    No participants found.
+                    ) : (
+                        filteredParticipants.map((p) => (
+                            <TableRow key={p.id}>
+                                <TableCell className="font-medium">
+                                    {p.displayId}
                                 </TableCell>
-                            </TableRow>
-                        ) : (
-                            filteredParticipants.map((p) => (
-                                <TableRow key={p.id}>
-                                    <TableCell className="font-medium">
-                                        {p.displayId}
-                                    </TableCell>
-                                    <TableCell>{p.name}</TableCell>
-                                    <TableCell>
-                                        <span
-                                            className={`px-2 py-1 rounded text-xs font-semibold
+                                <TableCell>{p.name}</TableCell>
+                                <TableCell>
+                                    <span
+                                        className={`px-2 py-1 rounded text-xs font-semibold
                                             ${
                                                 p.status ===
                                                 GradingStatus.COMPLETED
@@ -162,51 +161,46 @@ export default function GradingClient({
                                                         ? "bg-yellow-100 text-yellow-800"
                                                         : "bg-gray-100 text-gray-800"
                                             }`}>
-                                            {p.status}
-                                        </span>
-                                    </TableCell>
-                                    <TableCell>{p.score ?? "-"}</TableCell>
-                                    <TableCell>
-                                        <div className="flex gap-2">
+                                        {p.status}
+                                    </span>
+                                </TableCell>
+                                <TableCell>{p.score ?? "-"}</TableCell>
+                                <TableCell>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => setGradingItem(p)}>
+                                            Grade
+                                        </Button>
+                                        {p.status ===
+                                            GradingStatus.CONFLICT && (
                                             <Button
-                                                variant="outline"
+                                                variant="secondary"
+                                                className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
                                                 size="sm"
                                                 onClick={() =>
-                                                    setGradingItem(p)
+                                                    setConflictItem(p)
                                                 }>
-                                                Grade
+                                                Resolve
                                             </Button>
-                                            {p.status ===
-                                                GradingStatus.CONFLICT && (
-                                                <Button
-                                                    variant="secondary"
-                                                    className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        setConflictItem(p)
-                                                    }>
-                                                    Resolve
-                                                </Button>
-                                            )}
-                                            {p.status !==
-                                                GradingStatus.NOT_STARTED && (
-                                                <Button
-                                                    variant="destructive"
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        setResetItem(p)
-                                                    }>
-                                                    Reset
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                                        )}
+                                        {p.status !==
+                                            GradingStatus.NOT_STARTED && (
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={() => setResetItem(p)}>
+                                                Reset
+                                            </Button>
+                                        )}
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
+                </TableBody>
+            </Table>
 
             {gradingItem && (
                 <GradingModal

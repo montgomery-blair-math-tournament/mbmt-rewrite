@@ -66,11 +66,10 @@ export async function getGradingStatus(
 ) {
     const supabase = await createClient();
 
-    const table =
-        type === "participant" ? "participant_grading" : "team_grading";
-    const foreignKey = type === "participant" ? "participant_id" : "team_id";
+    const table = `${type}_grading`;
+    const foreignKey = `${type}_id`;
 
-    const { data, error } = await supabase
+    const { data: graderData, error } = await supabase
         .from(table)
         .select(
             `
@@ -95,30 +94,31 @@ export async function getGradingStatus(
     const statusMap: Record<number, string[]> = {};
     const hasGradedMap: Record<number, boolean> = {};
 
-    data?.forEach(
+    graderData?.forEach(
         (row: {
             problem_id: number;
             grader_id: string;
             grader: { username: string }[] | { username: string } | null;
         }) => {
-            const pId = row.problem_id;
+            console.log(row);
+            const problemId = row.problem_id;
             const graderObj = Array.isArray(row.grader)
                 ? row.grader[0]
                 : row.grader;
             const name = graderObj?.username || "Unknown";
             const graderId = row.grader_id;
 
-            if (!statusMap[pId]) {
-                statusMap[pId] = [];
-                hasGradedMap[pId] = false;
+            if (!statusMap[problemId]) {
+                statusMap[problemId] = [];
+                hasGradedMap[problemId] = false;
             }
 
-            if (!statusMap[pId].includes(name)) {
-                statusMap[pId].push(name);
+            if (!statusMap[problemId].includes(name)) {
+                statusMap[problemId].push(name);
             }
 
             if (user && graderId === user.id) {
-                hasGradedMap[pId] = true;
+                hasGradedMap[problemId] = true;
             }
         }
     );
