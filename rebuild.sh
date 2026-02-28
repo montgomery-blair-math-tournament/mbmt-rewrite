@@ -2,13 +2,13 @@
 
 git pull
 
-old_container=$(docker ps -a -q --filter ambmts)
+old_container=$(docker ps -a -q --filter mbmt)
 
 old_image=$(docker images -q mbmt)
 
 #docker rm $(docker stop $(docker ps -a -q  --filter ancestor=mbmt))
 
-docker build . -t mmbmtbhs --no-cache
+docker build . -t mbmt --no-cache
 
 docker stop $old_container
 
