@@ -8,6 +8,7 @@ RUN pnpm install --frozen-lockfile
 
 FROM node:18-alpine AS builder
 WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
