@@ -10,9 +10,8 @@ export async function getMyGrades(type: "participant" | "team", id: number) {
 
     if (!user) return [];
 
-    const table =
-        type === "participant" ? "participant_grading" : "team_grading";
-    const foreignKey = type === "participant" ? "participant_id" : "team_id";
+    const table = `${type}_grading`;
+    const foreignKey = `${type}_id`;
 
     const { data } = await supabase
         .from(table)
@@ -34,9 +33,8 @@ export async function getMyGrades(type: "participant" | "team", id: number) {
 export async function getAllGrades(type: "participant" | "team", id: number) {
     const supabase = await createClient();
 
-    const table =
-        type === "participant" ? "participant_grading" : "team_grading";
-    const foreignKey = type === "participant" ? "participant_id" : "team_id";
+    const table = `${type}_grading`;
+    const foreignKey = `${type}_id`;
 
     const { data, error } = await supabase
         .from(table)

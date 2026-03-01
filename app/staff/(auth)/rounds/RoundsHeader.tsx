@@ -12,9 +12,7 @@ export default function RoundsHeader() {
     return (
         <div className="flex items-center justify-between">
             <Heading level={1}>Rounds</Heading>
-            <HeaderButton
-                onClick={() => setIsCreateModalOpen(true)}
-                className="inline-flex text-sm gap-2 leading-4">
+            <HeaderButton onClick={() => setIsCreateModalOpen(true)}>
                 <HiPlus className="h-4 w-4" />
                 Add Round
             </HeaderButton>
