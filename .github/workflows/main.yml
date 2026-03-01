@@ -1,0 +1,23 @@
+name: Build and Deploy
+on:
+  push:
+    branches: [ dev ]
+  workflow_dispatch: 
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: cd /docker/mbhs/mbmt-dev && git checkout dev && bash rebuild.sh
