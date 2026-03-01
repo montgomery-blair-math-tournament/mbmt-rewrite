@@ -25,8 +25,7 @@ export default async function StaffNavbar() {
         { label: "Participants", href: "/staff/participants" },
         { label: "Teams", href: "/staff/teams" },
         { label: "Rounds", href: "/staff/rounds" },
-        // { label: "Announcements", href: "/staff/announcements" },
-        { label: "Guts Grading", href: "/staff/guts-grading" },
+        { label: "Announcements", href: "/staff/announcements" },
         { label: "Admin", href: "/staff/admin" },
     ];
 
