@@ -1,7 +1,6 @@
 name: Deploy Vercel preview
 on:
-    push:
-        branches-ignore: [main, master]
+    workflow_dispatch:
 jobs:
     build_and_deploy:
         runs-on: ubuntu-latest
