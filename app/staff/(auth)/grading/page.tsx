@@ -2,9 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import Heading from "@/components/Heading";
 import RoundCard from "@/components/RoundCard";
 import { Round } from "@/lib/schema/round";
-import HeaderButton from "@/components/HeaderButton";
-import { HiMiniCalculator } from "react-icons/hi2";
-import { calculateIndividualScores } from "./actions";
 
 export default async function GradingPage() {
     const supabase = await createClient();
@@ -67,10 +64,6 @@ export default async function GradingPage() {
         <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
                 <Heading level={1}>Grading</Heading>
-                <HeaderButton onClick={calculateIndividualScores}>
-                    <HiMiniCalculator className="h-4 w-4" /> Compute individual
-                    scores
-                </HeaderButton>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {roundsWithStats.map((round) => (
