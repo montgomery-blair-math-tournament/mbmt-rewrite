@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Round } from "@/lib/schema/round";
 import { Problem } from "@/lib/schema/problem";
 import { GradingStatus } from "@/lib/schema/score";
+import { DIVISIONS } from "@/lib/settings";
 
 export default async function RoundGradingPage({
     params,
@@ -49,15 +50,15 @@ export default async function RoundGradingPage({
             .from("team_round")
             .select(
                 `
-                team:team_id (id, name)
+                team:team_id (id, name, division)
             `
             )
             .eq("round_id", roundId);
 
         type TeamRoundType = {
             team:
-                | { id: number; name: string }
-                | { id: number; name: string }[]
+                | { id: number; name: string; division: number }
+                | { id: number; name: string; division: number }[]
                 | null;
         }[];
         const teamRounds = teamRoundsData as unknown as TeamRoundType | null;
@@ -76,9 +77,10 @@ export default async function RoundGradingPage({
                 if (Array.isArray(t)) t = t[0];
                 if (!t) return null;
                 const s = scoreMap.get(t.id);
+                const divisionInfo = DIVISIONS[t.division ?? 0] || DIVISIONS[0];
                 return {
                     id: t.id,
-                    displayId: t.id.toString(),
+                    displayId: `T${divisionInfo.prefix}${t.id}`,
                     name: t.name,
                     status: s?.status || GradingStatus.NOT_STARTED,
                     score: s?.score ?? null,
@@ -91,15 +93,25 @@ export default async function RoundGradingPage({
             .from("participant_round")
             .select(
                 `
-                participant:participant_id (id, first_name, last_name)
+                participant:participant_id (id, first_name, last_name, team:team_id(division))
             `
             )
             .eq("round_id", roundId);
 
         type ParticipantRoundType = {
             participant:
-                | { id: number; first_name: string; last_name: string }
-                | { id: number; first_name: string; last_name: string }[]
+                | {
+                      id: number;
+                      first_name: string;
+                      last_name: string;
+                      team: { division: number } | null;
+                  }
+                | {
+                      id: number;
+                      first_name: string;
+                      last_name: string;
+                      team: { division: number } | null;
+                  }[]
                 | null;
         }[];
         const participantRounds =
@@ -119,9 +131,16 @@ export default async function RoundGradingPage({
                 if (Array.isArray(p)) p = p[0];
                 if (!p) return null;
                 const s = scoreMap.get(p.id);
+
+                // Extract division from the nested team object
+                let pTeam = p.team;
+                if (Array.isArray(pTeam)) pTeam = pTeam[0];
+                const divisionCode = pTeam?.division ?? 0;
+                const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
+
                 return {
                     id: p.id,
-                    displayId: p.id.toString(),
+                    displayId: `${divisionInfo.prefix}${p.id}`,
                     name: `${p.first_name} ${p.last_name}`,
                     status: s?.status || GradingStatus.NOT_STARTED,
                     score: s?.score ?? null,

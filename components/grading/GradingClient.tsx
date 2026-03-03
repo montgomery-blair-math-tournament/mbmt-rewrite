@@ -64,7 +64,7 @@ export default function GradingClient({
 
     const handleGradeById = () => {
         const found = localTargets.find(
-            (p) => p.displayId === gradingId || p.id.toString() === gradingId
+            (p) => p.displayId.toUpperCase() === gradingId.trim().toUpperCase()
         );
         if (found) {
             setGradingItem(found);
