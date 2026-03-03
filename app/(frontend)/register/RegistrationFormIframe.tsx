@@ -1,4 +1,4 @@
-import { REGISTRATION_FORM_LINK } from "@/lib/settings";
+import { REGISTRATION_FORM_LINK } from "@/lib/constants/settings";
 
 export default function RegistrationFormIframe() {
     return (

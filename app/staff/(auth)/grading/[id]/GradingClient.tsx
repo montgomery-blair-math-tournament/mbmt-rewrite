@@ -100,8 +100,8 @@ export default function GradingClient({
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg shadow-sm">
+        <div className="flex flex-col gap-6">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center border p-4 rounded-lg shadow-sm">
                 <div className="flex items-center gap-4 w-full md:w-auto">
                     <Input
                         placeholder="Search by name or ID..."
@@ -177,51 +177,46 @@ export default function GradingClient({
                                                         ? "bg-yellow-100 text-yellow-800"
                                                         : "bg-gray-100 text-gray-800"
                                             }`}>
-                                            {p.status}
-                                        </span>
-                                    </TableCell>
-                                    <TableCell>{p.score ?? "-"}</TableCell>
-                                    <TableCell>
-                                        <div className="flex gap-2">
+                                        {p.status}
+                                    </span>
+                                </TableCell>
+                                <TableCell>{p.score ?? "-"}</TableCell>
+                                <TableCell>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => setGradingItem(p)}>
+                                            Grade
+                                        </Button>
+                                        {p.status ===
+                                            GradingStatus.CONFLICT && (
                                             <Button
-                                                variant="outline"
+                                                variant="secondary"
+                                                className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
                                                 size="sm"
                                                 onClick={() =>
-                                                    setGradingItem(p)
+                                                    setConflictItem(p)
                                                 }>
-                                                Grade
+                                                Resolve
                                             </Button>
-                                            {p.status ===
-                                                GradingStatus.CONFLICT && (
-                                                <Button
-                                                    variant="secondary"
-                                                    className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        setConflictItem(p)
-                                                    }>
-                                                    Resolve
-                                                </Button>
-                                            )}
-                                            {p.status !==
-                                                GradingStatus.NOT_STARTED && (
-                                                <Button
-                                                    variant="destructive"
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        setResetItem(p)
-                                                    }>
-                                                    Reset
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                                        )}
+                                        {p.status !==
+                                            GradingStatus.NOT_STARTED && (
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={() => setResetItem(p)}>
+                                                Reset
+                                            </Button>
+                                        )}
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
+                </TableBody>
+            </Table>
 
             {gradingItem && (
                 <GradingModal

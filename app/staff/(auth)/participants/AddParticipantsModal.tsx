@@ -1,8 +1,8 @@
 "use client";
 
-import Heading from "./Heading";
-import ParticipantsTable from "./ParticipantsTable";
-import Modal, { ModalButton } from "./ui/Modal";
+import Heading from "@/components/Heading";
+import ParticipantsTable from "@/components/ParticipantsTable";
+import Modal, { ModalButton } from "@/components/ui/Modal";
 
 export default function AddParticipantsModal({
     isOpen,

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { DIVISIONS } from "@/lib/settings";
+import { DIVISIONS } from "@/lib/constants/settings";
 import Heading from "@/components/Heading";
 
 import { HiCheck, HiXMark } from "react-icons/hi2";
@@ -12,7 +12,8 @@ import { toast } from "sonner";
 import { ParticipantDetail } from "@/lib/schema/participant";
 import { Round } from "@/lib/schema/round";
 import CheckInModal from "@/components/CheckInModal";
-import { cn } from "@/lib/utils";
+import Badge from "@/components/Badge";
+// import { cn } from "@/lib/utils";
 
 export default function ParticipantPage({
     params,
@@ -138,27 +139,36 @@ export default function ParticipantPage({
                     <Heading level={1}>
                         {participant.firstName} {participant.lastName}
                     </Heading>
-
-                    <CheckedInButton
+                    <Badge
                         onClick={() => setIsCheckInModalOpen(true)}
-                        checkedIn={participant.checkedIn}
-                    />
+                        className="mt-2"
+                        variant={participant.checkedIn ? "success" : "failure"}>
+                        {participant.checkedIn ? (
+                            <>
+                                <HiCheck className="w-4 h-4" /> Checked In
+                            </>
+                        ) : (
+                            <>
+                                <HiXMark className="w-4 h-4" /> Not Checked In
+                            </>
+                        )}
+                    </Badge>
                 </div>
-                <div className="text-gray-700 dark:text-gray-300 flex gap-4 mt-2">
-                    <span className="font-mono dark:text-gray-700 text-gray-300 bg-gray-700 dark:bg-gray-300 px-2 py-0.5 rounded text-sm">
-                        {participant.displayId}
-                    </span>
-                    <span>
-                        <Link
-                            href={`/staff/teams/${participant.teamId}`}
-                            className="text-rose-600 hover:underline hover:text-rose-800">
-                            {participant.team}
-                        </Link>
-                    </span>
-                    <span>{participant.school}</span>
-                    <span>{participant.division} Division</span>
-                    <span>Grade {participant.grade}</span>
-                </div>
+            </div>
+            <div className="text-gray-700 flex gap-4 mt-2">
+                <span className="font-mono text-gray-300 bg-gray-700 px-2 py-0.5 rounded text-sm">
+                    {participant.displayId}
+                </span>
+                <span>
+                    <Link
+                        href={`/staff/teams/${participant.teamId}`}
+                        className="text-red-600 hover:underline hover:text-red-800">
+                        {participant.team}
+                    </Link>
+                </span>
+                <span>{participant.school}</span>
+                <span>{participant.division} Division</span>
+                <span>Grade {participant.grade}</span>
             </div>
 
             {/* Individual rounds */}
@@ -204,32 +214,32 @@ export default function ParticipantPage({
     );
 }
 
-function CheckedInButton({
-    checkedIn = false,
-    className,
-    ...props
-}: { checkedIn: boolean } & React.ComponentProps<"button">) {
-    return (
-        <button
-            className={cn(
-                {
-                    "bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-400 flex items-center gap-1 hover:bg-green-200 hover:cursor-pointer transition-colors":
-                        checkedIn,
-                    "bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-400 flex items-center gap-1 hover:bg-gray-300 hover:cursor-pointer transition-colors":
-                        !checkedIn,
-                },
-                className
-            )}
-            {...props}>
-            {checkedIn ? (
-                <>
-                    <HiCheck className="w-3 h-3" /> Checked In
-                </>
-            ) : (
-                <>
-                    <HiXMark className="w-3 h-3" /> Not Checked In
-                </>
-            )}
-        </button>
-    );
-}
+// function CheckedInButton({
+//     checkedIn = false,
+//     className,
+//     ...props
+// }: { checkedIn: boolean } & React.ComponentProps<"button">) {
+//     return (
+//         <button
+//             className={cn(
+//                 {
+//                     "bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-400 flex items-center gap-1 hover:bg-green-200 hover:cursor-pointer transition-colors":
+//                         checkedIn,
+//                     "bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-400 flex items-center gap-1 hover:bg-gray-300 hover:cursor-pointer transition-colors":
+//                         !checkedIn,
+//                 },
+//                 className
+//             )}
+//             {...props}>
+//             {checkedIn ? (
+//                 <>
+//                     <HiCheck className="w-3 h-3" /> Checked In
+//                 </>
+//             ) : (
+//                 <>
+//                     <HiXMark className="w-3 h-3" /> Not Checked In
+//                 </>
+//             )}
+//         </button>
+//     );
+// }

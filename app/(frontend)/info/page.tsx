@@ -1,8 +1,7 @@
 import Main from "@/components/Main";
-import { DIVISIONS } from "@/lib/settings";
+import { DIVISIONS } from "@/lib/constants/settings";
 import Link2 from "@/components/Link2";
 import Heading from "@/components/Heading";
-import { cn } from "@/lib/utils";
 
 export default function Page() {
     const lower = DIVISIONS[0].name;
@@ -90,7 +89,7 @@ export default function Page() {
             </p>
 
             <Heading level={2}>Schedule</Heading>
-            <table className="border-collapse w-fit">
+            <table className="border-collapse w-fit text-sm sm:text-base">
                 <tbody>
                     <tr>
                         <td className="px-2 py-1 align-top border-r text-right">

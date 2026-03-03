@@ -51,7 +51,7 @@ export default function ResetConfirmModal({
                         Cancel
                     </Button>
                     <Button
-                        className="bg-red-800 hover:bg-red-700 dark:hover:bg-red-800 text-white"
+                        className="bg-red-800 hover:bg-red-700 text-white"
                         onClick={handleReset}
                         disabled={loading}>
                         {loading ? "Resetting..." : "Reset"}
