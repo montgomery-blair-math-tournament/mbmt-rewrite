@@ -63,8 +63,12 @@ export default function GradingClient({
             : "team";
 
     const handleGradeById = () => {
+        const trimmedId = gradingId.trim();
+        const upperId = trimmedId.toUpperCase();
         const found = localTargets.find(
-            (p) => p.displayId.toUpperCase() === gradingId.trim().toUpperCase()
+            (p) =>
+                p.displayId.toUpperCase() === upperId ||
+                p.id.toString() === trimmedId
         );
         if (found) {
             setGradingItem(found);
@@ -225,6 +229,7 @@ export default function GradingClient({
                     onClose={() => setGradingItem(null)}
                     type={type}
                     id={gradingItem.id}
+                    displayId={gradingItem.displayId}
                     roundId={round.id}
                     targetName={gradingItem.name}
                     problems={problems}
