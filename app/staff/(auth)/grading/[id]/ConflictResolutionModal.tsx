@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
 import { toast } from "sonner";
-
 import { Switch } from "@/components/ui/Switch";
 
 type GradeOption = {

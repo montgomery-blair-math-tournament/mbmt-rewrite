@@ -18,14 +18,6 @@ import { cn } from "@/lib/utils";
 import ConflictConfirmationModal from "./ConflictConfirmationModal";
 import Modal from "@/components/Modal";
 
-type GradingFormProps = {
-    type: "participant" | "team";
-    id: number;
-    roundId: number;
-    problems: Problem[];
-    onSuccess: () => void;
-};
-
 const formSchema = z.object({
     grades: z.record(
         z.string(),
@@ -42,10 +34,17 @@ export default function GradingForm({
     roundId,
     problems,
     onSuccess,
-}: GradingFormProps) {
+}: {
+    type: "participant" | "team";
+    id: number;
+    roundId: number;
+    problems: Problem[];
+    onSuccess: () => void;
+}) {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [gradingStatus, setGradingStatus] = useState<
+        // Problem id, grader name(s)
         Record<number, string[]>
     >({});
     const [hasGradedMap, setHasGradedMap] = useState<Record<number, boolean>>(
@@ -65,7 +64,7 @@ export default function GradingForm({
     });
 
     useEffect(() => {
-        const fetchStatus = async () => {
+        (async () => {
             setLoading(true);
             try {
                 const res = await getGradingStatus(type, id);
@@ -91,15 +90,12 @@ export default function GradingForm({
 
                 form.reset({ grades: initialGrades });
             } catch (error) {
+                toast.error("Failed to fetch grading status");
                 console.error("Failed to fetch grading status", error);
             } finally {
                 setLoading(false);
             }
-        };
-
-        if (id) {
-            fetchStatus();
-        }
+        })();
     }, [id, roundId, type, problems, form]);
 
     const performSubmit = async (confirm = false) => {
@@ -209,13 +205,13 @@ export default function GradingForm({
                                             `(${problem.points} pts)`}
                                     </Label>
                                     <div className="flex flex-col sm:flex-row gap-2 mt-1">
-                                        <p className="text-xs text-muted-foreground truncate max-w-[200px]">
+                                        <p className="text-xs text-muted-foreground truncate max-w-50">
                                             {problem.problem}
                                         </p>
                                         {gradingStatus[problem.id] &&
                                             gradingStatus[problem.id].length >
                                                 0 && (
-                                                <p className="text-xs text-rose-600 font-medium">
+                                                <p className="text-xs text-red-600 font-medium">
                                                     Graded by:{" "}
                                                     {gradingStatus[
                                                         problem.id
@@ -231,10 +227,10 @@ export default function GradingForm({
                                             control={form.control}
                                             name={`grades.${pidStr}.isCorrect`}
                                             render={({ field }) => (
-                                                <FormItem className="flex items-center gap-2 mb-0 gap-0">
+                                                <FormItem className="flex items-center gap-2 mb-0">
                                                     <Label
                                                         className={cn(
-                                                            "cursor-pointer min-w-[4rem] text-right",
+                                                            "cursor-pointer min-w-16 text-right",
                                                             isUnmarked &&
                                                                 "text-gray-400"
                                                         )}>
@@ -327,7 +323,7 @@ export default function GradingForm({
                                         className={cn(
                                             "h-8 px-2 text-xs",
                                             isUnmarked
-                                                ? "text-rose-600 hover:text-rose-800 hover:bg-rose-50"
+                                                ? "text-red-600 hover:text-red-800 hover:bg-red-50"
                                                 : "text-gray-400 hover:text-gray-600"
                                         )}>
                                         {isUnmarked ? "Mark" : "Unmark"}

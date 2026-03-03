@@ -1,7 +1,7 @@
 import Heading from "@/components/Heading";
 import Link2 from "@/components/Link2";
 import Main from "@/components/Main";
-import RegistrationFormIframe from "@/components/RegistrationFormIframe";
+import RegistrationFormIframe from "@/app/(frontend)/register/RegistrationFormIframe";
 import { REGISTRATION_FORM_LINK } from "@/lib/constants/settings";
 
 export default function Page() {

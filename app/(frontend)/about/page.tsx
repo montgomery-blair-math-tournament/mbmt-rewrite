@@ -2,9 +2,10 @@ import Main from "@/components/Main";
 import Heading from "@/components/Heading";
 import Image from "next/image";
 import Link from "next/link";
-import sponsorList from "../../lib/constants/sponsorList";
-import { writers, staff } from "../../lib/constants/people";
+import sponsorList from "@/lib/constants/sponsorList";
+import { writers, staff } from "@/lib/constants/people";
 import Link2 from "@/components/Link2";
+import { REPO_LINK } from "@/lib/constants/settings";
 
 const getShuffledStaff = () =>
     staff.map((row) => [...row].sort(() => Math.random() - 0.5));
@@ -57,8 +58,8 @@ export default function Page() {
                 large portion of the content on these webpages was written by
                 Noah Singer &apos;18 (Github: @singerng) and Noah Kim &apos;18
                 (Github: @noahbkim). Both this website and the grading server
-                are hosted on <Link2 href="https://vercel.com">Vercel</Link2>.{" "}
-                The code is not currently on GitHub, but will be in the future.
+                are hosted on the Montgomery Blair servers. The code is
+                available on <Link2 href={REPO_LINK}>GitHub</Link2>.
             </p>
 
             <Heading level={2}>Sponsors</Heading>
@@ -70,7 +71,11 @@ export default function Page() {
             </p>
             <div className="flex flex-wrap justify-around gap-2 items-center">
                 {sponsorList.map(({ name, image, link, width }) => (
-                    <Link key={name} href={link} className="h-fit bg-white">
+                    <Link
+                        key={name}
+                        href={link}
+                        className="h-fit bg-white"
+                        target="_blank">
                         <Image src={image} alt={`${name} logo`} width={width} />
                     </Link>
                 ))}

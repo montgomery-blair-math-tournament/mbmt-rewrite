@@ -2,19 +2,16 @@ import { cn } from "@/lib/utils";
 import React from "react";
 
 export default function Main({
-    children,
     className,
-}: {
-    children?: React.ReactNode;
-    className?: string;
-}) {
+    ...props
+}: { className?: string } & React.ComponentProps<"div">) {
     return (
-        <div
+        <main
             className={cn(
-                "flex flex-col gap-4 flex-1 max-w-5/6 p-8 mx-auto",
+                "flex flex-col gap-4 flex-1 w-full md:max-w-5/6 p-8 md:mx-auto",
                 className
-            )}>
-            {children}
-        </div>
+            )}
+            {...props}
+        />
     );
 }

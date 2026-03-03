@@ -24,19 +24,19 @@ export default function Modal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 dark:bg-black/70">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
             <div
                 className={cn(
-                    "bg-gray-100 dark:bg-gray-900 rounded-xl shadow-xl flex flex-col",
+                    "bg-gray-100 rounded-xl shadow-xl flex flex-col",
                     className
                 )}>
                 <div className="flex items-center justify-between px-6 py-4 border-b">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-full transition-colors hover:cursor-pointer"
+                            className="p-2 hover:bg-gray-200 rounded-full transition-colors hover:cursor-pointer"
                             aria-label="Close">
-                            <HiXMark className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+                            <HiXMark className="w-6 h-6 text-gray-600 " />
                         </button>
                         <h2 className="text-xl font-semibold h-full">
                             {title}
@@ -66,13 +66,13 @@ export function ModalButton({
     return (
         <button
             className={cn(
-                "px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:cursor-pointer",
+                "px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent hover:cursor-pointer",
                 {
-                    "text-white bg-rose-600 dark:bg-rose-800 hover:bg-rose-700 ":
+                    "text-white bg-accent hover:bg-accent-hover":
                         variant === "themed",
-                    "text-gray-700 dark:text-gray-200 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700":
+                    "text-gray-700 bg-gray-200 hover:bg-gray-300":
                         variant === "primary",
-                    "text-gray-200 dark:text-gray-700 bg-gray-800 dark:bg-gray-300 hover:bg-gray-700 dark:hover:bg-gray-200":
+                    "text-gray-200 bg-gray-800 hover:bg-gray-700":
                         variant === "secondary",
                 },
                 className

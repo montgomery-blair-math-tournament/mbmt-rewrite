@@ -31,7 +31,7 @@ export default function ProblemCard({
                             variant="ghost"
                             size="icon"
                             onClick={() => onEdit(problem)}
-                            className="h-8 w-8 hover:bg-gray-200 text-gray-500 hover:text-rose-600"
+                            className="h-8 w-8 hover:bg-gray-200 text-gray-500 hover:text-red-600"
                             aria-label="Edit problem">
                             <HiPencil className="w-4 h-4" />
                         </Button>

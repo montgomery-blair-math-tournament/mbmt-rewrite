@@ -85,7 +85,7 @@ export default function ProblemModal({
                         <Button
                             onClick={handleSubmit}
                             disabled={loading}
-                            className="bg-rose-600 hover:bg-rose-700 text-white">
+                            className="bg-accent hover:bg-accent-hover text-white">
                             {loading ? "Saving..." : isEditing ? "Edit" : "Add"}
                         </Button>
                     </>

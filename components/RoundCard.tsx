@@ -33,7 +33,7 @@ export default function RoundCard({
 
     return (
         <Link href={linkHref} className="block h-full">
-            <Card className="h-full hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors cursor-pointer">
+            <Card className="h-full hover:bg-gray-100 transition-colors cursor-pointer">
                 <CardHeader className="pb-2">
                     <CardTitle className="text-lg">{round.name}</CardTitle>
                     <CardDescription>{divisionName} Division</CardDescription>
@@ -44,7 +44,7 @@ export default function RoundCard({
                             <span className="text-sm font-medium text-gray-500">
                                 Progress
                             </span>
-                            <span className="text-lg font-bold text-gray-900 dark:text-gray-200">
+                            <span className="text-lg font-bold text-gray-900 ">
                                 {stats.graded} / {stats.total}
                             </span>
                         </div>
@@ -56,7 +56,7 @@ export default function RoundCard({
                                     <span className="text-sm font-medium text-gray-500">
                                         Questions
                                     </span>
-                                    <span className="text-lg font-bold text-gray-800 dark:text-gray-200">
+                                    <span className="text-lg font-bold text-gray-800 ">
                                         {numQuestions}
                                     </span>
                                 </div>
@@ -66,7 +66,7 @@ export default function RoundCard({
                                     <span className="text-sm font-medium text-gray-500">
                                         Participants
                                     </span>
-                                    <span className="text-lg font-bold text-gray-800 dark:text-gray-200">
+                                    <span className="text-lg font-bold text-gray-800 ">
                                         {stats.total}
                                     </span>
                                 </div>

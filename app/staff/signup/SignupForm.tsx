@@ -124,7 +124,7 @@ export default function SignupForm() {
                         </div>
                         <Button
                             type="submit"
-                            className="w-full bg-rose-900 hover:bg-rose-800 text-white"
+                            className="w-full bg-accent hover:bg-accent-hover text-white"
                             disabled={loading}>
                             {loading ? "Signing up...." : "Sign Up"}
                         </Button>

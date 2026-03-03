@@ -100,7 +100,7 @@ export default function ParticipantsTable({
                                     ) : (
                                         <Link
                                             href={`/staff/participants/${p.id}`}
-                                            className="hover:underline text-rose-600 hover:text-rose-800">
+                                            className="hover:underline text-red-600 hover:text-red-800">
                                             {p.displayId}
                                         </Link>
                                     )}
