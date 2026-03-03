@@ -177,84 +177,93 @@ export default function GradingClient({
                                                         ? "bg-yellow-100 text-yellow-800"
                                                         : "bg-gray-100 text-gray-800"
                                             }`}>
-                                        {p.status}
-                                    </span>
-                                </TableCell>
-                                <TableCell>{p.score ?? "-"}</TableCell>
-                                <TableCell>
-                                    <div className="flex gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => setGradingItem(p)}>
-                                            Grade
-                                        </Button>
-                                        {p.status ===
-                                            GradingStatus.CONFLICT && (
+                                            {p.status}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>{p.score ?? "-"}</TableCell>
+                                    <TableCell>
+                                        <div className="flex gap-2">
                                             <Button
-                                                variant="secondary"
-                                                className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                                variant="outline"
                                                 size="sm"
                                                 onClick={() =>
-                                                    setConflictItem(p)
+                                                    setGradingItem(p)
                                                 }>
-                                                Resolve
+                                                Grade
                                             </Button>
-                                        )}
-                                        {p.status !==
-                                            GradingStatus.NOT_STARTED && (
-                                            <Button
-                                                variant="destructive"
-                                                size="sm"
-                                                onClick={() => setResetItem(p)}>
-                                                Reset
-                                            </Button>
-                                        )}
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    )}
-                </TableBody>
-            </Table>
+                                            {p.status ===
+                                                GradingStatus.CONFLICT && (
+                                                <Button
+                                                    variant="secondary"
+                                                    className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        setConflictItem(p)
+                                                    }>
+                                                    Resolve
+                                                </Button>
+                                            )}
+                                            {p.status !==
+                                                GradingStatus.NOT_STARTED && (
+                                                <Button
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        setResetItem(p)
+                                                    }>
+                                                    Reset
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
 
-            {gradingItem && (
-                <GradingModal
-                    isOpen={!!gradingItem}
-                    onClose={() => setGradingItem(null)}
-                    type={type}
-                    id={gradingItem.id}
-                    displayId={gradingItem.displayId}
-                    roundId={round.id}
-                    targetName={gradingItem.name}
-                    problems={problems}
-                />
-            )}
+                {gradingItem && (
+                    <GradingModal
+                        isOpen={!!gradingItem}
+                        onClose={() => setGradingItem(null)}
+                        type={type}
+                        id={gradingItem.id}
+                        displayId={gradingItem.displayId}
+                        roundId={round.id}
+                        targetName={gradingItem.name}
+                        problems={problems}
+                    />
+                )}
 
-            {conflictItem && (
-                <ConflictResolutionModal
-                    isOpen={!!conflictItem}
-                    onClose={() => setConflictItem(null)}
-                    type={type}
-                    id={conflictItem.id}
-                    roundId={round.id}
-                    problems={problems}
-                    onResolve={(status, score) =>
-                        handleConflictResolve(conflictItem.id, status, score)
-                    }
-                />
-            )}
+                {conflictItem && (
+                    <ConflictResolutionModal
+                        isOpen={!!conflictItem}
+                        onClose={() => setConflictItem(null)}
+                        type={type}
+                        id={conflictItem.id}
+                        roundId={round.id}
+                        problems={problems}
+                        onResolve={(status, score) =>
+                            handleConflictResolve(
+                                conflictItem.id,
+                                status,
+                                score
+                            )
+                        }
+                    />
+                )}
 
-            {resetItem && (
-                <ResetConfirmModal
-                    isOpen={!!resetItem}
-                    onClose={() => setResetItem(null)}
-                    type={type}
-                    id={resetItem.id}
-                    roundId={round.id}
-                    targetName={resetItem.name}
-                />
-            )}
+                {resetItem && (
+                    <ResetConfirmModal
+                        isOpen={!!resetItem}
+                        onClose={() => setResetItem(null)}
+                        type={type}
+                        id={resetItem.id}
+                        roundId={round.id}
+                        targetName={resetItem.name}
+                    />
+                )}
+            </div>
         </div>
     );
 }
