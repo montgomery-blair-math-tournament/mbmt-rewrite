@@ -9,6 +9,7 @@ type GradingModalProps = {
     onClose: () => void;
     type: "participant" | "team";
     id: number;
+    displayId: string;
     roundId: number;
     problems: Problem[];
     targetName: string;
@@ -19,6 +20,7 @@ export default function GradingModal({
     onClose,
     type,
     id,
+    displayId,
     roundId,
     problems,
     targetName,
@@ -27,7 +29,7 @@ export default function GradingModal({
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title={`Grading: ${targetName} (${type === "participant" ? "ID: " : "Team ID: "}${id})`}
+            title={`Grading: ${targetName} (${type === "participant" ? "ID: " : "Team ID: "}${displayId})`}
             className="w-11/12 md:w-2/3 h-5/6">
             <GradingForm
                 type={type}
