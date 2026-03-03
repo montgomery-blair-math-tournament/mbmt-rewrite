@@ -49,15 +49,15 @@ export default async function RoundGradingPage({
             .from("team_round")
             .select(
                 `
-                team:team_id (id, name, displayId)
+                team:team_id (id, name)
             `
             )
             .eq("round_id", roundId);
 
         type TeamRoundType = {
             team:
-                | { id: number; name: string; displayId: string }
-                | { id: number; name: string; displayId: string }[]
+                | { id: number; name: string }
+                | { id: number; name: string }[]
                 | null;
         }[];
         const teamRounds = teamRoundsData as unknown as TeamRoundType | null;
@@ -78,7 +78,7 @@ export default async function RoundGradingPage({
                 const s = scoreMap.get(t.id);
                 return {
                     id: t.id,
-                    displayId: t.name,
+                    displayId: t.id.toString(),
                     name: t.name,
                     status: s?.status || GradingStatus.NOT_STARTED,
                     score: s?.score ?? null,
@@ -157,11 +157,7 @@ export default async function RoundGradingPage({
                 </div>
             </div>
 
-            <GradingClient
-                round={round}
-                problems={problems}
-                participants={rows}
-            />
+            <GradingClient round={round} problems={problems} targets={rows} />
         </div>
     );
 }

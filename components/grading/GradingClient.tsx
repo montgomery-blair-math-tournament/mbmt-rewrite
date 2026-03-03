@@ -18,7 +18,7 @@ import ConflictResolutionModal from "./ConflictResolutionModal";
 import ResetConfirmModal from "./ResetConfirmModal";
 import { toast } from "sonner";
 
-type ParticipantRow = {
+type GradingRow = {
     id: number;
     displayId: string;
     name: string;
@@ -30,31 +30,28 @@ type ParticipantRow = {
 type GradingClientProps = {
     round: Round;
     problems: Problem[];
-    participants: ParticipantRow[];
+    targets: GradingRow[];
 };
 
 export default function GradingClient({
     round,
     problems,
-    participants,
+    targets,
 }: GradingClientProps) {
     const [search, setSearch] = useState("");
     const [gradingId, setGradingId] = useState<string>("");
 
-    const [gradingItem, setGradingItem] = useState<ParticipantRow | null>(null);
-    const [conflictItem, setConflictItem] = useState<ParticipantRow | null>(
-        null
-    );
-    const [resetItem, setResetItem] = useState<ParticipantRow | null>(null);
+    const [gradingItem, setGradingItem] = useState<GradingRow | null>(null);
+    const [conflictItem, setConflictItem] = useState<GradingRow | null>(null);
+    const [resetItem, setResetItem] = useState<GradingRow | null>(null);
 
-    const [localParticipants, setLocalParticipants] =
-        useState<ParticipantRow[]>(participants);
+    const [localTargets, setLocalTargets] = useState<GradingRow[]>(targets);
 
     useEffect(() => {
-        setLocalParticipants(participants);
-    }, [participants]);
+        setLocalTargets(targets);
+    }, [targets]);
 
-    const filteredParticipants = localParticipants.filter(
+    const filteredTargets = localTargets.filter(
         (p) =>
             p.name.toLowerCase().includes(search.toLowerCase()) ||
             p.displayId.toLowerCase().includes(search.toLowerCase())
@@ -66,14 +63,16 @@ export default function GradingClient({
             : "team";
 
     const handleGradeById = () => {
-        const found = localParticipants.find(
+        const found = localTargets.find(
             (p) => p.displayId === gradingId || p.id.toString() === gradingId
         );
         if (found) {
             setGradingItem(found);
             setGradingId("");
         } else {
-            toast.error("Participant not found");
+            toast.error(
+                type === "team" ? "Team not found" : "Participant not found"
+            );
         }
     };
 
@@ -82,7 +81,7 @@ export default function GradingClient({
         status?: string,
         score?: number
     ) => {
-        setLocalParticipants((prev) =>
+        setLocalTargets((prev) =>
             prev.map((p) => {
                 if (p.id === id) {
                     return {
@@ -110,7 +109,11 @@ export default function GradingClient({
 
                 <div className="flex items-center gap-2 w-full md:w-auto">
                     <Input
-                        placeholder="Enter ID to Grade"
+                        placeholder={
+                            type === "team"
+                                ? "Enter Team ID"
+                                : "Enter ID to Grade"
+                        }
                         value={gradingId}
                         onChange={(e) => setGradingId(e.target.value)}
                         onKeyDown={(e) =>
@@ -126,24 +129,30 @@ export default function GradingClient({
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>ID</TableHead>
-                            <TableHead>Name</TableHead>
+                            <TableHead>
+                                {type === "team" ? "Team ID" : "ID"}
+                            </TableHead>
+                            <TableHead>
+                                {type === "team" ? "Team Name" : "Name"}
+                            </TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead>Score</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {filteredParticipants.length === 0 ? (
+                        {filteredTargets.length === 0 ? (
                             <TableRow>
                                 <TableCell
                                     colSpan={5}
                                     className="text-center py-8 text-muted-foreground">
-                                    No participants found.
+                                    No{" "}
+                                    {type === "team" ? "teams" : "participants"}{" "}
+                                    found.
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            filteredParticipants.map((p) => (
+                            filteredTargets.map((p) => (
                                 <TableRow key={p.id}>
                                     <TableCell className="font-medium">
                                         {p.displayId}
@@ -217,7 +226,7 @@ export default function GradingClient({
                     type={type}
                     id={gradingItem.id}
                     roundId={round.id}
-                    participantName={gradingItem.name}
+                    targetName={gradingItem.name}
                     problems={problems}
                 />
             )}
@@ -243,7 +252,7 @@ export default function GradingClient({
                     type={type}
                     id={resetItem.id}
                     roundId={round.id}
-                    participantName={resetItem.name}
+                    targetName={resetItem.name}
                 />
             )}
         </div>
