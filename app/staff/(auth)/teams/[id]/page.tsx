@@ -98,6 +98,7 @@ export default function TeamPage({
                         chaperone: tData.chaperone,
                         checkedIn: m.checked_in,
                         teamId: tData.id,
+                        isFlagged: m.is_flagged,
                     };
                 });
                 setMembers(mappedMembers);
