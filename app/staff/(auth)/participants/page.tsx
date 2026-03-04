@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { DIVISIONS } from "@/lib/constants/settings";
 import Heading from "@/components/Heading";
@@ -20,47 +20,48 @@ export default function ParticipantsPage() {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const supabase = createClient();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const { data, error } = await supabase
-                .from("participant")
-                .select(
-                    "*, team!participant_team_id_fkey(name, school, division, chaperone)"
-                );
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        const { data, error } = await supabase
+            .from("participant")
+            .select(
+                "*, team!participant_team_id_fkey(name, school, division, chaperone)"
+            );
 
-            if (error) {
-                console.error("Error fetching participants:", error);
-                toast.error("Error fetching participants");
-                setLoading(false);
-                return;
-            }
-
-            const formattedData = (data as ParticipantWithTeam[]).map((p) => {
-                const teamData = p.team;
-                const divisionCode = teamData?.division ?? 0;
-                const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
-
-                return {
-                    id: p.id,
-                    displayId: `${divisionInfo.prefix}${p.id}`,
-                    firstName: p.first_name,
-                    lastName: p.last_name,
-                    division: divisionInfo.name,
-                    grade: p.grade,
-                    school: teamData?.school || "N/A",
-                    team: teamData?.name || "N/A",
-                    chaperone: teamData?.chaperone || "N/A",
-                    checkedIn: p.checked_in,
-                    teamId: p.team_id,
-                    isFlagged: p.is_flagged,
-                };
-            });
-            setParticipants(formattedData);
+        if (error) {
+            console.error("Error fetching participants:", error);
+            toast.error("Error fetching participants");
             setLoading(false);
-        };
+            return;
+        }
 
-        fetchData();
+        const formattedData = (data as ParticipantWithTeam[]).map((p) => {
+            const teamData = p.team;
+            const divisionCode = teamData?.division ?? 0;
+            const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
+
+            return {
+                id: p.id,
+                displayId: `${divisionInfo.prefix}${p.id}`,
+                firstName: p.first_name,
+                lastName: p.last_name,
+                division: divisionInfo.name,
+                grade: p.grade,
+                school: teamData?.school || "N/A",
+                team: teamData?.name || "N/A",
+                chaperone: teamData?.chaperone || "N/A",
+                checkedIn: p.checked_in,
+                teamId: p.team_id,
+                isFlagged: p.is_flagged,
+            };
+        });
+        setParticipants(formattedData);
+        setLoading(false);
     }, [supabase]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     return (
         <div className="flex flex-col gap-6">
@@ -77,6 +78,7 @@ export default function ParticipantsPage() {
             <AddParticipantsModal
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
+                onSuccess={fetchData}
             />
         </div>
     );
