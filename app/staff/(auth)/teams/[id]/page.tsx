@@ -63,7 +63,7 @@ export default function TeamPage({
                 const roundIds = trData.map((r) => r.round_id);
                 const { data: rData } = await supabase
                     .from("round")
-                    .select("id, name, division, type")
+                    .select("*")
                     .in("id", roundIds);
 
                 if (rData) {
@@ -79,9 +79,9 @@ export default function TeamPage({
                 school: tData.school,
                 division: tData.division,
                 chaperone: tData.chaperone,
-                chaperoneEmail: tData.chaperone_email,
-                chaperonePhone: tData.chaperone_phone,
-                displayId: `T${divisionInfo.prefix}${tData.id}`,
+                chaperone_email: tData.chaperone_email,
+                chaperone_phone: tData.chaperone_phone,
+                displayId: `${divisionInfo.prefix}${tData.id}`,
             });
 
             if (mData) {

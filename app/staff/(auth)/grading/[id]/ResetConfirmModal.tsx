@@ -3,21 +3,21 @@
 import { useState } from "react";
 import Modal from "@/components/Modal";
 import Button from "@/components/ui/Button";
-import { resetGrades } from "@/app/actions/grading";
+import { resetGrades } from "./grading";
 import { toast } from "sonner";
 
 export default function ResetConfirmModal({
     isOpen,
     onClose,
     id,
-    participantName,
+    targetName,
     roundId,
     type,
 }: {
     isOpen: boolean;
     onClose: () => void;
     id: number;
-    participantName: string;
+    targetName: string;
     roundId: number;
     type: "participant" | "team";
 }) {
@@ -31,7 +31,7 @@ export default function ResetConfirmModal({
         if (res?.error) {
             toast.error(res.error);
         } else {
-            toast.success(`Grades for ${participantName} have been reset`);
+            toast.success(`Grades for ${targetName} have been reset`);
             onClose();
         }
     };
@@ -61,7 +61,7 @@ export default function ResetConfirmModal({
             <div className="py-2">
                 <p className="text-gray-700">
                     Are you sure you want to reset the grades and scores for{" "}
-                    <strong>{participantName}</strong>?
+                    <strong>{targetName}</strong>?
                 </p>
                 <p className="text-sm text-red-600 mt-2">
                     This action cannot be undone. All previous grading attempts

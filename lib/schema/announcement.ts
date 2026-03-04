@@ -3,9 +3,9 @@ import { z } from "zod";
 export const announcementSchema = z.object({
     id: z.number(),
     author: z.uuid(),
-    createdAt: z.string(),
+    created_at: z.iso.datetime({ offset: true }).optional(),
     message: z.string(),
-    expiresAt: z.string(),
+    expires_at: z.iso.datetime({ offset: true }),
 });
 
 export type Announcement = z.infer<typeof announcementSchema>;

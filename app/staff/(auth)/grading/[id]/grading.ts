@@ -81,7 +81,7 @@ export async function submitGrades(
 
     const type = submissions[0].type;
     const participantId = submissions[0].id;
-    const roundId = submissions[0].roundId;
+    const roundId = submissions[0].round_id;
 
     const table =
         type === "participant" ? "participant_grading" : "team_grading";
@@ -89,7 +89,7 @@ export async function submitGrades(
 
     try {
         if (!confirm) {
-            const problemIds = submissions.map((s) => s.problemId);
+            const problemIds = submissions.map((s) => s.problem_id);
             const { data: existingData } = await supabase
                 .from(table)
                 .select("*")
@@ -117,11 +117,11 @@ export async function submitGrades(
             if (answer) answer = answer.trim();
             return {
                 [foreignKey]: s.id,
-                problem_id: s.problemId,
+                problem_id: s.problem_id,
                 grader_id: user.id,
                 answer: answer,
-                is_correct: s.isCorrect,
-                is_force: s.isForce || false,
+                is_correct: s.is_correct,
+                is_force: s.is_force || false,
             };
         });
 

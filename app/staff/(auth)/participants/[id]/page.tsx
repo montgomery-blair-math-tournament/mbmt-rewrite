@@ -13,7 +13,6 @@ import { ParticipantDetail } from "@/lib/schema/participant";
 import { Round } from "@/lib/schema/round";
 import CheckInModal from "@/components/CheckInModal";
 import Badge from "@/components/Badge";
-// import { cn } from "@/lib/utils";
 
 export default function ParticipantPage({
     params,
@@ -80,7 +79,7 @@ export default function ParticipantPage({
             if (allRoundIds.length > 0) {
                 const { data: rounds } = await supabase
                     .from("round")
-                    .select("id, name, division, type")
+                    .select("*")
                     .in("id", allRoundIds);
 
                 if (rounds) {

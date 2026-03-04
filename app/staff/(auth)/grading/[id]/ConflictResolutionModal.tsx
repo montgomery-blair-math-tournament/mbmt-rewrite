@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { getAllGrades } from "@/app/actions/grading-data";
-import { submitGrades } from "@/app/actions/grading";
+import { getAllGrades } from "./grading-data";
+import { submitGrades } from "./grading";
 import { Problem } from "@/lib/schema/problem";
 import Modal from "@/components/Modal";
 import Button from "@/components/ui/Button";
@@ -15,16 +15,16 @@ import { Switch } from "@/components/ui/Switch";
 type GradeOption = {
     graderName: string;
     graderRole?: string;
-    answer: string | null;
-    isCorrect: boolean | null;
+    answer: string;
+    isCorrect: boolean;
     id: number;
 };
 
 type GradeRow = {
     problem_id: number;
-    is_force?: boolean;
-    is_correct: boolean | null;
-    answer: string | null;
+    is_force: boolean;
+    is_correct: boolean;
+    answer: string;
     grader?: { username: string; role: string } | null;
     id: number;
 };
@@ -34,7 +34,7 @@ export default function ConflictResolutionModal({
     onClose,
     type,
     id,
-    roundId,
+    roundId: round_id,
     problems,
     onResolve,
 }: {
@@ -56,7 +56,7 @@ export default function ConflictResolutionModal({
             {
                 choice: string;
                 customAnswer: string;
-                customIsCorrect: boolean | null;
+                customIsCorrect: boolean;
             }
         >
     >({});
@@ -120,8 +120,8 @@ export default function ConflictResolutionModal({
         const res = resolutions[problemId];
         if (!res) return;
 
-        let finalAnswer = null;
-        let finalIsCorrect = null;
+        let finalAnswer = "";
+        let finalIsCorrect = false;
 
         if (res.choice === "new") {
             finalAnswer = res.customAnswer;
@@ -132,7 +132,7 @@ export default function ConflictResolutionModal({
                 (o) => o.id.toString() === res.choice
             );
             if (selected) {
-                finalAnswer = selected.answer;
+                finalAnswer = selected.answer || "";
                 finalIsCorrect = selected.isCorrect;
             }
         }
@@ -141,11 +141,11 @@ export default function ConflictResolutionModal({
             {
                 type,
                 id,
-                roundId,
-                problemId,
+                round_id,
+                problem_id: problemId,
                 answer: finalAnswer,
-                isCorrect: finalIsCorrect,
-                isForce: true,
+                is_correct: finalIsCorrect,
+                is_force: true,
             },
         ]);
 

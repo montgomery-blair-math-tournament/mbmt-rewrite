@@ -18,7 +18,7 @@ import ConflictResolutionModal from "./ConflictResolutionModal";
 import ResetConfirmModal from "./ResetConfirmModal";
 import { toast } from "sonner";
 
-type ParticipantRow = {
+type GradingRow = {
     id: number;
     displayId: string;
     name: string;
@@ -27,51 +27,49 @@ type ParticipantRow = {
     roundId: number;
 };
 
-type GradingClientProps = {
-    round: Round;
-    problems: Problem[];
-    participants: ParticipantRow[];
-};
-
 export default function GradingClient({
     round,
     problems,
-    participants,
-}: GradingClientProps) {
+    targets,
+}: {
+    round: Round;
+    problems: Problem[];
+    targets: GradingRow[];
+}) {
     const [search, setSearch] = useState("");
     const [gradingId, setGradingId] = useState<string>("");
-    const [gradingItem, setGradingItem] = useState<ParticipantRow | null>(null);
-    const [conflictItem, setConflictItem] = useState<ParticipantRow | null>(
-        null
-    );
-    const [resetItem, setResetItem] = useState<ParticipantRow | null>(null);
-    const [localParticipants, setLocalParticipants] =
-        useState<ParticipantRow[]>(participants);
+    const [gradingItem, setGradingItem] = useState<GradingRow | null>(null);
+    const [conflictItem, setConflictItem] = useState<GradingRow | null>(null);
+    const [resetItem, setResetItem] = useState<GradingRow | null>(null);
+    const [localTargets, setLocalTargets] = useState<GradingRow[]>(targets);
 
     useEffect(() => {
-        setLocalParticipants(participants);
-    }, [participants]);
+        setLocalTargets(targets);
+    }, [targets]);
 
-    const filteredParticipants = localParticipants.filter(
+    const filteredTargets = localTargets.filter(
         (p) =>
             p.name.toLowerCase().includes(search.toLowerCase()) ||
             p.displayId.toLowerCase().includes(search.toLowerCase())
     );
 
-    const type =
-        round.type === "participant" || round.type === "individual"
-            ? "participant"
-            : "team";
+    const type = round.type === "individual" ? "participant" : "team";
 
     const handleGradeById = () => {
-        const found = localParticipants.find(
-            (p) => p.displayId === gradingId || p.id.toString() === gradingId
+        const trimmedId = gradingId.trim();
+        const upperId = trimmedId.toUpperCase();
+        const found = localTargets.find(
+            (p) =>
+                p.displayId.toUpperCase() === upperId ||
+                p.id.toString() === trimmedId
         );
         if (found) {
             setGradingItem(found);
             setGradingId("");
         } else {
-            toast.error("Participant not found");
+            toast.error(
+                type === "team" ? "Team not found" : "Participant not found"
+            );
         }
     };
 
@@ -80,7 +78,7 @@ export default function GradingClient({
         status?: string,
         score?: number
     ) => {
-        setLocalParticipants((prev) =>
+        setLocalTargets((prev) =>
             prev.map((p) => {
                 if (p.id === id) {
                     return {
@@ -108,7 +106,11 @@ export default function GradingClient({
 
                 <div className="flex items-center gap-2 w-full md:w-auto">
                     <Input
-                        placeholder="Enter ID to Grade"
+                        placeholder={
+                            type === "team"
+                                ? "Enter Team ID"
+                                : "Enter ID to Grade"
+                        }
                         value={gradingId}
                         onChange={(e) => setGradingId(e.target.value)}
                         onKeyDown={(e) =>
@@ -120,35 +122,42 @@ export default function GradingClient({
                 </div>
             </div>
 
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>ID</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Score</TableHead>
-                        <TableHead>Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody noHover>
-                    {filteredParticipants.length === 0 ? (
+            <div className="bg-white rounded-lg shadow-sm border">
+                <Table>
+                    <TableHeader>
                         <TableRow>
-                            <TableCell
-                                colSpan={5}
-                                className="text-center py-8 text-muted-foreground">
-                                No participants found.
-                            </TableCell>
+                            <TableHead>
+                                {type === "team" ? "Team ID" : "ID"}
+                            </TableHead>
+                            <TableHead>
+                                {type === "team" ? "Team Name" : "Name"}
+                            </TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Score</TableHead>
+                            <TableHead>Actions</TableHead>
                         </TableRow>
-                    ) : (
-                        filteredParticipants.map((p) => (
-                            <TableRow key={p.id}>
-                                <TableCell className="font-medium">
-                                    {p.displayId}
+                    </TableHeader>
+                    <TableBody>
+                        {filteredTargets.length === 0 ? (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={5}
+                                    className="text-center py-8 text-muted-foreground">
+                                    No{" "}
+                                    {type === "team" ? "teams" : "participants"}{" "}
+                                    found.
                                 </TableCell>
-                                <TableCell>{p.name}</TableCell>
-                                <TableCell>
-                                    <span
-                                        className={`px-2 py-1 rounded text-xs font-semibold
+                            </TableRow>
+                        ) : (
+                            filteredTargets.map((p) => (
+                                <TableRow key={p.id}>
+                                    <TableCell className="font-medium">
+                                        {p.displayId}
+                                    </TableCell>
+                                    <TableCell>{p.name}</TableCell>
+                                    <TableCell>
+                                        <span
+                                            className={`px-2 py-1 rounded text-xs font-semibold
                                             ${
                                                 p.status ===
                                                 GradingStatus.COMPLETED
@@ -161,83 +170,93 @@ export default function GradingClient({
                                                         ? "bg-yellow-100 text-yellow-800"
                                                         : "bg-gray-100 text-gray-800"
                                             }`}>
-                                        {p.status}
-                                    </span>
-                                </TableCell>
-                                <TableCell>{p.score ?? "-"}</TableCell>
-                                <TableCell>
-                                    <div className="flex gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => setGradingItem(p)}>
-                                            Grade
-                                        </Button>
-                                        {p.status ===
-                                            GradingStatus.CONFLICT && (
+                                            {p.status}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>{p.score ?? "-"}</TableCell>
+                                    <TableCell>
+                                        <div className="flex gap-2">
                                             <Button
-                                                variant="secondary"
-                                                className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                                variant="outline"
                                                 size="sm"
                                                 onClick={() =>
-                                                    setConflictItem(p)
+                                                    setGradingItem(p)
                                                 }>
-                                                Resolve
+                                                Grade
                                             </Button>
-                                        )}
-                                        {p.status !==
-                                            GradingStatus.NOT_STARTED && (
-                                            <Button
-                                                variant="destructive"
-                                                size="sm"
-                                                onClick={() => setResetItem(p)}>
-                                                Reset
-                                            </Button>
-                                        )}
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    )}
-                </TableBody>
-            </Table>
+                                            {p.status ===
+                                                GradingStatus.CONFLICT && (
+                                                <Button
+                                                    variant="secondary"
+                                                    className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        setConflictItem(p)
+                                                    }>
+                                                    Resolve
+                                                </Button>
+                                            )}
+                                            {p.status !==
+                                                GradingStatus.NOT_STARTED && (
+                                                <Button
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        setResetItem(p)
+                                                    }>
+                                                    Reset
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
 
-            {gradingItem && (
-                <GradingModal
-                    isOpen={!!gradingItem}
-                    onClose={() => setGradingItem(null)}
-                    type={type}
-                    id={gradingItem.id}
-                    roundId={round.id}
-                    participantName={gradingItem.name}
-                    problems={problems}
-                />
-            )}
+                {gradingItem && (
+                    <GradingModal
+                        isOpen={!!gradingItem}
+                        onClose={() => setGradingItem(null)}
+                        type={type}
+                        id={gradingItem.id}
+                        displayId={gradingItem.displayId}
+                        roundId={round.id}
+                        targetName={gradingItem.name}
+                        problems={problems}
+                    />
+                )}
 
-            {conflictItem && (
-                <ConflictResolutionModal
-                    isOpen={!!conflictItem}
-                    onClose={() => setConflictItem(null)}
-                    type={type}
-                    id={conflictItem.id}
-                    roundId={round.id}
-                    problems={problems}
-                    onResolve={(status, score) =>
-                        handleConflictResolve(conflictItem.id, status, score)
-                    }
-                />
-            )}
+                {conflictItem && (
+                    <ConflictResolutionModal
+                        isOpen={!!conflictItem}
+                        onClose={() => setConflictItem(null)}
+                        type={type}
+                        id={conflictItem.id}
+                        roundId={round.id}
+                        problems={problems}
+                        onResolve={(status, score) =>
+                            handleConflictResolve(
+                                conflictItem.id,
+                                status,
+                                score
+                            )
+                        }
+                    />
+                )}
 
-            {resetItem && (
-                <ResetConfirmModal
-                    isOpen={!!resetItem}
-                    onClose={() => setResetItem(null)}
-                    type={type}
-                    id={resetItem.id}
-                    roundId={round.id}
-                    participantName={resetItem.name}
-                />
-            )}
+                {resetItem && (
+                    <ResetConfirmModal
+                        isOpen={!!resetItem}
+                        onClose={() => setResetItem(null)}
+                        type={type}
+                        id={resetItem.id}
+                        roundId={round.id}
+                        targetName={resetItem.name}
+                    />
+                )}
+            </div>
         </div>
     );
 }

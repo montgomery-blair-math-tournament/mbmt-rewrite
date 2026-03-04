@@ -22,7 +22,9 @@ export default function EditRoundModal({
 }) {
     const [name, setName] = useState(round.name);
     const [division, setDivision] = useState(round.division);
-    const [type, setType] = useState(round.type);
+    const [type, setType] = useState<"individual" | "team" | "guts">(
+        round.type
+    );
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
@@ -91,16 +93,23 @@ export default function EditRoundModal({
 
                 <div>
                     <Label className="mb-2 block">Type</Label>
-                    <RadioGroup value={type} onValueChange={setType}>
-                        {["individual", "team", "guts"].map((t) => (
+                    <RadioGroup
+                        value={type}
+                        onValueChange={(val) =>
+                            setType(val as "individual" | "team" | "guts")
+                        }>
+                        {["individual", "team", "guts"].map((roundType) => (
                             <div
-                                key={t}
-                                className="flex items-center space-x-2">
-                                <RadioGroupItem value={t} id={`type-${t}`} />
+                                key={roundType}
+                                className="flex items-center gap-2">
+                                <RadioGroupItem
+                                    value={roundType}
+                                    id={`type-${roundType}`}
+                                />
                                 <Label
-                                    htmlFor={`type-${t}`}
+                                    htmlFor={`type-${roundType}`}
                                     className="capitalize">
-                                    {t}
+                                    {roundType}
                                 </Label>
                             </div>
                         ))}

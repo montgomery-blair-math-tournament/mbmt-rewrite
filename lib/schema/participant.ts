@@ -3,13 +3,15 @@ import { Round } from "./round";
 
 export const participantSchema = z.object({
     id: z.number(),
+    created_at: z.iso.datetime({ offset: true }).optional(),
+    team_id: z.number(),
     first_name: z.string(),
     last_name: z.string(),
     grade: z.number(),
-    team_id: z.number(),
     checked_in: z.boolean(),
     tshirt: z.string(),
-    is_flagged: z.boolean(),
+    score: z.float64().nullable(),
+    is_flagged: z.boolean().default(false),
 });
 
 export type Participant = z.infer<typeof participantSchema>;

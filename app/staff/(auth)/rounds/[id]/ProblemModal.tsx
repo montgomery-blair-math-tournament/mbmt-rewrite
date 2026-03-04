@@ -23,7 +23,7 @@ export default function ProblemModal({
 }) {
     const isEditing = !!problem;
 
-    const [number, setNumber] = useState("");
+    const [number, setNumber] = useState(0);
     const [type, setType] = useState<Problem["type"]>("boolean");
     const [probText, setProbText] = useState("");
     const [answer, setAnswer] = useState("");
@@ -37,7 +37,7 @@ export default function ProblemModal({
                 setProbText(problem.problem);
                 setAnswer(problem.answer);
             } else {
-                setNumber("");
+                setNumber(0);
                 setType("boolean");
                 setProbText("");
                 setAnswer("");
@@ -97,7 +97,7 @@ export default function ProblemModal({
                     <Input
                         type="text"
                         value={number}
-                        onChange={(e) => setNumber(e.target.value)}
+                        onChange={(e) => setNumber(parseInt(e.target.value))}
                         className="mt-1"
                         placeholder="e.g. 1"
                     />
