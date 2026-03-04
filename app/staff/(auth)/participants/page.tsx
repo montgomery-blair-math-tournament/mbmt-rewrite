@@ -52,6 +52,7 @@ export default function ParticipantsPage() {
                     chaperone: teamData?.chaperone || "N/A",
                     checkedIn: p.checked_in,
                     teamId: p.team_id,
+                    isFlagged: p.is_flagged,
                 };
             });
             setParticipants(formattedData);

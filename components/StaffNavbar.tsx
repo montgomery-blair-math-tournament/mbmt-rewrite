@@ -22,7 +22,7 @@ export default async function StaffNavbar() {
 
     const links = [
         { label: "Grading", href: "/staff/grading" },
-        { label: "Participants", href: "/staff/participants" },
+        { label: "Participants/Check In", href: "/staff/participants" },
         { label: "Teams", href: "/staff/teams" },
         { label: "Rounds", href: "/staff/rounds" },
         { label: "Announcements", href: "/staff/announcements" },
