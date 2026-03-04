@@ -113,6 +113,7 @@ export default function ParticipantPage({
                 individualRounds,
                 teamRounds,
                 teamId: pData.team_id ?? 0,
+                isFlagged: pData.is_flagged,
             });
             setLoading(false);
         };

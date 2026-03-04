@@ -130,7 +130,9 @@ export default function CheckInModal({
                     <ModalButton
                         variant="themed"
                         onClick={onCheckIn}
-                        disabled={participant.checkedIn}>
+                        disabled={
+                            participant.checkedIn || participant.isFlagged
+                        }>
                         Check In
                     </ModalButton>
                 </>
@@ -141,58 +143,82 @@ export default function CheckInModal({
                         Read and follow the script:
                     </p>
 
-                    <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-800 ">
-                        <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md">
+                    {!participant.isFlagged && (
+                        <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-800 ">
+                            <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md">
+                                <p>
+                                    Confirm they are{" "}
+                                    <strong>
+                                        {participant.firstName}{" "}
+                                        {participant.lastName}
+                                    </strong>{" "}
+                                    from <strong>{participant.school}</strong>{" "}
+                                    in Grade{" "}
+                                    <strong>{participant.grade}</strong>.
+                                </p>
+                            </div>
+
                             <p>
-                                Confirm they are{" "}
+                                Your participant ID is{" "}
+                                <strong>{participant.displayId}</strong> and
+                                your team ID is{" "}
                                 <strong>
-                                    {participant.firstName}{" "}
-                                    {participant.lastName}
-                                </strong>{" "}
-                                from <strong>{participant.school}</strong> in
-                                Grade <strong>{participant.grade}</strong>.
-                            </p>
-                        </div>
-
-                        <p>
-                            Your participant ID is{" "}
-                            <strong>{participant.displayId}</strong> and your
-                            team ID is{" "}
-                            <strong>
-                                T{participant.division[0]}
-                                {participant.teamId}
-                            </strong>
-                            .
-                        </p>
-
-                        <p>
-                            You are on <strong>{participant.team}</strong> in
-                            the <strong>{participant.division}</strong>{" "}
-                            division.
-                        </p>
-
-                        <p>
-                            You will be taking the following individual rounds:{" "}
-                            <strong>{roundListContent}</strong>.
-                        </p>
-
-                        <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md">
-                            <p>
-                                Find{" "}
-                                <strong>
-                                    {participant.firstName}{" "}
-                                    {participant.lastName}
+                                    T{participant.division[0]}
+                                    {participant.teamId}
                                 </strong>
-                                &apos;s sticker. Hand over welcome packet.
+                                .
+                            </p>
+
+                            <p>
+                                You are on <strong>{participant.team}</strong>{" "}
+                                in the <strong>{participant.division}</strong>{" "}
+                                division.
+                            </p>
+
+                            <p>
+                                You will be taking the following individual
+                                rounds: <strong>{roundListContent}</strong>.
+                            </p>
+
+                            <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md">
+                                <p>
+                                    Find{" "}
+                                    <strong>
+                                        {participant.firstName}{" "}
+                                        {participant.lastName}
+                                    </strong>
+                                    &apos;s sticker. Hand over welcome packet.
+                                </p>
+                            </div>
+
+                            <p>
+                                Please wear your sticker. It contains your table
+                                numbers. You can use the map in the packet to
+                                find your team table.
                             </p>
                         </div>
+                    )}
+                    {participant.isFlagged && (
+                        <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-800 ">
+                            <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md">
+                                <p>
+                                    Confirm they are{" "}
+                                    <strong>
+                                        {participant.firstName}{" "}
+                                        {participant.lastName}
+                                    </strong>{" "}
+                                    from <strong>{participant.school}</strong>{" "}
+                                    in Grade{" "}
+                                    <strong>{participant.grade}</strong>.
+                                </p>
+                            </div>
 
-                        <p>
-                            Please wear your sticker. It contains your table
-                            numbers. You can use the map in the packet to find
-                            your team table.
-                        </p>
-                    </div>
+                            <p>
+                                Please report to the master table, over there
+                                (point to master table)
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
         </Modal>

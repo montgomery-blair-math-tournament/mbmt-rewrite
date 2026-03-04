@@ -10,6 +10,7 @@ export const participantSchema = z.object({
     checked_in: z.boolean(),
     tshirt: z.string(),
     score: z.float64().nullable(),
+    is_flagged: z.boolean(),
 });
 
 export type Participant = z.infer<typeof participantSchema>;
@@ -35,6 +36,7 @@ export type ParticipantDisplay = {
     chaperone: string;
     checkedIn: boolean;
     teamId: number;
+    isFlagged: boolean;
 };
 
 export type ParticipantDetail = ParticipantDisplay & {

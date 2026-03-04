@@ -59,6 +59,8 @@ export default function Modal({
 export function ModalButton({
     variant,
     className,
+    onClick,
+    disabled,
     ...props
 }: {
     variant: "primary" | "secondary" | "themed";
@@ -66,17 +68,25 @@ export function ModalButton({
     return (
         <button
             className={cn(
-                "px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent hover:cursor-pointer",
+                "px-4 py-2 text-sm font-medium rounded-md transition-colors",
                 {
-                    "text-white bg-accent hover:bg-accent-hover":
-                        variant === "themed",
-                    "text-gray-700 bg-gray-200 hover:bg-gray-300":
-                        variant === "primary",
-                    "text-gray-200 bg-gray-800 hover:bg-gray-700":
-                        variant === "secondary",
+                    "text-white bg-accent": variant === "themed",
+                    "text-gray-700 bg-gray-200": variant === "primary",
+                    "text-gray-200 bg-gray-800": variant === "secondary",
+                },
+                {
+                    "hover:bg-accent-hover": variant === "themed" && !disabled,
+                    "hover:bg-gray-300": variant === "primary" && !disabled,
+                    "hover:bg-gray-700": variant === "secondary" && !disabled,
+                },
+                {
+                    "opacity-50": disabled,
+                    "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent hover:cursor-pointer":
+                        !disabled,
                 },
                 className
             )}
+            onClick={(e) => !disabled && onClick && onClick(e)}
             {...props}
         />
     );
