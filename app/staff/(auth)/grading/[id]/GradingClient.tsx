@@ -27,17 +27,15 @@ type GradingRow = {
     roundId: number;
 };
 
-type GradingClientProps = {
-    round: Round;
-    problems: Problem[];
-    targets: GradingRow[];
-};
-
 export default function GradingClient({
     round,
     problems,
     targets,
-}: GradingClientProps) {
+}: {
+    round: Round;
+    problems: Problem[];
+    targets: GradingRow[];
+}) {
     const [search, setSearch] = useState("");
     const [gradingId, setGradingId] = useState<string>("");
     const [gradingItem, setGradingItem] = useState<GradingRow | null>(null);
