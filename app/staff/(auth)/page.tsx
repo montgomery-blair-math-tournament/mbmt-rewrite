@@ -1,18 +1,15 @@
 import Heading from "@/components/Heading";
-import Button from "@/components/ui/Button";
 
 export default function StaffPage() {
     return (
-        <div>
+        <div className="flex flex-col gap-6">
             <Heading level={1}>Staff Dashboard</Heading>
-            <p>Welcome!</p>
-            <div className="flex gap-4">
-                <Button variant={"default"}>default</Button>
-                <Button variant={"destructive"}>destructive</Button>
-                <Button variant={"outline"}>outline</Button>
-                <Button variant={"secondary"}>secondary</Button>
-                <Button variant={"ghost"}>ghost</Button>
-                <Button variant={"link"}>link</Button>
+            <div>
+                <p>
+                    Welcome! Feel free to play around with the different staff
+                    pages until this Saturday. Report any issues with this
+                    website on the discord server.
+                </p>
             </div>
         </div>
     );
