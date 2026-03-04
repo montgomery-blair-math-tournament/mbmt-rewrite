@@ -3,24 +3,22 @@
 import Modal from "@/components/Modal";
 import Button from "@/components/ui/Button";
 
-type ConflictConfirmationModalProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    onConfirm: () => void;
-    conflicts: { problemId: number }[];
-    problems: { id: number; number: string | number }[];
-};
-
 export default function ConflictConfirmationModal({
     isOpen,
     onClose,
     onConfirm,
     conflicts,
     problems,
-}: ConflictConfirmationModalProps) {
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+    onConfirm: () => void;
+    conflicts: { problemId: number }[];
+    problems: { id: number; number: string | number }[];
+}) {
     const conflictingProblems = conflicts
         .map((c) => {
-            const p = problems.find((prob) => prob.id === c.problemId);
+            const p = problems.find((problem) => problem.id === c.problemId);
             return p ? `Problem ${p.number}` : `Problem ID ${c.problemId}`;
         })
         .join(", ");

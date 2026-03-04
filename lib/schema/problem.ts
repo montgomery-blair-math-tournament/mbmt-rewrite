@@ -11,6 +11,7 @@ export const problemSchema = z.object({
         .default("standard"),
     points: z.number().default(1),
     section: z.number().nullable(),
+    weight: z.float64().nullable(),
 });
 
 export type Problem = z.infer<typeof problemSchema>;

@@ -9,6 +9,7 @@ export const participantSchema = z.object({
     team_id: z.number(),
     checked_in: z.boolean(),
     tshirt: z.string(),
+    score: z.float64().nullable(),
 });
 
 export type Participant = z.infer<typeof participantSchema>;
