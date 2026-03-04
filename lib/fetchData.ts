@@ -97,7 +97,7 @@ export async function fetchProblems({
     return data as Problem[];
 }
 
-export async function fetchUsers({ id }: { id?: number | null }) {
+export async function fetchUsers({ id }: { id?: string | null }) {
     const supabase = await createClient();
 
     let query = supabase.from("user").select("*");
