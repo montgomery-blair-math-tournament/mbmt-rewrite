@@ -12,17 +12,17 @@ import Button from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import { Switch } from "@/components/ui/Switch";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import ConflictConfirmationModal from "./ConflictConfirmationModal";
 import Modal from "@/components/Modal";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/Form";
 
 const formSchema = z.object({
     grades: z.record(
         z.string(),
         z.object({
-            isCorrect: z.boolean().nullable(),
+            is_correct: z.boolean().nullable(),
             answer: z.string().optional(),
         })
     ),
@@ -52,7 +52,7 @@ export default function GradingForm({
     );
     const [conflictData, setConflictData] = useState<{
         isOpen: boolean;
-        conflicts: { problemId: number }[];
+        conflicts: { problem_id: number }[];
     }>({ isOpen: false, conflicts: [] });
     const [regradeModalOpen, setRegradeModalOpen] = useState(false);
 
@@ -78,12 +78,12 @@ export default function GradingForm({
 
                 const initialGrades: Record<
                     string,
-                    { isCorrect: boolean | null; answer: string }
+                    { is_correct: boolean | null; answer: string }
                 > = {};
 
                 problems.forEach((p) => {
                     initialGrades[p.id.toString()] = {
-                        isCorrect: false,
+                        is_correct: false,
                         answer: "",
                     };
                 });
@@ -104,20 +104,23 @@ export default function GradingForm({
         const values = form.getValues();
 
         problems.forEach((p) => {
-            const g = values.grades[p.id.toString()];
-            if (g) {
+            const grades = values.grades[p.id.toString()];
+            if (grades) {
                 const isStandard =
                     p.type === "standard" || p.type === "boolean";
                 const isUnmarked =
-                    g.isCorrect === null && (!g.answer || g.answer === "");
+                    grades.is_correct === null &&
+                    (!grades.answer || grades.answer === "");
                 if (!isUnmarked) {
                     submissions.push({
                         type,
                         id,
-                        roundId,
-                        problemId: p.id,
-                        answer: g.answer || null,
-                        isCorrect: isStandard ? (g.isCorrect ?? null) : null,
+                        round_id: roundId,
+                        problem_id: p.id,
+                        answer: grades.answer || "",
+                        is_correct: isStandard
+                            ? (grades.is_correct ?? false)
+                            : false,
                     });
                 }
             }
@@ -150,7 +153,7 @@ export default function GradingForm({
         problems.forEach((p) => {
             const g = values.grades[p.id.toString()];
             const isUnmarked =
-                g?.isCorrect === null && (!g?.answer || g?.answer === "");
+                g?.is_correct === null && (!g?.answer || g?.answer === "");
             if (hasGradedMap[p.id] && !isUnmarked) {
                 hasRegrade = true;
             }
@@ -173,12 +176,14 @@ export default function GradingForm({
                 className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto p-1">
                     {problems.map((problem) => {
-                        const pidStr = problem.id.toString();
-                        const currentGrade = form.watch(`grades.${pidStr}`);
+                        const problemIdString = problem.id.toString();
+                        const currentGrade = form.watch(
+                            `grades.${problemIdString}`
+                        );
                         if (!currentGrade) return null;
 
                         const isUnmarked =
-                            currentGrade.isCorrect === null &&
+                            currentGrade.is_correct === null &&
                             (!currentGrade.answer ||
                                 currentGrade.answer === "");
                         const isStandard =
@@ -225,7 +230,7 @@ export default function GradingForm({
                                     {isStandard ? (
                                         <FormField
                                             control={form.control}
-                                            name={`grades.${pidStr}.isCorrect`}
+                                            name={`grades.${problemIdString}.isCorrect`}
                                             render={({ field }) => (
                                                 <FormItem className="flex items-center gap-2 mb-0">
                                                     <Label
@@ -262,7 +267,7 @@ export default function GradingForm({
                                     ) : (
                                         <FormField
                                             control={form.control}
-                                            name={`grades.${pidStr}.answer`}
+                                            name={`grades.${problemIdString}.answer`}
                                             render={({ field }) => (
                                                 <FormItem className="mb-0 gap-0">
                                                     <FormControl>
@@ -273,11 +278,11 @@ export default function GradingForm({
                                                                     e
                                                                 );
                                                                 if (
-                                                                    currentGrade.isCorrect ===
+                                                                    currentGrade.is_correct ===
                                                                     null
                                                                 ) {
                                                                     form.setValue(
-                                                                        `grades.${pidStr}.isCorrect`,
+                                                                        `grades.${problemIdString}.is_correct`,
                                                                         false
                                                                     );
                                                                 }
@@ -302,20 +307,20 @@ export default function GradingForm({
                                         onClick={() => {
                                             if (isUnmarked) {
                                                 form.setValue(
-                                                    `grades.${pidStr}.isCorrect`,
+                                                    `grades.${problemIdString}.is_correct`,
                                                     false
                                                 );
                                                 form.setValue(
-                                                    `grades.${pidStr}.answer`,
+                                                    `grades.${problemIdString}.answer`,
                                                     ""
                                                 );
                                             } else {
                                                 form.setValue(
-                                                    `grades.${pidStr}.isCorrect`,
+                                                    `grades.${problemIdString}.is_correct`,
                                                     null
                                                 );
                                                 form.setValue(
-                                                    `grades.${pidStr}.answer`,
+                                                    `grades.${problemIdString}.answer`,
                                                     ""
                                                 );
                                             }

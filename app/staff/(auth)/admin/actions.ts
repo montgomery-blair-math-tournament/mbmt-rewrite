@@ -50,11 +50,11 @@ async function calculateProblemWeight({
     ).map((grade) => ({
         type: "participant" as const,
         id: grade.id,
-        roundId: problem.round_id,
-        problemId: problem.id,
+        round_id: problem.round_id,
+        problem_id: problem.id,
         answer: grade.answer,
-        isCorrect: grade.is_correct,
-        isForce: grade.is_force,
+        is_correct: grade.is_correct,
+        is_force: grade.is_force,
         participantId: grade.participant_id,
     }));
 
@@ -62,12 +62,12 @@ async function calculateProblemWeight({
         // only count the first submission per participant unless forced
         if (!participantsSeen.includes(grade.participantId)) {
             participantsSeen.push(grade.participantId);
-            if (grade.isCorrect) {
+            if (grade.is_correct) {
                 participantsCorrect.push(grade.participantId);
             }
         } else if (
             participantsSeen.includes(grade.participantId) &&
-            grade.isForce
+            grade.is_force
         ) {
             if (participantsCorrect.includes(grade.participantId)) {
                 participantsCorrect.splice(
@@ -176,42 +176,8 @@ async function checkIfParticipantCorrect({
     problemId: number;
     gradingData: ParticipantGrading[];
 }): Promise<boolean> {
-    const participantProblemGrades = gradingData.filter(
-        (grade) =>
-            grade.participant_id === participantId &&
-            grade.problem_id === problemId
-    );
-
-    if (participantProblemGrades.length === 0) {
-        return false;
-    }
-
-    // Sort by created_at to get the chronological order of submissions
-    participantProblemGrades.sort(
-        (a, b) =>
-            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-    );
-
-    let finalIsCorrect: boolean | null = null;
-    let hasForcedSubmission = false;
-
-    for (const grade of participantProblemGrades) {
-        if (grade.is_force) {
-            finalIsCorrect = grade.is_correct;
-            hasForcedSubmission = true;
-            // If a forced grade is encountered, it overrides everything before it
-            // and we can stop looking for further forced grades in this context
-        } else if (!hasForcedSubmission) {
-            // If no forced submission has been encountered yet, consider the unforced grade
-            // The first unforced grade sets the initial correctness, subsequent unforced
-            // grades are ignored unless a forced grade overrides it.
-            if (finalIsCorrect === null) {
-                finalIsCorrect = grade.is_correct;
-            }
-        }
-    }
-
-    return finalIsCorrect ?? false;
+    // TODO
+    return false;
 }
 
 async function calculateRoundWeightSums(): Promise<Map<Round, number>[]> {

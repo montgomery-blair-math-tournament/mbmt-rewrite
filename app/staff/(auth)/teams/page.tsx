@@ -26,21 +26,23 @@ export default function TeamsPage() {
             }
 
             const formattedData: TeamDisplay[] = (data as TeamWithCount[]).map(
-                (t) => {
-                    const divisionCode = t.division ?? 0;
+                (team) => {
+                    const divisionCode = team.division ?? 0;
                     const divisionInfo =
                         DIVISIONS[divisionCode] || DIVISIONS[0];
 
-                    const displayId = `${divisionInfo.prefix}${t.id}`;
+                    const displayId = `${divisionInfo.prefix}${team.id}`;
 
                     return {
-                        id: t.id,
+                        id: team.id,
+                        name: team.name,
+                        school: team.school,
+                        chaperone: team.chaperone,
+                        chaperone_email: team.chaperone_email,
+                        chaperone_phone: team.chaperone_phone,
+                        division: divisionCode,
+                        size: team.participant?.[0]?.count,
                         displayId: displayId,
-                        name: t.name,
-                        school: t.school,
-                        chaperone: t.chaperone,
-                        division: divisionInfo.name,
-                        size: t.participant?.[0]?.count,
                     };
                 }
             );

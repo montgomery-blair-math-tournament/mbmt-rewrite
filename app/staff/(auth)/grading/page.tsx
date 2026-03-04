@@ -2,9 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import Heading from "@/components/Heading";
 import RoundCard from "@/components/RoundCard";
 import { Round } from "@/lib/schema/round";
-import HeaderButton from "@/components/HeaderButton";
-import { HiMiniCalculator } from "react-icons/hi2";
-import { calculateIndividualScores } from "./grade-calculation";
 
 export default async function GradingPage() {
     const supabase = await createClient();

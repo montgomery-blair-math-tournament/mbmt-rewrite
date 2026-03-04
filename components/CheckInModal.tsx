@@ -53,28 +53,6 @@ export default function CheckInModal({
         redirect("/staff/participants");
     }
 
-    // async function onCancelCheckIn() {
-    //     try {
-    //         const { error } = await supabase
-    //             .from("participant")
-    //             .update({ checked_in: false })
-    //             .eq("id", participant?.id);
-
-    //         if (error) throw error;
-    //     } catch (error) {
-    //         console.error(error);
-    //         toast.error(
-    //             `Failed to cancel check in for participant ${participant?.firstName} ${participant?.lastName}`
-    //         );
-    //         return;
-    //     }
-    //     toast.success(
-    //         `Successfully canceled check in for ${participant?.firstName} ${participant?.lastName}`
-    //     );
-    //     onClose();
-    //     redirect("/staff/participants");
-    // }
-
     useEffect(() => {
         const fetchRounds = async () => {
             if (!participant || !isOpen) return;
@@ -94,7 +72,7 @@ export default function CheckInModal({
             if (roundIds.length > 0) {
                 const { data: rounds } = await supabase
                     .from("round")
-                    .select("id, name, division, type")
+                    .select("*")
                     .in("id", roundIds);
 
                 if (rounds) {

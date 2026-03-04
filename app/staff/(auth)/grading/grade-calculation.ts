@@ -1,11 +1,9 @@
 "use server";
 
-import { GradeSubmission, gradeSubmissionSchema } from "@/lib/schema/grading";
+import { GradeSubmission } from "@/lib/schema/grading";
 import { Problem } from "@/lib/schema/problem";
 import { Round } from "@/lib/schema/round";
 import { createClient } from "@/lib/supabase/server";
-import { getAllGrades } from "./[id]/grading-data";
-import { Participant } from "@/lib/schema/participant";
 
 export async function calculateIndividualScores() {
     const supabase = await createClient();

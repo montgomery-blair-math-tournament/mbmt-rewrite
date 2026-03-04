@@ -40,11 +40,9 @@ export default function GradingClient({
 }: GradingClientProps) {
     const [search, setSearch] = useState("");
     const [gradingId, setGradingId] = useState<string>("");
-
     const [gradingItem, setGradingItem] = useState<GradingRow | null>(null);
     const [conflictItem, setConflictItem] = useState<GradingRow | null>(null);
     const [resetItem, setResetItem] = useState<GradingRow | null>(null);
-
     const [localTargets, setLocalTargets] = useState<GradingRow[]>(targets);
 
     useEffect(() => {
@@ -57,10 +55,7 @@ export default function GradingClient({
             p.displayId.toLowerCase().includes(search.toLowerCase())
     );
 
-    const type =
-        round.type === "participant" || round.type === "individual"
-            ? "participant"
-            : "team";
+    const type = round.type === "individual" ? "participant" : "team";
 
     const handleGradeById = () => {
         const trimmedId = gradingId.trim();

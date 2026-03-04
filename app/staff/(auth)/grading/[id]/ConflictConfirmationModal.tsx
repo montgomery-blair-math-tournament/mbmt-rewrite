@@ -13,13 +13,13 @@ export default function ConflictConfirmationModal({
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
-    conflicts: { problemId: number }[];
+    conflicts: { problem_id: number }[];
     problems: { id: number; number: string | number }[];
 }) {
     const conflictingProblems = conflicts
         .map((c) => {
-            const p = problems.find((problem) => problem.id === c.problemId);
-            return p ? `Problem ${p.number}` : `Problem ID ${c.problemId}`;
+            const p = problems.find((problem) => problem.id === c.problem_id);
+            return p ? `Problem ${p.number}` : `Problem ID ${c.problem_id}`;
         })
         .join(", ");
 

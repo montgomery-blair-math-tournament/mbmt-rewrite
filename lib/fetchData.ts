@@ -1,16 +1,9 @@
-import {
-    BetterParticipantGrading,
-    BetterTeamGrading,
-    PARTICIPANT_GRADING_TABLE_NAME,
-    TEAM_GRADING_TABLE_NAME,
-} from "./schema2/grading";
-import {
-    BetterParticipant,
-    PARTICIPANT_TABLE_NAME,
-} from "./schema2/participant";
-import { BetterRound, ROUND_TABLE_NAME } from "./schema2/round";
-import { BetterTeam, TEAM_TABLE_NAME } from "./schema2/team";
-import { BetterUser, USER_TABLE_NAME } from "./schema2/user";
+import { ParticipantGrading, TeamGrading } from "./schema/grading";
+import { Participant } from "./schema/participant";
+import { Problem } from "./schema/problem";
+import { Round } from "./schema/round";
+import { Team } from "./schema/team";
+import { User } from "./schema/user";
 import { createClient } from "./supabase/server";
 
 export async function fetchParticipants({
@@ -22,7 +15,7 @@ export async function fetchParticipants({
 }) {
     const supabase = await createClient();
 
-    let query = supabase.from(PARTICIPANT_TABLE_NAME).select("*");
+    let query = supabase.from("participant").select("*");
 
     if (id != null) {
         query = query.eq("id", id);
@@ -37,13 +30,13 @@ export async function fetchParticipants({
         throw error;
     }
 
-    return data as BetterParticipant[];
+    return data as Participant[];
 }
 
 export async function fetchTeams({ id }: { id?: number | null }) {
     const supabase = await createClient();
 
-    let query = supabase.from(TEAM_TABLE_NAME).select("*");
+    let query = supabase.from("team").select("*");
 
     if (id != null) {
         query = query.eq("id", id);
@@ -55,13 +48,13 @@ export async function fetchTeams({ id }: { id?: number | null }) {
         throw error;
     }
 
-    return data as BetterTeam[];
+    return data as Team[];
 }
 
 export async function fetchRounds({ id }: { id?: number | null }) {
     const supabase = await createClient();
 
-    let query = supabase.from(ROUND_TABLE_NAME).select("*");
+    let query = supabase.from("round").select("*");
 
     if (id != null) {
         query = query.eq("id", id);
@@ -73,7 +66,7 @@ export async function fetchRounds({ id }: { id?: number | null }) {
         throw error;
     }
 
-    return data as BetterRound[];
+    return data as Round[];
 }
 
 export async function fetchProblems({
@@ -85,7 +78,7 @@ export async function fetchProblems({
 }) {
     const supabase = await createClient();
 
-    let query = supabase.from(USER_TABLE_NAME).select("*");
+    let query = supabase.from("problem").select("*");
 
     if (id != null) {
         query = query.eq("id", id);
@@ -101,13 +94,13 @@ export async function fetchProblems({
         throw error;
     }
 
-    return data as BetterRound[];
+    return data as Problem[];
 }
 
 export async function fetchUsers({ id }: { id?: number | null }) {
     const supabase = await createClient();
 
-    let query = supabase.from(USER_TABLE_NAME).select("*");
+    let query = supabase.from("user").select("*");
 
     if (id != null) {
         query = query.eq("id", id);
@@ -119,7 +112,7 @@ export async function fetchUsers({ id }: { id?: number | null }) {
         throw error;
     }
 
-    return data as BetterUser[];
+    return data as User[];
 }
 
 export async function fetchParticipantGrades({
@@ -135,7 +128,7 @@ export async function fetchParticipantGrades({
 }) {
     const supabase = await createClient();
 
-    let query = supabase.from(PARTICIPANT_GRADING_TABLE_NAME).select("*");
+    let query = supabase.from("participant_grading").select("*");
 
     if (id != null) {
         query = query.eq("id", id);
@@ -156,7 +149,7 @@ export async function fetchParticipantGrades({
         throw error;
     }
 
-    return data as BetterParticipantGrading[];
+    return data as ParticipantGrading[];
 }
 
 export async function fetchTeamGrades({
@@ -172,7 +165,7 @@ export async function fetchTeamGrades({
 }) {
     const supabase = await createClient();
 
-    let query = supabase.from(TEAM_GRADING_TABLE_NAME).select("*");
+    let query = supabase.from("team_grading").select("*");
 
     if (id != null) {
         query = query.eq("id", id);
@@ -193,5 +186,5 @@ export async function fetchTeamGrades({
         throw error;
     }
 
-    return data as BetterTeamGrading[];
+    return data as TeamGrading[];
 }

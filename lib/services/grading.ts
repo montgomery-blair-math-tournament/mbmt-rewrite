@@ -121,7 +121,7 @@ export function detectConflicts(
     existingData: (ParticipantGrading | TeamGrading)[],
     problems: { id: number; type: string }[]
 ): {
-    problemId: number;
+    problem_id: number;
     existingGrades: (ParticipantGrading | TeamGrading)[];
 }[] {
     const typeMap = new Map(problems.map((p) => [p.id, p.type]));
@@ -133,23 +133,23 @@ export function detectConflicts(
     });
 
     const conflicts: {
-        problemId: number;
+        problem_id: number;
         existingGrades: (ParticipantGrading | TeamGrading)[];
     }[] = [];
 
     for (const sub of submissions) {
-        if (sub.isForce) continue;
+        if (sub.is_force) continue;
 
-        const existing = existingMap.get(sub.problemId);
+        const existing = existingMap.get(sub.problem_id);
         if (!existing || existing.length === 0) continue;
 
-        const pType = typeMap.get(sub.problemId) || "standard";
+        const pType = typeMap.get(sub.problem_id) || "standard";
 
         let isDifference = false;
         for (const e of existing) {
-            const subGrade = {
-                answer: sub.answer,
-                is_correct: sub.isCorrect,
+            const subGrade = sub as {
+                answer: string;
+                is_correct: boolean;
             };
             if (checkMismatch(subGrade, e, pType)) {
                 isDifference = true;
@@ -159,7 +159,7 @@ export function detectConflicts(
 
         if (isDifference) {
             conflicts.push({
-                problemId: sub.problemId,
+                problem_id: sub.problem_id,
                 existingGrades: existing,
             });
         }
