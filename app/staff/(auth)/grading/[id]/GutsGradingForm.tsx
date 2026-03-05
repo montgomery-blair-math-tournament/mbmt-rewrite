@@ -8,10 +8,10 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/Form";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@/lib/utils";
 import { Switch } from "@/components/ui/Switch";
 import { Input } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { parseSetCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 const formSchema = z.object({
     grades: z.record(
@@ -36,7 +36,7 @@ export default function GutsGradingForm({
 }) {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
-    const [sectionSelect, setSectionSelect] = useState(0);
+    const [, setSectionSelect] = useState(0);
     const [problemsForEachSection, setProblemsForEachSection] = useState<
         { section: number; problems: Problem[] }[]
     >([]);
@@ -89,8 +89,9 @@ export default function GutsGradingForm({
     async function setCurrentSection(section: number) {
         setSectionSelect(section);
         setProblemsForThisSection(
-            problemsForEachSection.filter((pSet) => pSet.section === section)[0]
-                .problems
+            problemsForEachSection
+                .filter((pSet) => pSet.section === section)[0]
+                .problems.sort((a, b) => a.number - b.number)
         );
     }
 
@@ -122,17 +123,8 @@ export default function GutsGradingForm({
             <Form {...form}>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                     <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto p-1">
-                        {problems.map((problem) => {
+                        {problemsForThisSection.map((problem) => {
                             const problemIdString = problem.id.toString();
-                            const currentGrade = form.watch(
-                                `grades.${problemIdString}`
-                            );
-                            if (!currentGrade) return null;
-
-                            const isUnmarked =
-                                currentGrade.is_correct === null &&
-                                (!currentGrade.answer ||
-                                    currentGrade.answer === "");
                             const isStandard =
                                 problem.type === "standard" ||
                                 problem.type === "boolean";
@@ -140,18 +132,9 @@ export default function GutsGradingForm({
                             return (
                                 <div
                                     key={problem.id}
-                                    className={cn(
-                                        "flex items-center justify-between p-3 border rounded-lg transition-colors",
-                                        isUnmarked
-                                            ? "bg-gray-50 border-gray-200 opacity-75"
-                                            : "bg-white border-gray-300"
-                                    )}>
+                                    className="flex items-center justify-between p-3 border rounded-lg transition-colors">
                                     <div className="flex-1 pr-4">
-                                        <Label
-                                            className={cn(
-                                                "text-base font-medium",
-                                                isUnmarked && "text-gray-500"
-                                            )}>
+                                        <Label className="text-base font-medium">
                                             Problem {problem.number}{" "}
                                             {problem.points > 1 &&
                                                 `(${problem.points} pts)`}
@@ -170,25 +153,15 @@ export default function GutsGradingForm({
                                                 name={`grades.${problemIdString}.isCorrect`}
                                                 render={({ field }) => (
                                                     <FormItem className="flex items-center gap-2 mb-0">
-                                                        <Label
-                                                            className={cn(
-                                                                "cursor-pointer min-w-16 text-right",
-                                                                isUnmarked &&
-                                                                    "text-gray-400"
-                                                            )}>
-                                                            {field.value ===
-                                                            true
+                                                        <Label className="cursor-pointer min-w-16 text-right">
+                                                            {field.value
                                                                 ? "Correct"
-                                                                : field.value ===
-                                                                    false
-                                                                  ? "Incorrect"
-                                                                  : "Unmarked"}
+                                                                : "Incorrect"}
                                                         </Label>
                                                         <FormControl>
                                                             <Switch
                                                                 checked={
-                                                                    field.value ===
-                                                                    true
+                                                                    field.value
                                                                 }
                                                                 onCheckedChange={(
                                                                     checked
@@ -217,62 +190,19 @@ export default function GutsGradingForm({
                                                                     field.onChange(
                                                                         e
                                                                     );
-                                                                    if (
-                                                                        currentGrade.is_correct ===
-                                                                        null
-                                                                    ) {
-                                                                        form.setValue(
-                                                                            `grades.${problemIdString}.is_correct`,
-                                                                            false
-                                                                        );
-                                                                    }
+                                                                    form.setValue(
+                                                                        `grades.${problemIdString}.is_correct`,
+                                                                        false
+                                                                    );
                                                                 }}
                                                                 placeholder="Answer..."
-                                                                className={cn(
-                                                                    "w-32",
-                                                                    isUnmarked &&
-                                                                        "bg-gray-100"
-                                                                )}
+                                                                className="w-32"
                                                             />
                                                         </FormControl>
                                                     </FormItem>
                                                 )}
                                             />
                                         )}
-
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => {
-                                                if (isUnmarked) {
-                                                    form.setValue(
-                                                        `grades.${problemIdString}.is_correct`,
-                                                        false
-                                                    );
-                                                    form.setValue(
-                                                        `grades.${problemIdString}.answer`,
-                                                        ""
-                                                    );
-                                                } else {
-                                                    form.setValue(
-                                                        `grades.${problemIdString}.is_correct`,
-                                                        null
-                                                    );
-                                                    form.setValue(
-                                                        `grades.${problemIdString}.answer`,
-                                                        ""
-                                                    );
-                                                }
-                                            }}
-                                            className={cn(
-                                                "h-8 px-2 text-xs",
-                                                isUnmarked
-                                                    ? "text-red-600 hover:text-red-800 hover:bg-red-50"
-                                                    : "text-gray-400 hover:text-gray-600"
-                                            )}>
-                                            {isUnmarked ? "Mark" : "Unmark"}
-                                        </Button>
                                     </div>
                                 </div>
                             );
