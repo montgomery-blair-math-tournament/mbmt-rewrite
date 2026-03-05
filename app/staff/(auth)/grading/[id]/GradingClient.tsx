@@ -16,6 +16,7 @@ import Table, {
 import GradingModal from "./GradingModal";
 import ConflictResolutionModal from "./ConflictResolutionModal";
 import ResetConfirmModal from "./ResetConfirmModal";
+import AddToRoundModal from "./AddToRoundModal";
 import { toast } from "sonner";
 
 type GradingRow = {
@@ -41,6 +42,7 @@ export default function GradingClient({
     const [gradingItem, setGradingItem] = useState<GradingRow | null>(null);
     const [conflictItem, setConflictItem] = useState<GradingRow | null>(null);
     const [resetItem, setResetItem] = useState<GradingRow | null>(null);
+    const [addingId, setAddingId] = useState<string | null>(null);
     const [localTargets, setLocalTargets] = useState<GradingRow[]>(targets);
 
     useEffect(() => {
@@ -59,9 +61,7 @@ export default function GradingClient({
         const trimmedId = gradingId.trim();
         const upperId = trimmedId.toUpperCase();
         const found = localTargets.find(
-            (p) =>
-                p.displayId.toUpperCase() === upperId ||
-                p.id.toString() === trimmedId
+            (p) => p.displayId.toUpperCase() === upperId
         );
         if (found) {
             setGradingItem(found);
@@ -106,11 +106,7 @@ export default function GradingClient({
 
                 <div className="flex items-center gap-2 w-full md:w-auto">
                     <Input
-                        placeholder={
-                            type === "team"
-                                ? "Enter Team ID"
-                                : "Enter ID to Grade"
-                        }
+                        placeholder="Enter ID"
                         value={gradingId}
                         onChange={(e) => setGradingId(e.target.value)}
                         onKeyDown={(e) =>
@@ -119,6 +115,17 @@ export default function GradingClient({
                         className="w-full md:w-40"
                     />
                     <Button onClick={handleGradeById}>Grade</Button>
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            if (!gradingId.trim()) {
+                                toast.error("Please enter an ID");
+                                return;
+                            }
+                            setAddingId(gradingId.trim());
+                        }}>
+                        Add to round
+                    </Button>
                 </div>
             </div>
 
@@ -254,6 +261,17 @@ export default function GradingClient({
                         id={resetItem.id}
                         roundId={round.id}
                         targetName={resetItem.name}
+                    />
+                )}
+
+                {addingId && (
+                    <AddToRoundModal
+                        isOpen={!!addingId}
+                        onClose={() => setAddingId(null)}
+                        fullId={addingId}
+                        roundId={round.id}
+                        type={type}
+                        onSuccess={() => setGradingId("")}
                     />
                 )}
             </div>
