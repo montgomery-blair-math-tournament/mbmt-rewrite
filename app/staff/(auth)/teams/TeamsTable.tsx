@@ -33,8 +33,8 @@ const SortableHeader = ({
 }: {
     column: keyof TeamDisplay;
     label: string;
-    currentSortColumn: keyof TeamDisplay;
-    currentSortDirection: "asc" | "desc";
+    currentSortColumn: keyof TeamDisplay | null;
+    currentSortDirection: "asc" | "desc" | null;
     onSort: (col: keyof TeamDisplay) => void;
 }) => {
     const isActive = currentSortColumn === column;
@@ -74,8 +74,8 @@ export default function TeamsTable({
 }) {
     const [isDeleting, setIsDeleting] = useState<number | null>(null);
     const [teamToDelete, setTeamToDelete] = useState<TeamDisplay | null>(null);
-    const [sortColumn, setSortColumn] = useState<keyof TeamDisplay>("name");
-    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+    const [sortColumn, setSortColumn] = useState<keyof TeamDisplay | null>(null);
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(null);
     const router = useRouter();
     const supabase = createClient();
 
@@ -109,7 +109,12 @@ export default function TeamsTable({
 
     const handleSort = (column: keyof TeamDisplay) => {
         if (sortColumn === column) {
-            setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+            if (sortDirection === "asc") {
+                setSortDirection("desc");
+            } else {
+                setSortColumn(null);
+                setSortDirection(null);
+            }
         } else {
             setSortColumn(column);
             setSortDirection("asc");
@@ -117,6 +122,7 @@ export default function TeamsTable({
     };
 
     const sortedTeams = useMemo(() => {
+        if (!sortColumn || !sortDirection) return [...teams];
         return [...teams].sort((a, b) => {
             const valA = a[sortColumn];
             const valB = b[sortColumn];
