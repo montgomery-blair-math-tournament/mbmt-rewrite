@@ -54,6 +54,7 @@ export default function GradingClient({
     );
 
     const type = round.type === "individual" ? "participant" : "team";
+    const isGuts = round.type === "guts";
 
     const handleGradeById = () => {
         const trimmedId = gradingId.trim();
@@ -225,6 +226,19 @@ export default function GradingClient({
                         roundId={round.id}
                         targetName={gradingItem.name}
                         problems={problems}
+                        gutsParsedProblems={problems.map((problem) => ({
+                            id: problem.id,
+                            created_at: problem.created_at,
+                            number: problem.number,
+                            round_id: problem.round_id,
+                            problem: problem.problem,
+                            type: problem.type,
+                            answer: problem.answer,
+                            points: problem.points,
+                            weight: problem.weight,
+                            guts_section: problem.guts_section ?? 0,
+                        }))}
+                        isGuts={isGuts}
                     />
                 )}
 

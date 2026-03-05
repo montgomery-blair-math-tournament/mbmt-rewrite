@@ -83,9 +83,7 @@ export default function CreateRoundModal({
                         value={division?.toString() || ""}
                         onValueChange={(val) => setDivision(parseInt(val))}>
                         {Object.entries(DIVISIONS).map(([key, div]) => (
-                            <div
-                                key={key}
-                                className="flex items-center space-x-2">
+                            <div key={key} className="flex items-center gap-2">
                                 <RadioGroupItem
                                     value={key}
                                     id={`new-division-${key}`}
@@ -102,9 +100,7 @@ export default function CreateRoundModal({
                     <Label className="mb-2 block">Type</Label>
                     <RadioGroup value={type} onValueChange={setType}>
                         {["individual", "team", "guts"].map((t) => (
-                            <div
-                                key={t}
-                                className="flex items-center space-x-2">
+                            <div key={t} className="flex items-center gap-2">
                                 <RadioGroupItem
                                     value={t}
                                     id={`new-type-${t}`}

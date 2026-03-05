@@ -14,6 +14,7 @@ export default function GradingModal({
     roundId,
     problems,
     targetName,
+    gutsParsedProblems: gutsProblems,
     isGuts = false,
 }: {
     isOpen: boolean;
@@ -24,6 +25,9 @@ export default function GradingModal({
     roundId: number;
     problems: Problem[];
     targetName: string;
+    gutsParsedProblems: (Omit<Problem, "guts_section"> & {
+        guts_section: number;
+    })[];
     isGuts: boolean;
 }) {
     return (
@@ -42,7 +46,11 @@ export default function GradingModal({
                 />
             )}
             {isGuts && (
-                <GutsGradingForm problems={problems} onSuccess={onClose} />
+                <GutsGradingForm
+                    roundId={roundId}
+                    problems={gutsProblems}
+                    onSuccess={onClose}
+                />
             )}
         </Modal>
     );
