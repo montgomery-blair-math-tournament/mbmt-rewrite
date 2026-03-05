@@ -27,7 +27,7 @@ async function calculateRoundScore(
 
     const { data: roundProblems } = await supabase
         .from("problem")
-        .select("id, points, type")
+        .select("*")
         .eq("round_id", roundId);
 
     const { data: allGrades } = await supabase

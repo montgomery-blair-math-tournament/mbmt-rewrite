@@ -70,7 +70,7 @@ export default async function GradingPage() {
                     <RoundCard
                         key={round.id}
                         round={round}
-                        showProgress={true}
+                        showProgress={round.type !== "guts"}
                         stats={round.stats}
                         showDetails={false} // Don't show generic details, focusing on grading
                         href={`/staff/grading/${round.id}`}
