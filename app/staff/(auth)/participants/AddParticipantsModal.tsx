@@ -154,23 +154,17 @@ export default function AddParticipantsModal({
     };
 
     const handleAddManual = () => {
-        if (
-            !manualId ||
-            !manualFirst ||
-            !manualLast ||
-            !manualGrade ||
-            !manualTeamId
-        ) {
-            toast.error("Please fill out all fields.");
+        if (!manualId || !manualFirst || !manualLast || !manualGrade) {
+            toast.error("Please fill out all required fields.");
             return;
         }
 
-        const matchedTeam = validateTeamId(manualTeamId);
+        const matchedTeam = manualTeamId ? validateTeamId(manualTeamId) : null;
         const idVal = validateParticipantId(manualId, matchedTeam);
 
         const gradeParsed = parseInt(manualGrade.trim(), 10);
         let error = idVal.error;
-        if (!error && !matchedTeam) {
+        if (!error && manualTeamId && !matchedTeam) {
             error = "Invalid Team";
         }
         if (!error && isNaN(gradeParsed)) {
@@ -187,7 +181,9 @@ export default function AddParticipantsModal({
             rawTeamId: manualTeamId.trim().toUpperCase(),
             matchedTeam,
             isValid:
-                matchedTeam !== null && idVal.isValid && !isNaN(gradeParsed),
+                (manualTeamId === "" || matchedTeam !== null) &&
+                idVal.isValid &&
+                !isNaN(gradeParsed),
             validationError: error,
         };
 
@@ -209,16 +205,23 @@ export default function AddParticipantsModal({
             if (!line.trim()) continue;
             // Expected format: ID, FirstName, LastName, Grade, TeamId
             const parts = line.split(",").map((p) => p.trim());
-            if (parts.length >= 5) {
-                const [id, first, last, grade, teamId] = parts;
+            if (parts.length >= 4) {
+                const id = parts[0];
+                const first = parts[1];
+                const last = parts[2];
+                const grade = parts[3];
+                const teamId = parts.length >= 5 ? parts[4] : "";
+
                 const parseId = id.toUpperCase();
                 const parseTeamId = teamId.toUpperCase();
-                const matchedTeam = validateTeamId(parseTeamId);
+                const matchedTeam = parseTeamId
+                    ? validateTeamId(parseTeamId)
+                    : null;
                 const idVal = validateParticipantId(parseId, matchedTeam);
 
                 const gradeParsed = parseInt(grade, 10);
                 let error = idVal.error;
-                if (!error && !matchedTeam) {
+                if (!error && parseTeamId && !matchedTeam) {
                     error = "Invalid Team";
                 }
                 if (!error && isNaN(gradeParsed)) {
@@ -235,7 +238,7 @@ export default function AddParticipantsModal({
                     rawTeamId: parseTeamId,
                     matchedTeam,
                     isValid:
-                        matchedTeam !== null &&
+                        (parseTeamId === "" || matchedTeam !== null) &&
                         idVal.isValid &&
                         !isNaN(gradeParsed),
                     validationError: error,
@@ -269,7 +272,7 @@ export default function AddParticipantsModal({
             first_name: s.firstName,
             last_name: s.lastName,
             grade: parseInt(s.grade, 10),
-            team_id: s.matchedTeam!.id,
+            team_id: s.matchedTeam?.id || null,
             checked_in: false,
         }));
 
@@ -394,7 +397,7 @@ export default function AddParticipantsModal({
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-gray-600 uppercase">
-                                    Team ID
+                                    Team ID (Optional)
                                 </label>
                                 <Input
                                     value={manualTeamId}
@@ -403,7 +406,7 @@ export default function AddParticipantsModal({
                                             e.target.value.toUpperCase()
                                         )
                                     }
-                                    placeholder="e.g. TA1"
+                                    placeholder="e.g. TA1 (leave blank if none)"
                                 />
                             </div>
                             <Button
@@ -419,6 +422,7 @@ export default function AddParticipantsModal({
                         <div className="flex flex-col gap-3 h-full">
                             <label className="text-xs font-semibold text-gray-600 uppercase">
                                 Format: ID, FirstName, LastName, Grade, TeamId
+                                (TeamId is optional)
                             </label>
                             <textarea
                                 className="flex-1 w-full min-h-[150px] p-2 border rounded-md text-sm outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
@@ -504,9 +508,13 @@ export default function AddParticipantsModal({
                                                                 .displayId
                                                         }
                                                     </span>
-                                                ) : (
+                                                ) : s.rawTeamId ? (
                                                     <span className="text-red-500 font-semibold">
                                                         {s.rawTeamId}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-gray-400 font-medium">
+                                                        None
                                                     </span>
                                                 )}
                                             </TableCell>
@@ -529,6 +537,11 @@ export default function AddParticipantsModal({
                                                             </span>
                                                         )}
                                                     </div>
+                                                ) : !s.rawTeamId &&
+                                                  s.isValid ? (
+                                                    <span className="text-gray-500 italic text-sm">
+                                                        No Team Assigned
+                                                    </span>
                                                 ) : (
                                                     <span className="text-red-600 text-sm font-medium">
                                                         {s.validationError ||

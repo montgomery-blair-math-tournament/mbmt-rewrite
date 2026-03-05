@@ -141,7 +141,11 @@ export default function TeamPage({
             <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-4">
                     <Heading level={2}>Members</Heading>
-                    <ParticipantsTable participants={members} loading={false} />
+                    <ParticipantsTable
+                        participants={members}
+                        loading={false}
+                        onDelete={() => window.location.reload()}
+                    />
                 </div>
 
                 <div className="flex flex-col gap-4">
