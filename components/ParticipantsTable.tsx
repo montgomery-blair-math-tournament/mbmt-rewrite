@@ -223,8 +223,8 @@ export default function ParticipantsTable({
                             onSort={handleSort}
                         />
                         <SortableHeader
-                            column="school"
-                            label="School"
+                            column="displayTeamId"
+                            label="Team ID"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
                             onSort={handleSort}
@@ -232,6 +232,13 @@ export default function ParticipantsTable({
                         <SortableHeader
                             column="team"
                             label="Team"
+                            currentSortColumn={sortColumn}
+                            currentSortDirection={sortDirection}
+                            onSort={handleSort}
+                        />
+                        <SortableHeader
+                            column="school"
+                            label="School"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
                             onSort={handleSort}
@@ -249,7 +256,7 @@ export default function ParticipantsTable({
                     {loading ? (
                         <TableRow>
                             <TableCell
-                                colSpan={readonly ? 9 : 10}
+                                colSpan={readonly ? 10 : 11}
                                 className="text-center h-24">
                                 Loading...
                             </TableCell>
@@ -257,7 +264,7 @@ export default function ParticipantsTable({
                     ) : participants.length === 0 ? (
                         <TableRow>
                             <TableCell
-                                colSpan={readonly ? 9 : 10}
+                                colSpan={readonly ? 10 : 11}
                                 className="text-center h-24">
                                 No participants found.
                             </TableCell>
@@ -311,8 +318,23 @@ export default function ParticipantsTable({
                                 <TableCell>{p.lastName}</TableCell>
                                 <TableCell>{p.division}</TableCell>
                                 <TableCell>{p.grade}</TableCell>
-                                <TableCell>{p.school}</TableCell>
+                                <TableCell>
+                                    {p.displayTeamId ? (
+                                        readonly ? (
+                                            p.displayTeamId
+                                        ) : (
+                                            <Link
+                                                href={`/staff/teams/${p.teamId}`}
+                                                className="hover:underline text-red-600 hover:text-red-800">
+                                                {p.displayTeamId}
+                                            </Link>
+                                        )
+                                    ) : (
+                                        "N/A"
+                                    )}
+                                </TableCell>
                                 <TableCell>{p.team}</TableCell>
+                                <TableCell>{p.school}</TableCell>
                                 <TableCell>{p.chaperone}</TableCell>
                             </TableRow>
                         ))

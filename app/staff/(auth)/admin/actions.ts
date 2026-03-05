@@ -3,6 +3,7 @@
 import { GradeSubmission, ParticipantGrading } from "@/lib/schema/grading";
 import { createClient } from "@/lib/supabase/server";
 import { Problem } from "@/lib/schema/problem";
+import { Round } from "@/lib/schema/round";
 import { Participant } from "@/lib/schema/participant";
 
 // Returns the number of problems that updated their weights
@@ -104,6 +105,14 @@ async function addWeightsToDB({
     return count;
 }
 
+async function getProblemWeights() {
+    const supabase = await createClient();
+    const { data: weightData } = await supabase
+        .from("problem")
+        .select("*")
+        .not("weight", "is", null);
+}
+
 export async function calculateIndividualScores(): Promise<number> {
     const supabase = await createClient();
 
@@ -125,13 +134,26 @@ export async function calculateIndividualScores(): Promise<number> {
     }
     const problems = problemsData as Problem[];
 
+    const { data: participantGradingData, error: gradingError } = await supabase
+        .from("participant_grading")
+        .select("*");
+    if (gradingError) {
+        console.error("Error fetching participant grading:", gradingError);
+        return 0;
+    }
+    const participantGrading = participantGradingData as ParticipantGrading[];
+
     const participantRawScores = new Map<number, number>();
 
     for (const participant of participants) {
         let rawScore = 0;
         for (const problem of problems) {
             // Check if participant is correct for this problem
-            const isCorrect = await checkIfParticipantCorrect();
+            const isCorrect = await checkIfParticipantCorrect({
+                participantId: participant.id,
+                problemId: problem.id,
+                gradingData: participantGrading,
+            });
 
             if (isCorrect) {
                 // Add points multiplied by weight for correct problems
@@ -145,7 +167,38 @@ export async function calculateIndividualScores(): Promise<number> {
     return -1;
 }
 
-async function checkIfParticipantCorrect(): Promise<boolean> {
+async function checkIfParticipantCorrect({
+    participantId,
+    problemId,
+    gradingData,
+}: {
+    participantId: number;
+    problemId: number;
+    gradingData: ParticipantGrading[];
+}): Promise<boolean> {
     // TODO
     return false;
+}
+
+async function calculateRoundWeightSums(): Promise<Map<Round, number>[]> {
+    const supabase = await createClient();
+    const { data: roundsData } = await supabase.from("round").select("*");
+    const rounds = await Promise.all(
+        (roundsData as Round[]).map(async (round) => {
+            const { data: problemsData } = await supabase
+                .from("problem")
+                .select("*")
+                .eq("round_id", round.id);
+
+            let weightSum = 0;
+            (problemsData as Problem[]).map(
+                (problem) => (weightSum += problem.weight ?? 0)
+            );
+
+            const map = new Map<Round, number>();
+            map.set(round, weightSum);
+            return map;
+        })
+    );
+    return rounds;
 }
