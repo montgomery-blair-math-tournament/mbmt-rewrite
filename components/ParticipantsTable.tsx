@@ -20,7 +20,8 @@ import {
 import Link from "next/link";
 import { ParticipantDisplay } from "@/lib/schema/participant";
 import CheckInModal from "./CheckInModal";
-import { redirect, useRouter } from "next/navigation";
+import EditParticipantModal from "@/app/staff/(auth)/participants/EditParticipantModal";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import Modal, { ModalButton } from "@/components/ui/Modal";
@@ -73,6 +74,8 @@ export default function ParticipantsTable({
     const [selectedParticipant, setSelectedParticipant] =
         useState<ParticipantDisplay | null>(null);
     const [isCheckInModalOpen, setIsCheckInModalOpen] = useState(false);
+    const [editingParticipant, setEditingParticipant] =
+        useState<ParticipantDisplay | null>(null);
     const [isDeleting, setIsDeleting] = useState<number | null>(null);
     const [participantToDelete, setParticipantToDelete] =
         useState<ParticipantDisplay | null>(null);
@@ -269,9 +272,7 @@ export default function ParticipantsTable({
                                                 <HiOutlinePencil
                                                     className="w-4 h-4"
                                                     onClick={() =>
-                                                        redirect(
-                                                            `/staff/participants/${p.id}`
-                                                        )
+                                                        setEditingParticipant(p)
                                                     }
                                                 />
                                             </TableButton>
@@ -323,6 +324,16 @@ export default function ParticipantsTable({
                 isOpen={isCheckInModalOpen}
                 onClose={() => setIsCheckInModalOpen(false)}
                 participant={selectedParticipant}
+            />
+
+            <EditParticipantModal
+                isOpen={!!editingParticipant}
+                onClose={() => setEditingParticipant(null)}
+                participant={editingParticipant}
+                onSuccess={() => {
+                    router.refresh();
+                    if (onDelete) onDelete();
+                }}
             />
 
             <Modal
