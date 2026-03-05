@@ -9,6 +9,7 @@ import MCPSFoodImage from "@/public/images/mcpsfood.png";
 import WolframImage from "@/public/images/wolfram.png";
 import CitadelImage from "@/public/images/citadel.png";
 import HRTImage from "@/public/images/hrt.png";
+import LiveImage from "@/public/images/live.png";
 
 const sponsorList: {
     name: string;
@@ -27,6 +28,12 @@ const sponsorList: {
         image: HRTImage,
         link: "https://www.hudsonrivertrading.com/",
         width: 600,
+    },
+    {
+        name: "Jump Trading",
+        image: JumpTradingImage,
+        link: "https://jumptrading.com/",
+        width: 300,
     },
     {
         name: "Art of Problem Solving",
@@ -58,16 +65,17 @@ const sponsorList: {
         link: "https://www.awesomemath.org/",
         width: 200,
     },
-    {
-        name: "Jump Trading",
-        image: JumpTradingImage,
-        link: "https://jumptrading.com/",
-        width: 300,
-    },
+
     {
         name: "Citadel",
         image: CitadelImage,
         link: "https://www.citadel.com/",
+        width: 300,
+    },
+    {
+        name: "Live by Po-Shen Loh",
+        image: LiveImage,
+        link: "https://live.poshenloh.com/",
         width: 300,
     },
 ];
