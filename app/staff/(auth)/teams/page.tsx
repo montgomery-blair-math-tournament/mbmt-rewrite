@@ -64,15 +64,17 @@ export default function TeamsPage() {
     const filteredTeams = useMemo(() => {
         if (!searchTerm.trim()) return teams;
         const lowerQuery = searchTerm.toLowerCase();
-        return teams.filter(
-            (t) =>
+        return teams.filter((t) => {
+            const divisionName = (DIVISIONS[t.division]?.name ?? "").toLowerCase();
+            return (
                 t.name.toLowerCase().includes(lowerQuery) ||
                 t.displayId.toLowerCase().includes(lowerQuery) ||
                 (t.school && t.school.toLowerCase().includes(lowerQuery)) ||
                 (t.chaperone &&
                     t.chaperone.toLowerCase().includes(lowerQuery)) ||
-                DIVISIONS[t.division]?.name.toLowerCase().includes(lowerQuery)
-        );
+                divisionName.includes(lowerQuery)
+            );
+        });
     }, [teams, searchTerm]);
 
     return (

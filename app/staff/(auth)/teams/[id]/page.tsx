@@ -81,7 +81,7 @@ export default function TeamPage({
                 chaperone: tData.chaperone,
                 chaperone_email: tData.chaperone_email,
                 chaperone_phone: tData.chaperone_phone,
-                displayId: `${divisionInfo.prefix}${tData.id}`,
+                displayId: `T${divisionInfo.prefix}${tData.id}`,
             });
 
             if (mData) {

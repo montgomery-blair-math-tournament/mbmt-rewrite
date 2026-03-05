@@ -144,7 +144,7 @@ export default function AddTeamsModal({
         }
 
         const newStaged: StagedTeam = {
-            tempId: Math.random().toString(36).substring(7),
+            tempId: crypto.randomUUID(),
             rawId: manualId.trim().toUpperCase(),
             parsedId: idVal.parsedId,
             name: manualName.trim(),
@@ -189,7 +189,7 @@ export default function AddTeamsModal({
                 }
 
                 parsed.push({
-                    tempId: Math.random().toString(36).substring(7),
+                    tempId: crypto.randomUUID(),
                     rawId: parseId,
                     parsedId: idVal.parsedId,
                     name: name,
