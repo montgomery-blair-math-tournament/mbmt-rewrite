@@ -73,7 +73,7 @@ const sponsorList: {
         width: 300,
     },
     {
-        name: "Live",
+        name: "Live by Po-Shen Loh",
         image: LiveImage,
         link: "https://live.poshenloh.com/",
         width: 300,

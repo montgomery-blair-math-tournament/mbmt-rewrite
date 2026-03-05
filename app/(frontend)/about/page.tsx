@@ -64,10 +64,15 @@ export default function Page() {
 
             <Heading level={2}>Sponsors</Heading>
             <p>
-                MBMT is sponsored by the Montgomery Blair Magnet Foundation,
-                Hudson River Trading, Art of Problem Solving, Wolfram, Jane
-                Street, MCPS Food & Nutrition Services, AwesomeMath, Jump
-                Trading, and Citadel/Citadel Securities.
+                MBMT is sponsored by the following organizations:{" "}
+                {sponsorList
+                    .map(({ name }) => name + ", ")
+                    .toSpliced(
+                        -1,
+                        1,
+                        "and " + sponsorList[sponsorList.length - 1].name
+                    )}
+                .
             </p>
             <div className="flex flex-wrap justify-around gap-2 items-center">
                 {sponsorList.map(({ name, image, link, width }) => (
