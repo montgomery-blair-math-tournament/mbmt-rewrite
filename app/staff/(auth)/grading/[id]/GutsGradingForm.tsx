@@ -80,23 +80,34 @@ export default function GutsGradingForm({
             problemMap.sort((p1, p2) => p1.section - p2.section);
             setProblemsForEachSection(problemMap);
 
+            // Initialize form values for all problems
+            const initialGrades: Record<
+                string,
+                { is_correct: boolean; answer: string }
+            > = {};
+            problemsForThisSection.forEach((problem) => {
+                initialGrades[problem.id.toString()] = {
+                    is_correct: false,
+                    answer: "",
+                };
+            });
+            form.reset({ grades: initialGrades });
+
             setLoading(false);
         })();
-    }, [problems, roundId]);
+    }, [problems, roundId, form, problemsForThisSection]);
 
     if (loading)
         return <div className="p-4 text-center">Loading grades...</div>;
 
     async function handleSubmit(values: z.infer<typeof formSchema>) {
         setSubmitting(true);
-        console.log(values.grades);
 
         const submissions: GutsGradeSubmission[] = [];
 
         problems.forEach((p) => {
             const grades = values.grades[p.id.toString()];
             if (grades) {
-                console.log(grades);
                 const isStandard =
                     p.type === "standard" || p.type === "boolean";
                 const isUnmarked =
@@ -146,6 +157,7 @@ export default function GutsGradingForm({
 
     return (
         <div className="flex flex-col gap-6">
+            {/* Guts section selection */}
             <div>
                 <Label className="mb-2 block">Select section to grade</Label>
                 <RadioGroup
@@ -169,6 +181,8 @@ export default function GutsGradingForm({
                     })}
                 </RadioGroup>
             </div>
+
+            {/* Problem grading */}
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(handleSubmit)}
@@ -187,8 +201,7 @@ export default function GutsGradingForm({
                                     <div className="flex-1 pr-4">
                                         <Label className="text-base font-medium">
                                             Problem {problem.number}{" "}
-                                            {problem.points > 1 &&
-                                                `(${problem.points} pts)`}
+                                            {`(${problem.points} pts)`}
                                         </Label>
                                         <div className="flex flex-col sm:flex-row gap-2 mt-1">
                                             <p className="text-xs text-muted-foreground truncate max-w-50">
@@ -212,7 +225,8 @@ export default function GutsGradingForm({
                                                         <FormControl>
                                                             <Switch
                                                                 checked={
-                                                                    field.value
+                                                                    field.value ??
+                                                                    false
                                                                 }
                                                                 onCheckedChange={(
                                                                     checked
