@@ -58,7 +58,8 @@ export async function updateSession(request: NextRequest) {
         !request.nextUrl.pathname.startsWith("/staff/login") &&
         request.nextUrl.pathname.startsWith("/staff") &&
         request.nextUrl.pathname !== "/staff" &&
-        (!roleData ||
+        (!user ||
+            !roleData ||
             !roleData.role ||
             roleData.role !== "staff" ||
             roleData.role !== "admin")
