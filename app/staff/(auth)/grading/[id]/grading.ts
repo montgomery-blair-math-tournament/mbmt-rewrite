@@ -202,3 +202,102 @@ export async function resetGrades(
         return { error: "Server error" };
     }
 }
+
+export async function addParticipantOrTeamToRound(
+    fullId: string,
+    roundId: number,
+    type: "participant" | "team"
+) {
+    const supabase = await createClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { error: "Unauthorized" };
+
+    const upperId = fullId.trim().toUpperCase();
+    const numMatch = upperId.match(/\d+$/);
+
+    if (!numMatch) {
+        return { error: "Invalid ID format" };
+    }
+
+    const idNum = parseInt(numMatch[0]);
+
+    if (type === "team") {
+        const { data: team, error: teamError } = await supabase
+            .from("team")
+            .select("id, division")
+            .eq("id", idNum)
+            .single();
+
+        if (teamError || !team) {
+            return { error: "Team not found" };
+        }
+
+        const { DIVISIONS } = await import("@/lib/constants/settings");
+        const divisionInfo = DIVISIONS[team.division ?? 0] || DIVISIONS[0];
+        const expectedId = `T${divisionInfo.prefix}${team.id}`.toUpperCase();
+
+        if (upperId !== expectedId) {
+            return {
+                error: `Invalid team ID. Expected prefix for division: ${expectedId.replace(/[0-9]/g, "")}`,
+            };
+        }
+
+        const { error: insertError } = await supabase
+            .from("team_round")
+            .insert({ team_id: idNum, round_id: roundId });
+
+        if (insertError && insertError.code !== "23505") {
+            console.error(insertError);
+            return { error: "Failed to add to round" };
+        }
+    } else {
+        const { data: participantData, error: participantError } =
+            await supabase
+                .from("participant")
+                .select("id, team_id")
+                .eq("id", idNum)
+                .single();
+
+        if (participantError || !participantData) {
+            return { error: "Participant not found" };
+        }
+
+        let divisionCode = 0;
+        if (participantData.team_id) {
+            const { data: teamData } = await supabase
+                .from("team")
+                .select("division")
+                .eq("id", participantData.team_id)
+                .single();
+            if (teamData) {
+                divisionCode = teamData.division ?? 0;
+            }
+        }
+
+        const { DIVISIONS } = await import("@/lib/constants/settings");
+        const divisionInfo = DIVISIONS[divisionCode] || DIVISIONS[0];
+        const expectedId =
+            `${divisionInfo.prefix}${participantData.id}`.toUpperCase();
+
+        if (upperId !== expectedId) {
+            return {
+                error: `Invalid participant ID. Expected prefix for division: ${expectedId.replace(/[0-9]/g, "")}`,
+            };
+        }
+
+        const { error: insertError } = await supabase
+            .from("participant_round")
+            .insert({ participant_id: idNum, round_id: roundId });
+
+        if (insertError && insertError.code !== "23505") {
+            console.error(insertError);
+            return { error: "Failed to add to round" };
+        }
+    }
+
+    revalidatePath(`/staff/grading/${roundId}`);
+    return { success: true };
+}

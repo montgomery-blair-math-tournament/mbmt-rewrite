@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Heading from "@/components/Heading";
 import { Input } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
@@ -17,28 +17,19 @@ import { DIVISIONS } from "@/lib/constants/settings";
 import { toast } from "sonner";
 import { HiOutlineTrash } from "react-icons/hi2";
 
-type TeamData = {
-    id: number;
-    name: string;
-    school: string;
-    division: number;
-    displayId: string;
-};
-
-type StagedParticipant = {
+type StagedTeam = {
     tempId: string;
     rawId: string;
     parsedId: number;
-    firstName: string;
-    lastName: string;
-    grade: string;
-    rawTeamId: string;
-    matchedTeam: TeamData | null;
+    name: string;
+    divisionCode: number | null;
+    school: string;
+    chaperone: string;
     isValid: boolean;
     validationError: string | null;
 };
 
-export default function AddParticipantsModal({
+export default function AddTeamsModal({
     isOpen,
     onClose,
     onSuccess,
@@ -48,90 +39,75 @@ export default function AddParticipantsModal({
     onSuccess?: () => void;
 }) {
     const supabase = createClient();
-    const [teams, setTeams] = useState<TeamData[]>([]);
-    const [loadingTeams, setLoadingTeams] = useState(true);
-
-    const [staged, setStaged] = useState<StagedParticipant[]>([]);
+    const [staged, setStaged] = useState<StagedTeam[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Manual Entry State
     const [manualId, setManualId] = useState("");
-    const [manualFirst, setManualFirst] = useState("");
-    const [manualLast, setManualLast] = useState("");
-    const [manualGrade, setManualGrade] = useState("");
-    const [manualTeamId, setManualTeamId] = useState("");
+    const [manualName, setManualName] = useState("");
+    const [manualDivisionStr, setManualDivisionStr] = useState("");
+    const [manualSchool, setManualSchool] = useState("");
+    const [manualChaperone, setManualChaperone] = useState("");
 
-    // CSV Entry State
     const [csvText, setCsvText] = useState("");
 
-    // Tabs
     const [activeTab, setActiveTab] = useState<"manual" | "csv">("manual");
 
     const handleClose = () => {
         setStaged([]);
         setManualId("");
-        setManualFirst("");
-        setManualLast("");
-        setManualGrade("");
-        setManualTeamId("");
+        setManualName("");
+        setManualDivisionStr("");
+        setManualSchool("");
+        setManualChaperone("");
         setCsvText("");
         setActiveTab("manual");
         onClose();
     };
 
-    useEffect(() => {
-        if (!isOpen) return;
-
-        const fetchTeams = async () => {
-            setLoadingTeams(true);
-            const { data, error } = await supabase
-                .from("team")
-                .select("id, name, school, division");
-
-            if (error) {
-                console.error("Error fetching teams:", error);
-                toast.error("Failed to fetch teams.");
-            } else {
-                const formatted = (data || []).map((t) => {
-                    const divisionInfo = DIVISIONS[t.division] || DIVISIONS[0];
-                    return {
-                        ...t,
-                        displayId: `T${divisionInfo.prefix}${t.id}`,
-                    };
-                });
-                setTeams(formatted);
+    const parseDivision = (divStr: string): number | null => {
+        const lower = divStr.trim().toLowerCase();
+        for (const [code, divInfo] of Object.entries(DIVISIONS)) {
+            if (
+                divInfo.name.toLowerCase() === lower ||
+                divInfo.prefix.toLowerCase() === lower ||
+                code === lower
+            ) {
+                return parseInt(code, 10);
             }
-            setLoadingTeams(false);
-        };
-
-        fetchTeams();
-    }, [isOpen, supabase]);
-
-    const validateTeamId = (rawId: string) => {
-        const upper = rawId.trim().toUpperCase();
-        return teams.find((t) => t.displayId.toUpperCase() === upper) || null;
+        }
+        return null;
     };
 
-    const validateParticipantId = (rawId: string, team: TeamData | null) => {
+    const validateTeamId = (rawId: string, divisionCode: number | null) => {
         const idUpper = rawId.trim().toUpperCase();
 
+        if (!idUpper.startsWith("T")) {
+            return {
+                isValid: false,
+                parsedId: 0,
+                error: "ID must start with T",
+            };
+        }
+
+        const idWithoutT = idUpper.substring(1);
+
         let expectedPrefix: string | null = null;
-        if (team) {
-            expectedPrefix = (
-                DIVISIONS[team.division] || DIVISIONS[0]
-            ).prefix.toUpperCase();
+        if (divisionCode !== null && DIVISIONS[divisionCode]) {
+            expectedPrefix = DIVISIONS[divisionCode].prefix.toUpperCase();
         }
 
         const validPrefixes = Object.values(DIVISIONS).map((d) =>
             d.prefix.toUpperCase()
         );
-        const matchedPrefix = validPrefixes.find((p) => idUpper.startsWith(p));
+        const matchedPrefix = validPrefixes.find((p) =>
+            idWithoutT.startsWith(p)
+        );
 
         if (!matchedPrefix) {
             return {
                 isValid: false,
                 parsedId: 0,
-                error: `Invalid ID`,
+                error: `Invalid Division Prefix`,
             };
         }
 
@@ -139,11 +115,11 @@ export default function AddParticipantsModal({
             return {
                 isValid: false,
                 parsedId: 0,
-                error: `ID must start with ${expectedPrefix}`,
+                error: `ID must contain ${expectedPrefix} for selected division`,
             };
         }
 
-        const numStr = idUpper.substring(matchedPrefix.length);
+        const numStr = idWithoutT.substring(matchedPrefix.length);
         const parsed = parseInt(numStr, 10);
 
         if (isNaN(parsed)) {
@@ -154,93 +130,73 @@ export default function AddParticipantsModal({
     };
 
     const handleAddManual = () => {
-        if (!manualId || !manualFirst || !manualLast || !manualGrade) {
+        if (!manualId || !manualName || !manualDivisionStr) {
             toast.error("Please fill out all required fields.");
             return;
         }
 
-        const matchedTeam = manualTeamId ? validateTeamId(manualTeamId) : null;
-        const idVal = validateParticipantId(manualId, matchedTeam);
+        const divisionCode = parseDivision(manualDivisionStr);
+        const idVal = validateTeamId(manualId, divisionCode);
 
-        const gradeParsed = parseInt(manualGrade.trim(), 10);
         let error = idVal.error;
-        if (!error && manualTeamId && !matchedTeam) {
-            error = "Invalid Team";
-        }
-        if (!error && isNaN(gradeParsed)) {
-            error = "Invalid Grade";
+        if (!error && divisionCode === null) {
+            error = "Invalid Division";
         }
 
-        const newStaged: StagedParticipant = {
-            tempId: Math.random().toString(36).substring(7),
+        const newStaged: StagedTeam = {
+            tempId: crypto.randomUUID(),
             rawId: manualId.trim().toUpperCase(),
             parsedId: idVal.parsedId,
-            firstName: manualFirst.trim(),
-            lastName: manualLast.trim(),
-            grade: manualGrade.trim(),
-            rawTeamId: manualTeamId.trim().toUpperCase(),
-            matchedTeam,
-            isValid:
-                (manualTeamId === "" || matchedTeam !== null) &&
-                idVal.isValid &&
-                !isNaN(gradeParsed),
+            name: manualName.trim(),
+            divisionCode,
+            school: manualSchool.trim(),
+            chaperone: manualChaperone.trim(),
+            isValid: idVal.isValid && divisionCode !== null,
             validationError: error,
         };
 
         setStaged((prev) => [...prev, newStaged]);
         setManualId("");
-        setManualFirst("");
-        setManualLast("");
-        setManualGrade("");
-        setManualTeamId("");
+        setManualName("");
+        setManualDivisionStr("");
+        setManualSchool("");
+        setManualChaperone("");
     };
 
     const handleParseCsv = () => {
         if (!csvText.trim()) return;
 
         const lines = csvText.split("\n");
-        const parsed: StagedParticipant[] = [];
+        const parsed: StagedTeam[] = [];
 
         for (const line of lines) {
             if (!line.trim()) continue;
-            // Expected format: ID, FirstName, LastName, Grade, TeamId
             const parts = line.split(",").map((p) => p.trim());
-            if (parts.length >= 4) {
+            if (parts.length >= 3) {
                 const id = parts[0];
-                const first = parts[1];
-                const last = parts[2];
-                const grade = parts[3];
-                const teamId = parts.length >= 5 ? parts[4] : "";
+                const name = parts[1];
+                const divisionStr = parts[2];
+                const school = parts.length >= 4 ? parts[3] : "";
+                const chaperone = parts.length >= 5 ? parts[4] : "";
 
                 const parseId = id.toUpperCase();
-                const parseTeamId = teamId.toUpperCase();
-                const matchedTeam = parseTeamId
-                    ? validateTeamId(parseTeamId)
-                    : null;
-                const idVal = validateParticipantId(parseId, matchedTeam);
+                const divisionCode = parseDivision(divisionStr);
+                const idVal = validateTeamId(parseId, divisionCode);
 
-                const gradeParsed = parseInt(grade, 10);
                 let error = idVal.error;
-                if (!error && parseTeamId && !matchedTeam) {
-                    error = "Invalid Team";
-                }
-                if (!error && isNaN(gradeParsed)) {
-                    error = "Invalid Grade";
+                if (!error && divisionCode === null) {
+                    error = "Invalid Division";
                 }
 
                 parsed.push({
-                    tempId: Math.random().toString(36).substring(7),
+                    tempId: crypto.randomUUID(),
                     rawId: parseId,
                     parsedId: idVal.parsedId,
-                    firstName: first,
-                    lastName: last,
-                    grade: grade,
-                    rawTeamId: parseTeamId,
-                    matchedTeam,
-                    isValid:
-                        (parseTeamId === "" || matchedTeam !== null) &&
-                        idVal.isValid &&
-                        !isNaN(gradeParsed),
+                    name: name,
+                    divisionCode,
+                    school: school,
+                    chaperone: chaperone,
+                    isValid: idVal.isValid && divisionCode !== null,
                     validationError: error,
                 });
             } else {
@@ -269,22 +225,19 @@ export default function AddParticipantsModal({
 
         const toInsert = staged.map((s) => ({
             id: s.parsedId,
-            first_name: s.firstName,
-            last_name: s.lastName,
-            grade: parseInt(s.grade, 10),
-            team_id: s.matchedTeam?.id || null,
-            checked_in: false,
+            name: s.name,
+            division: s.divisionCode as number,
+            school: s.school,
+            chaperone: s.chaperone || null,
         }));
 
-        const { error } = await supabase.from("participant").insert(toInsert);
+        const { error } = await supabase.from("team").insert(toInsert);
 
         if (error) {
-            console.error("Error inserting participants:", error);
-            toast.error("An error occurred while adding participants.");
+            console.error("Error inserting teams:", error);
+            toast.error("An error occurred while adding teams.");
         } else {
-            toast.success(
-                `Successfully added ${toInsert.length} participants.`
-            );
+            toast.success(`Successfully added ${toInsert.length} teams.`);
             if (onSuccess) onSuccess();
             handleClose();
         }
@@ -298,7 +251,7 @@ export default function AddParticipantsModal({
         <Modal
             isOpen={isOpen}
             onClose={handleClose}
-            title="Add Participants"
+            title="Add Teams"
             className="w-11/12 max-w-4xl h-[80vh]"
             footer={
                 <>
@@ -314,7 +267,7 @@ export default function AddParticipantsModal({
                         disabled={
                             !allValid || isSubmitting || staged.length === 0
                         }>
-                        {isSubmitting ? "Adding..." : "Add Participants"}
+                        {isSubmitting ? "Adding..." : "Add Teams"}
                     </ModalButton>
                 </>
             }>
@@ -355,63 +308,59 @@ export default function AddParticipantsModal({
                                             e.target.value.toUpperCase()
                                         )
                                     }
-                                    placeholder="e.g. A12"
+                                    placeholder="e.g. TA12"
                                 />
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-gray-600 uppercase">
-                                    First Name
+                                    Name
                                 </label>
                                 <Input
-                                    value={manualFirst}
+                                    value={manualName}
                                     onChange={(e) =>
-                                        setManualFirst(e.target.value)
+                                        setManualName(e.target.value)
                                     }
-                                    placeholder="John"
+                                    placeholder="Mathletes"
                                 />
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-gray-600 uppercase">
-                                    Last Name
+                                    Division
                                 </label>
                                 <Input
-                                    value={manualLast}
+                                    value={manualDivisionStr}
                                     onChange={(e) =>
-                                        setManualLast(e.target.value)
+                                        setManualDivisionStr(e.target.value)
                                     }
-                                    placeholder="Doe"
+                                    placeholder="Abel or Jacobi"
                                 />
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-gray-600 uppercase">
-                                    Grade (Number)
+                                    School (Optional)
                                 </label>
                                 <Input
-                                    type="number"
-                                    value={manualGrade}
+                                    value={manualSchool}
                                     onChange={(e) =>
-                                        setManualGrade(e.target.value)
+                                        setManualSchool(e.target.value)
                                     }
-                                    placeholder="10"
+                                    placeholder="Blair High School"
                                 />
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-gray-600 uppercase">
-                                    Team ID (Optional)
+                                    Chaperone (Optional)
                                 </label>
                                 <Input
-                                    value={manualTeamId}
+                                    value={manualChaperone}
                                     onChange={(e) =>
-                                        setManualTeamId(
-                                            e.target.value.toUpperCase()
-                                        )
+                                        setManualChaperone(e.target.value)
                                     }
-                                    placeholder="e.g. TA1 (leave blank if none)"
+                                    placeholder="Jane Doe"
                                 />
                             </div>
                             <Button
                                 onClick={handleAddManual}
-                                disabled={loadingTeams}
                                 className="mt-2 text-white">
                                 Add to Staging
                             </Button>
@@ -421,20 +370,19 @@ export default function AddParticipantsModal({
                     {activeTab === "csv" && (
                         <div className="flex flex-col gap-3 h-full">
                             <label className="text-xs font-semibold text-gray-600 uppercase">
-                                Format: ID, FirstName, LastName, Grade, TeamId
-                                (TeamId is optional)
+                                Format: ID, Name, Division, School, Chaperone
+                                (School & Chaperone are optional)
                             </label>
                             <textarea
                                 className="flex-1 w-full min-h-[150px] p-2 border rounded-md text-sm outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
                                 placeholder={
-                                    "A12, John, Doe, 10, TA1\nJ1, Jane, Smith, 11, TJ2"
+                                    "TA12, Mathletes, Abel, Blair High School, Jane Doe\nTJ1, Number Ninjas, Jacobi, RM High School, John Doe"
                                 }
                                 value={csvText}
                                 onChange={(e) => setCsvText(e.target.value)}
                             />
                             <Button
                                 onClick={handleParseCsv}
-                                disabled={loadingTeams}
                                 className="mt-2 text-white">
                                 Parse CSV
                             </Button>
@@ -442,11 +390,10 @@ export default function AddParticipantsModal({
                     )}
                 </div>
 
-                {/* Right Column: Staging Table */}
                 <div className="w-full md:w-2/3 flex flex-col bg-white rounded-md border shadow-sm overflow-hidden min-h-[300px]">
                     <div className="px-4 py-3 border-b bg-gray-50 flex justify-between items-center">
                         <Heading level={3} className="text-lg font-medium">
-                            Staged Participants ({staged.length})
+                            Staged Teams ({staged.length})
                         </Heading>
                     </div>
                     <div className="flex-1 overflow-auto">
@@ -454,12 +401,10 @@ export default function AddParticipantsModal({
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>ID</TableHead>
-                                    <TableHead>First Name</TableHead>
-                                    <TableHead>Last Name</TableHead>
-                                    <TableHead>Grade</TableHead>
+                                    <TableHead>Name</TableHead>
                                     <TableHead>Division</TableHead>
-                                    <TableHead>Team ID</TableHead>
-                                    <TableHead>Team Name</TableHead>
+                                    <TableHead>School</TableHead>
+                                    <TableHead>Chaperone</TableHead>
                                     <TableHead className="w-10"></TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -467,9 +412,9 @@ export default function AddParticipantsModal({
                                 {staged.length === 0 ? (
                                     <TableRow>
                                         <TableCell
-                                            colSpan={8}
+                                            colSpan={6}
                                             className="text-center py-8 text-muted-foreground h-40">
-                                            No participants staged yet.
+                                            No teams staged yet.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
@@ -482,72 +427,42 @@ export default function AddParticipantsModal({
                                             <TableCell
                                                 className={`font-medium whitespace-nowrap ${s.validationError?.includes("ID") ? "text-red-500" : ""}`}>
                                                 {s.rawId}
+                                                {!s.isValid &&
+                                                    s.validationError?.includes(
+                                                        "ID"
+                                                    ) && (
+                                                        <div className="text-red-600 text-xs mt-0.5 font-medium">
+                                                            {s.validationError}
+                                                        </div>
+                                                    )}
                                             </TableCell>
                                             <TableCell className="font-medium whitespace-nowrap">
-                                                {s.firstName}
-                                            </TableCell>
-                                            <TableCell className="font-medium whitespace-nowrap">
-                                                {s.lastName}
-                                            </TableCell>
-                                            <TableCell>{s.grade}</TableCell>
-                                            <TableCell>
-                                                {s.matchedTeam
-                                                    ? (
-                                                          DIVISIONS[
-                                                              s.matchedTeam
-                                                                  .division
-                                                          ] || DIVISIONS[0]
-                                                      ).name
-                                                    : "-"}
+                                                {s.name}
                                             </TableCell>
                                             <TableCell>
-                                                {s.matchedTeam ? (
-                                                    <span className="font-semibold">
-                                                        {
-                                                            s.matchedTeam
-                                                                .displayId
-                                                        }
-                                                    </span>
-                                                ) : s.rawTeamId ? (
+                                                {s.divisionCode !== null &&
+                                                DIVISIONS[s.divisionCode] ? (
+                                                    DIVISIONS[s.divisionCode]
+                                                        .name
+                                                ) : (
                                                     <span className="text-red-500 font-semibold">
-                                                        {s.rawTeamId}
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-gray-400 font-medium">
-                                                        None
+                                                        Invalid
                                                     </span>
                                                 )}
+                                                {!s.isValid &&
+                                                    s.validationError?.includes(
+                                                        "Division"
+                                                    ) && (
+                                                        <div className="text-red-600 text-xs mt-0.5 font-medium">
+                                                            {s.validationError}
+                                                        </div>
+                                                    )}
                                             </TableCell>
                                             <TableCell>
-                                                {s.matchedTeam ? (
-                                                    <div className="flex flex-col">
-                                                        <span>
-                                                            {s.matchedTeam.name}
-                                                        </span>
-                                                        <span className="text-xs text-muted-foreground">
-                                                            {
-                                                                s.matchedTeam
-                                                                    .school
-                                                            }
-                                                        </span>
-                                                        {!s.isValid && (
-                                                            <span className="text-red-600 text-xs mt-0.5 font-medium">
-                                                                {s.validationError ||
-                                                                    "Invalid"}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                ) : !s.rawTeamId &&
-                                                  s.isValid ? (
-                                                    <span className="text-gray-500 italic text-sm">
-                                                        No Team Assigned
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-red-600 text-sm font-medium">
-                                                        {s.validationError ||
-                                                            "Invalid"}
-                                                    </span>
-                                                )}
+                                                {s.school || "-"}
+                                            </TableCell>
+                                            <TableCell>
+                                                {s.chaperone || "-"}
                                             </TableCell>
                                             <TableCell>
                                                 <button
