@@ -42,17 +42,17 @@ export default function ParticipantsPage() {
 
             return {
                 id: p.id,
-                displayId: `${divisionInfo.prefix}${p.id}`,
-                firstName: p.first_name,
-                lastName: p.last_name,
+                display_id: `${divisionInfo.prefix}${p.id}`,
+                first_name: p.first_name,
+                last_name: p.last_name,
                 division: divisionInfo.name,
                 grade: p.grade,
                 school: teamData?.school || "N/A",
                 team: teamData?.name || "N/A",
                 chaperone: teamData?.chaperone || "N/A",
-                checkedIn: p.checked_in,
+                checked_in: p.checked_in,
                 teamId: p.team_id,
-                isFlagged: p.is_flagged,
+                is_flagged: p.is_flagged,
             };
         });
         setParticipants(formattedData);
@@ -71,9 +71,9 @@ export default function ParticipantsPage() {
         const lowerQuery = searchTerm.toLowerCase();
         return participants.filter(
             (p) =>
-                p.firstName.toLowerCase().includes(lowerQuery) ||
-                p.lastName.toLowerCase().includes(lowerQuery) ||
-                p.displayId.toLowerCase().includes(lowerQuery) ||
+                p.first_name.toLowerCase().includes(lowerQuery) ||
+                p.last_name.toLowerCase().includes(lowerQuery) ||
+                p.display_id.toLowerCase().includes(lowerQuery) ||
                 p.school.toLowerCase().includes(lowerQuery) ||
                 p.team.toLowerCase().includes(lowerQuery)
         );

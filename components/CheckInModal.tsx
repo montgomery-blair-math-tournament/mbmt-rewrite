@@ -10,6 +10,7 @@ import { Round } from "@/lib/schema/round";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
+import { checkInParticipant } from "./actions";
 
 export default function CheckInModal({
     isOpen,
@@ -33,21 +34,18 @@ export default function CheckInModal({
 
     async function onCheckIn() {
         try {
-            const { error } = await supabase
-                .from("participant")
-                .update({ checked_in: true })
-                .eq("id", participant?.id);
-
-            if (error) throw error;
+            await checkInParticipant({
+                id: participant?.id ?? 0,
+            });
         } catch (error) {
             console.error(error);
             toast.error(
-                `Failed to check in participant ${participant?.firstName} ${participant?.lastName}`
+                `Failed to check in participant ${participant?.first_name} ${participant?.last_name}`
             );
             return;
         }
         toast.success(
-            `${participant?.firstName} ${participant?.lastName} checked in successfully`
+            `${participant?.first_name} ${participant?.last_name} checked in successfully`
         );
         onClose();
         redirect("/staff/participants");
@@ -98,7 +96,7 @@ export default function CheckInModal({
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title={`Check in for ${participant.firstName} ${participant.lastName}`}
+            title={`Check in for ${participant.first_name} ${participant.last_name}`}
             className="w-full max-w-2xl h-auto max-h-[90vh]"
             footer={
                 <>
@@ -109,7 +107,7 @@ export default function CheckInModal({
                         variant="themed"
                         onClick={onCheckIn}
                         disabled={
-                            participant.checkedIn || participant.isFlagged
+                            participant.checked_in || participant.is_flagged
                         }>
                         Check In
                     </ModalButton>
@@ -121,14 +119,14 @@ export default function CheckInModal({
                         Read and follow the script:
                     </p>
 
-                    {!participant.isFlagged && (
+                    {!participant.is_flagged && (
                         <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-800 ">
                             <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md">
                                 <p>
                                     Confirm they are{" "}
                                     <strong>
-                                        {participant.firstName}{" "}
-                                        {participant.lastName}
+                                        {participant.first_name}{" "}
+                                        {participant.last_name}
                                     </strong>{" "}
                                     from <strong>{participant.school}</strong>{" "}
                                     in Grade{" "}
@@ -138,7 +136,7 @@ export default function CheckInModal({
 
                             <p>
                                 Your participant ID is{" "}
-                                <strong>{participant.displayId}</strong> and
+                                <strong>{participant.display_id}</strong> and
                                 your team ID is{" "}
                                 <strong>
                                     T{participant.division[0]}
@@ -162,8 +160,8 @@ export default function CheckInModal({
                                 <p>
                                     Find{" "}
                                     <strong>
-                                        {participant.firstName}{" "}
-                                        {participant.lastName}
+                                        {participant.first_name}{" "}
+                                        {participant.last_name}
                                     </strong>
                                     &apos;s sticker. Hand over welcome packet.
                                 </p>
@@ -176,14 +174,14 @@ export default function CheckInModal({
                             </p>
                         </div>
                     )}
-                    {participant.isFlagged && (
+                    {participant.is_flagged && (
                         <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-800 ">
                             <div className="bg-yellow-100 border border-yellow-400 text-yellow-900 p-3 rounded-md">
                                 <p>
                                     Confirm they are{" "}
                                     <strong>
-                                        {participant.firstName}{" "}
-                                        {participant.lastName}
+                                        {participant.first_name}{" "}
+                                        {participant.last_name}
                                     </strong>{" "}
                                     from <strong>{participant.school}</strong>{" "}
                                     in Grade{" "}

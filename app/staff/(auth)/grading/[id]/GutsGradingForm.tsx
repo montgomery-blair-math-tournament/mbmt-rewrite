@@ -11,13 +11,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Switch } from "@/components/ui/Switch";
 import { Input } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import { parseSetCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { submitGrades } from "./gutsGrading";
+import { GutsGradeSubmission } from "@/lib/schema/grading";
+import { toast } from "sonner";
 
 const formSchema = z.object({
     grades: z.record(
         z.string(),
         z.object({
-            is_correct: z.boolean().nullable(),
+            is_correct: z.boolean(),
             answer: z.string().optional(),
         })
     ),
@@ -25,10 +27,12 @@ const formSchema = z.object({
 
 export default function GutsGradingForm({
     problems,
+    teamId,
     roundId,
     onSuccess,
 }: {
     roundId: number;
+    teamId: number;
     problems: (Omit<Problem, "guts_section"> & {
         guts_section: number;
     })[];
@@ -47,7 +51,10 @@ export default function GutsGradingForm({
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            grades: {},
+            grades: {} as Record<
+                string,
+                { is_correct: boolean; answer: string }
+            >,
         },
     });
 
@@ -57,7 +64,8 @@ export default function GutsGradingForm({
 
             problems.map((problem) => {
                 const found = problemMap.find(
-                    (pSet) => pSet.section === problem.guts_section
+                    (problemsSection) =>
+                        problemsSection.section === problem.guts_section
                 );
                 if (found) {
                     found.problems.push(problem);
@@ -79,8 +87,49 @@ export default function GutsGradingForm({
     if (loading)
         return <div className="p-4 text-center">Loading grades...</div>;
 
-    async function handleSubmit() {
+    async function handleSubmit(values: z.infer<typeof formSchema>) {
         setSubmitting(true);
+        console.log(values.grades);
+
+        const submissions: GutsGradeSubmission[] = [];
+
+        problems.forEach((p) => {
+            const grades = values.grades[p.id.toString()];
+            if (grades) {
+                console.log(grades);
+                const isStandard =
+                    p.type === "standard" || p.type === "boolean";
+                const isUnmarked =
+                    grades.is_correct === null &&
+                    (!grades.answer || grades.answer === "");
+                if (!isUnmarked) {
+                    submissions.push({
+                        id: teamId,
+                        round_id: roundId,
+                        problem_id: p.id,
+                        answer: grades.answer || "",
+                        is_correct: isStandard
+                            ? (grades.is_correct ?? false)
+                            : false,
+                    });
+                }
+            }
+        });
+
+        if (submissions.length === 0) {
+            toast.error("No grades to submit");
+            setSubmitting(false);
+            return;
+        }
+
+        const res = await submitGrades(submissions);
+
+        if (res.error) {
+            toast.error(res.error);
+        } else {
+            toast.success("Grades submitted");
+            onSuccess();
+        }
 
         setSubmitting(false);
         onSuccess();
@@ -121,7 +170,9 @@ export default function GutsGradingForm({
                 </RadioGroup>
             </div>
             <Form {...form}>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                <form
+                    onSubmit={form.handleSubmit(handleSubmit)}
+                    className="flex flex-col gap-6">
                     <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto p-1">
                         {problemsForThisSection.map((problem) => {
                             const problemIdString = problem.id.toString();
@@ -150,7 +201,7 @@ export default function GutsGradingForm({
                                         {isStandard ? (
                                             <FormField
                                                 control={form.control}
-                                                name={`grades.${problemIdString}.isCorrect`}
+                                                name={`grades.${problemIdString}.is_correct`}
                                                 render={({ field }) => (
                                                     <FormItem className="flex items-center gap-2 mb-0">
                                                         <Label className="cursor-pointer min-w-16 text-right">

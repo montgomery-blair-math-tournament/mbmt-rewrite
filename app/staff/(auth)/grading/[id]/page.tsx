@@ -36,9 +36,8 @@ export default async function RoundGradingPage({
         score: number | null;
         roundId: number;
     }[] = [];
-    const isTeam = round.type === "team" || round.type === "guts";
 
-    if (isTeam) {
+    if (round.type === "team" || round.type === "guts") {
         const { data: teamRoundsData } = await supabase
             .from("team_round")
             .select(
@@ -65,8 +64,8 @@ export default async function RoundGradingPage({
         scores?.forEach((s) => scoreMap.set(s.team_id, s));
 
         rows = (teamRounds || [])
-            .map((tr: TeamRoundType[0]) => {
-                let t = tr.team;
+            .map((teamRound: TeamRoundType[0]) => {
+                let t = teamRound.team;
                 if (Array.isArray(t)) t = t[0];
                 if (!t) return null;
                 const s = scoreMap.get(t.id);

@@ -48,6 +48,7 @@ export default function GradingModal({
             {isGuts && (
                 <GutsGradingForm
                     roundId={roundId}
+                    teamId={id}
                     problems={gutsProblems}
                     onSuccess={onClose}
                 />

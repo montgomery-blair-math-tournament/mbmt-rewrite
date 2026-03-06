@@ -100,19 +100,19 @@ export default function ParticipantPage({
 
             setParticipant({
                 id: pData.id,
-                displayId: `${divisionInfo.prefix}${pData.id}`,
-                firstName: pData.first_name,
-                lastName: pData.last_name,
+                display_id: `${divisionInfo.prefix}${pData.id}`,
+                first_name: pData.first_name,
+                last_name: pData.last_name,
                 division: divisionInfo.name,
                 grade: pData.grade,
                 school: teamData?.school,
                 team: teamData?.name,
                 chaperone: teamData?.chaperone,
-                checkedIn: pData.checked_in,
+                checked_in: pData.checked_in,
                 individualRounds,
                 teamRounds,
                 teamId: pData.team_id ?? 0,
-                isFlagged: pData.is_flagged,
+                is_flagged: pData.is_flagged,
             });
             setLoading(false);
         };
@@ -137,13 +137,15 @@ export default function ParticipantPage({
                 <div className="flex items-center gap-4">
                     {/* Participant name */}
                     <Heading level={1}>
-                        {participant.firstName} {participant.lastName}
+                        {participant.first_name} {participant.last_name}
                     </Heading>
                     <Badge
                         onClick={() => setIsCheckInModalOpen(true)}
                         className="mt-2"
-                        variant={participant.checkedIn ? "success" : "failure"}>
-                        {participant.checkedIn ? (
+                        variant={
+                            participant.checked_in ? "success" : "failure"
+                        }>
+                        {participant.checked_in ? (
                             <>
                                 <HiCheck className="w-4 h-4" /> Checked In
                             </>
@@ -157,7 +159,7 @@ export default function ParticipantPage({
             </div>
             <div className="text-gray-700 flex gap-4 mt-2">
                 <span className="font-mono text-gray-300 bg-gray-700 px-2 py-0.5 rounded text-sm">
-                    {participant.displayId}
+                    {participant.display_id}
                 </span>
                 <span>
                     <Link

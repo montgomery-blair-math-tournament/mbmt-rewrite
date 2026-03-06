@@ -27,17 +27,17 @@ export type ParticipantWithTeam = Participant & {
 
 export type ParticipantDisplay = {
     id: number;
-    displayId: string;
-    firstName: string;
-    lastName: string;
+    display_id: string;
+    first_name: string;
+    last_name: string;
     division: string;
     grade: number;
     school: string;
     team: string;
     chaperone: string;
-    checkedIn: boolean;
+    checked_in: boolean;
     teamId: number;
-    isFlagged: boolean;
+    is_flagged: boolean;
 };
 
 export type ParticipantDetail = ParticipantDisplay & {
