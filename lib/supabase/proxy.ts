@@ -46,5 +46,28 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url);
     }
 
+    const { data: userData } = await supabase
+        .from("user")
+        .select("role")
+        .eq("id", user?.id)
+        .limit(1)
+        .single();
+
+    if (
+        request.nextUrl.pathname.startsWith("/staff") &&
+        request.nextUrl.pathname !== "/staff" &&
+        !request.nextUrl.pathname.startsWith("/staff/signup") &&
+        !request.nextUrl.pathname.startsWith("/staff/login") &&
+        (!userData ||
+            !userData.role ||
+            userData.role !== "staff" ||
+            userData.role !== "admin")
+    ) {
+        // no staff role, respond by redirecting them to the staff dashboard page
+        const url = request.nextUrl.clone();
+        url.pathname = "/staff";
+        return NextResponse.redirect(url);
+    }
+
     return supabaseResponse;
 }
