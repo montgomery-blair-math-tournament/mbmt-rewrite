@@ -111,7 +111,8 @@ export default function ParticipantPage({
                 checked_in: pData.checked_in,
                 individualRounds,
                 teamRounds,
-                teamId: pData.team_id ?? 0,
+                team_id: pData.team_id ?? 0,
+                display_team_id: "T" + (pData.team_id ?? 0),
                 is_flagged: pData.is_flagged,
             });
             setLoading(false);
@@ -163,7 +164,7 @@ export default function ParticipantPage({
                 </span>
                 <span>
                     <Link
-                        href={`/staff/teams/${participant.teamId}`}
+                        href={`/staff/teams/${participant.team_id}`}
                         className="text-red-600 hover:underline hover:text-red-800">
                         {participant.team}
                     </Link>

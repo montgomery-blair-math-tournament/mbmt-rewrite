@@ -140,7 +140,7 @@ export default function CheckInModal({
                                 your team ID is{" "}
                                 <strong>
                                     T{participant.division[0]}
-                                    {participant.teamId}
+                                    {participant.team_id}
                                 </strong>
                                 .
                             </p>

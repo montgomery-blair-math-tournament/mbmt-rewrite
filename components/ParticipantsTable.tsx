@@ -238,7 +238,7 @@ export default function ParticipantsTable({
                             onSort={handleSort}
                         />
                         <SortableHeader
-                            column="displayTeamId"
+                            column="display_team_id"
                             label="Team ID"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
@@ -334,14 +334,14 @@ export default function ParticipantsTable({
                                 <TableCell>{p.division}</TableCell>
                                 <TableCell>{p.grade}</TableCell>
                                 <TableCell>
-                                    {p.displayTeamId ? (
+                                    {p.display_team_id ? (
                                         readonly ? (
-                                            p.displayTeamId
+                                            p.display_team_id
                                         ) : (
                                             <Link
-                                                href={`/staff/teams/${p.teamId}`}
+                                                href={`/staff/teams/${p.team_id}`}
                                                 className="hover:underline text-red-600 hover:text-red-800">
-                                                {p.displayTeamId}
+                                                {p.display_team_id}
                                             </Link>
                                         )
                                     ) : (

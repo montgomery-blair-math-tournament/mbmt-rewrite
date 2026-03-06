@@ -51,7 +51,7 @@ export default function ParticipantsPage() {
                 team: teamData?.name || "N/A",
                 chaperone: teamData?.chaperone || "N/A",
                 checked_in: p.checked_in,
-                teamId: p.team_id,
+                team_id: p.team_id,
                 display_team_id: teamData
                     ? `T${divisionInfo.prefix}${p.team_id}`
                     : null,

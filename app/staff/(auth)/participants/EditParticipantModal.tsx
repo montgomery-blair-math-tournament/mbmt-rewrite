@@ -43,15 +43,15 @@ export default function EditParticipantModal({
     if (isOpen !== prevIsOpen) {
         setPrevIsOpen(isOpen);
         if (isOpen && participant) {
-            setManualId(participant.displayId);
-            setManualFirst(participant.firstName || "");
-            setManualLast(participant.lastName || "");
+            setManualId(participant.display_id);
+            setManualFirst(participant.first_name || "");
+            setManualLast(participant.last_name || "");
             setManualGrade(
                 participant.grade ? participant.grade.toString() : ""
             );
 
-            if (participant.teamId && teams.length > 0) {
-                const team = teams.find((t) => t.id === participant.teamId);
+            if (participant.team_id && teams.length > 0) {
+                const team = teams.find((t) => t.id === participant.team_id);
                 if (team) {
                     setManualTeamId(team.displayId);
                 } else {
@@ -63,7 +63,7 @@ export default function EditParticipantModal({
         }
     }
 
-    const participantTeamId = participant?.teamId;
+    const participantTeamId = participant?.team_id;
 
     useEffect(() => {
         if (!isOpen) return;
