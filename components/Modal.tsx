@@ -4,15 +4,6 @@ import { HiXMark } from "react-icons/hi2";
 import { ReactNode } from "react";
 import Button from "@/components/ui/Button";
 
-interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title: string;
-    children: ReactNode;
-    footer?: ReactNode;
-    className?: string;
-}
-
 export default function Modal({
     isOpen,
     onClose,
@@ -20,7 +11,14 @@ export default function Modal({
     children,
     footer,
     className = "w-11/12 h-5/6",
-}: ModalProps) {
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
+    children: ReactNode;
+    footer?: ReactNode;
+    className?: string;
+}) {
     if (!isOpen) return null;
 
     return (

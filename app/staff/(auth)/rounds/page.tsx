@@ -2,9 +2,16 @@ import { createClient } from "@/lib/supabase/server";
 import RoundsHeader from "./RoundsHeader";
 import RoundCard from "@/components/RoundCard";
 import { Round } from "@/lib/schema/round";
+import { fetchUsers } from "@/lib/fetchData";
+import { redirect } from "next/navigation";
 
 export default async function RoundsPage() {
     const supabase = await createClient();
+    const { data: userData } = await supabase.auth.getUser();
+    const user = await fetchUsers({ id: userData.user!.id });
+    if (user[0].role !== "admin") {
+        redirect("/staff");
+    }
 
     const { data: roundsData, error } = await supabase
         .from("round")

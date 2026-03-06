@@ -3,9 +3,9 @@ import GradingClient from "./GradingClient";
 import Heading from "@/components/Heading";
 import Link from "next/link";
 import { Round } from "@/lib/schema/round";
-import { Problem } from "@/lib/schema/problem";
 import { GradingStatus } from "@/lib/schema/score";
 import { DIVISIONS } from "@/lib/constants/settings";
+import { fetchProblems } from "@/lib/fetchData";
 
 export default async function RoundGradingPage({
     params,
@@ -26,14 +26,7 @@ export default async function RoundGradingPage({
         return <div>Round not found</div>;
     }
     const round = roundData as Round;
-
-    const { data: problemsData } = await supabase
-        .from("problem")
-        .select("*")
-        .eq("round_id", roundId)
-        .order("number", { ascending: true });
-
-    const problems = (problemsData || []) as Problem[];
+    const problems = await fetchProblems({ roundId });
 
     let rows: {
         id: number;
@@ -43,9 +36,8 @@ export default async function RoundGradingPage({
         score: number | null;
         roundId: number;
     }[] = [];
-    const isTeam = round.type === "team" || round.type === "guts";
 
-    if (isTeam) {
+    if (round.type === "team" || round.type === "guts") {
         const { data: teamRoundsData } = await supabase
             .from("team_round")
             .select(
@@ -72,8 +64,8 @@ export default async function RoundGradingPage({
         scores?.forEach((s) => scoreMap.set(s.team_id, s));
 
         rows = (teamRounds || [])
-            .map((tr: TeamRoundType[0]) => {
-                let t = tr.team;
+            .map((teamRound: TeamRoundType[0]) => {
+                let t = teamRound.team;
                 if (Array.isArray(t)) t = t[0];
                 if (!t) return null;
                 const s = scoreMap.get(t.id);

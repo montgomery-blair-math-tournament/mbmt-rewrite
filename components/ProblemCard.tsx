@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Problem } from "@/lib/schema/problem";
 import Math from "./Math";
 import Button from "@/components/ui/Button";
-
 import { HiPencil, HiTrash } from "react-icons/hi2";
 
 export default function ProblemCard({
@@ -26,7 +25,7 @@ export default function ProblemCard({
                             ? "Correct/Incorrect"
                             : problem.type}
                     </div>
-                    {onEdit && (
+                    {/* {onEdit && (
                         <Button
                             variant="ghost"
                             size="icon"
@@ -45,7 +44,7 @@ export default function ProblemCard({
                             aria-label="Delete problem">
                             <HiTrash className="w-4 h-4" />
                         </Button>
-                    )}
+                    )} */}
                 </div>
             </CardHeader>
             <CardContent>

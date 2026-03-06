@@ -96,7 +96,7 @@ export default function RoundDetailClient({
                         </span>
                     </div>
                     <div className="flex gap-2">
-                        <Button
+                        {/* <Button
                             variant="outline"
                             onClick={() => setIsEditRoundOpen(true)}
                             className="bg-white hover:bg-gray-50 text-gray-700 border-gray-300 shadow-sm">
@@ -114,7 +114,7 @@ export default function RoundDetailClient({
                             className="bg-accent hover:bg-accent-hover text-white shadow-sm">
                             <HiPlus className="mr-2 h-4 w-4" />
                             Add Problem
-                        </Button>
+                        </Button> */}
                     </div>
                 </div>
             </div>
