@@ -98,6 +98,7 @@ export default function TeamPage({
                         chaperone: tData.chaperone,
                         checkedIn: m.checked_in,
                         teamId: tData.id,
+                        displayTeamId: `T${divisionInfo.prefix}${tData.id}`,
                         isFlagged: m.is_flagged,
                     };
                 });
@@ -157,7 +158,11 @@ export default function TeamPage({
                             </p>
                         ) : (
                             teamRounds.map((round) => (
-                                <RoundCard key={round.id} round={round} />
+                                <RoundCard
+                                    key={round.id}
+                                    round={round}
+                                    href={`/staff/grading/${round.id}`}
+                                />
                             ))
                         )}
                     </div>
