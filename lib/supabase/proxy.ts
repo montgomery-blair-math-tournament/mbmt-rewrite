@@ -46,28 +46,5 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url);
     }
 
-    const { data: roleData } = await supabase
-        .from("user")
-        .select("role")
-        .eq("id", user?.id)
-        .limit(1)
-        .single();
-
-    if (
-        !request.nextUrl.pathname.startsWith("/staff/signup") &&
-        !request.nextUrl.pathname.startsWith("/staff/login") &&
-        request.nextUrl.pathname.startsWith("/staff") &&
-        request.nextUrl.pathname !== "/staff" &&
-        (!user ||
-            !roleData ||
-            !roleData.role ||
-            roleData.role !== "staff" ||
-            roleData.role !== "admin")
-    ) {
-        // no user, potentially respond by redirecting the user to the login page
-        const url = request.nextUrl.clone();
-        url.pathname = "/staff";
-        return NextResponse.redirect(url);
-    }
     return supabaseResponse;
 }
