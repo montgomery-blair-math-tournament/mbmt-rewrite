@@ -37,6 +37,7 @@ export type ParticipantDisplay = {
     chaperone: string;
     checked_in: boolean;
     teamId: number;
+    display_team_id: string | null;
     is_flagged: boolean;
 };
 

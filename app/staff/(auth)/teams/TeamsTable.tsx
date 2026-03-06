@@ -23,6 +23,7 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import Modal, { ModalButton } from "@/components/ui/Modal";
 import { DIVISIONS } from "@/lib/constants/settings";
+import EditTeamModal from "@/app/staff/(auth)/teams/EditTeamModal";
 
 const SortableHeader = ({
     column,
@@ -74,8 +75,13 @@ export default function TeamsTable({
 }) {
     const [isDeleting, setIsDeleting] = useState<number | null>(null);
     const [teamToDelete, setTeamToDelete] = useState<TeamDisplay | null>(null);
-    const [sortColumn, setSortColumn] = useState<keyof TeamDisplay | null>(null);
-    const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(null);
+    const [editingTeam, setEditingTeam] = useState<TeamDisplay | null>(null);
+    const [sortColumn, setSortColumn] = useState<keyof TeamDisplay | null>(
+        null
+    );
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(
+        null
+    );
     const router = useRouter();
     const supabase = createClient();
 
@@ -220,9 +226,7 @@ export default function TeamsTable({
                                                 <HiOutlinePencil
                                                     className="w-4 h-4"
                                                     onClick={() =>
-                                                        router.push(
-                                                            `/staff/teams/${t.id}`
-                                                        )
+                                                        setEditingTeam(t)
                                                     }
                                                 />
                                             </TableButton>
@@ -261,6 +265,19 @@ export default function TeamsTable({
                     )}
                 </TableBody>
             </Table>
+
+            <EditTeamModal
+                isOpen={!!editingTeam}
+                onClose={() => setEditingTeam(null)}
+                team={editingTeam}
+                onSuccess={() => {
+                    if (onDelete) {
+                        onDelete();
+                    } else {
+                        router.refresh();
+                    }
+                }}
+            />
 
             <Modal
                 isOpen={!!teamToDelete}

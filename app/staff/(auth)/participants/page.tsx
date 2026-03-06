@@ -52,6 +52,9 @@ export default function ParticipantsPage() {
                 chaperone: teamData?.chaperone || "N/A",
                 checked_in: p.checked_in,
                 teamId: p.team_id,
+                display_team_id: teamData
+                    ? `T${divisionInfo.prefix}${p.team_id}`
+                    : null,
                 is_flagged: p.is_flagged,
             };
         });

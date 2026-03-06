@@ -20,7 +20,8 @@ import {
 import Link from "next/link";
 import { ParticipantDisplay } from "@/lib/schema/participant";
 import CheckInModal from "./CheckInModal";
-import { redirect, useRouter } from "next/navigation";
+import EditParticipantModal from "@/app/staff/(auth)/participants/EditParticipantModal";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import Modal, { ModalButton } from "@/components/ui/Modal";
@@ -73,6 +74,8 @@ export default function ParticipantsTable({
     const [selectedParticipant, setSelectedParticipant] =
         useState<ParticipantDisplay | null>(null);
     const [isCheckInModalOpen, setIsCheckInModalOpen] = useState(false);
+    const [editingParticipant, setEditingParticipant] =
+        useState<ParticipantDisplay | null>(null);
     const [isDeleting, setIsDeleting] = useState<number | null>(null);
     const [participantToDelete, setParticipantToDelete] =
         useState<ParticipantDisplay | null>(null);
@@ -235,8 +238,8 @@ export default function ParticipantsTable({
                             onSort={handleSort}
                         />
                         <SortableHeader
-                            column="school"
-                            label="School"
+                            column="displayTeamId"
+                            label="Team ID"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
                             onSort={handleSort}
@@ -244,6 +247,13 @@ export default function ParticipantsTable({
                         <SortableHeader
                             column="team"
                             label="Team"
+                            currentSortColumn={sortColumn}
+                            currentSortDirection={sortDirection}
+                            onSort={handleSort}
+                        />
+                        <SortableHeader
+                            column="school"
+                            label="School"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
                             onSort={handleSort}
@@ -261,7 +271,7 @@ export default function ParticipantsTable({
                     {loading ? (
                         <TableRow>
                             <TableCell
-                                colSpan={readonly ? 9 : 10}
+                                colSpan={readonly ? 10 : 11}
                                 className="text-center h-24">
                                 Loading...
                             </TableCell>
@@ -269,7 +279,7 @@ export default function ParticipantsTable({
                     ) : participants.length === 0 ? (
                         <TableRow>
                             <TableCell
-                                colSpan={readonly ? 9 : 10}
+                                colSpan={readonly ? 10 : 11}
                                 className="text-center h-24">
                                 No participants found.
                             </TableCell>
@@ -284,9 +294,7 @@ export default function ParticipantsTable({
                                                 <HiOutlinePencil
                                                     className="w-4 h-4"
                                                     onClick={() =>
-                                                        redirect(
-                                                            `/staff/participants/${p.id}`
-                                                        )
+                                                        setEditingParticipant(p)
                                                     }
                                                 />
                                             </TableButton>
@@ -325,8 +333,23 @@ export default function ParticipantsTable({
                                 <TableCell>{p.last_name}</TableCell>
                                 <TableCell>{p.division}</TableCell>
                                 <TableCell>{p.grade}</TableCell>
-                                <TableCell>{p.school}</TableCell>
+                                <TableCell>
+                                    {p.displayTeamId ? (
+                                        readonly ? (
+                                            p.displayTeamId
+                                        ) : (
+                                            <Link
+                                                href={`/staff/teams/${p.teamId}`}
+                                                className="hover:underline text-red-600 hover:text-red-800">
+                                                {p.displayTeamId}
+                                            </Link>
+                                        )
+                                    ) : (
+                                        "N/A"
+                                    )}
+                                </TableCell>
                                 <TableCell>{p.team}</TableCell>
+                                <TableCell>{p.school}</TableCell>
                                 <TableCell>{p.chaperone}</TableCell>
                             </TableRow>
                         ))
@@ -338,6 +361,16 @@ export default function ParticipantsTable({
                 isOpen={isCheckInModalOpen}
                 onClose={() => setIsCheckInModalOpen(false)}
                 participant={selectedParticipant}
+            />
+
+            <EditParticipantModal
+                isOpen={!!editingParticipant}
+                onClose={() => setEditingParticipant(null)}
+                participant={editingParticipant}
+                onSuccess={() => {
+                    router.refresh();
+                    if (onDelete) onDelete();
+                }}
             />
 
             <Modal
