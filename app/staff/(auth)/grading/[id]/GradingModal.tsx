@@ -3,7 +3,6 @@
 import Modal from "@/components/Modal";
 import GradingForm from "./GradingForm";
 import { Problem } from "@/lib/schema/problem";
-import GutsGradingForm from "./GutsGradingForm";
 
 export default function GradingModal({
     isOpen,
@@ -14,8 +13,6 @@ export default function GradingModal({
     roundId,
     problems,
     targetName,
-    gutsParsedProblems: gutsProblems,
-    isGuts = false,
 }: {
     isOpen: boolean;
     onClose: () => void;
@@ -36,23 +33,13 @@ export default function GradingModal({
             onClose={onClose}
             title={`Grading: ${targetName} (${type === "participant" ? "ID: " : "Team ID: "}${displayId})`}
             className="w-11/12 md:w-2/3 h-5/6">
-            {!isGuts && (
-                <GradingForm
-                    type={type}
-                    id={id}
-                    roundId={roundId}
-                    problems={problems}
-                    onSuccess={onClose}
-                />
-            )}
-            {isGuts && (
-                <GutsGradingForm
-                    roundId={roundId}
-                    teamId={id}
-                    problems={gutsProblems}
-                    onSuccess={onClose}
-                />
-            )}
+            <GradingForm
+                type={type}
+                id={id}
+                roundId={roundId}
+                problems={problems}
+                onSuccess={onClose}
+            />
         </Modal>
     );
 }

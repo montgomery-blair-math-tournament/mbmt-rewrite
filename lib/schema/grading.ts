@@ -25,7 +25,6 @@ export const teamGradingSchema = z.object({
 });
 
 export type TeamGrading = z.infer<typeof teamGradingSchema>;
-export type GutsGrading = Omit<TeamGrading, "is_force">;
 
 export const gradeSubmissionSchema = z.object({
     type: z.enum(["participant", "team"]),
@@ -38,13 +37,3 @@ export const gradeSubmissionSchema = z.object({
 });
 
 export type GradeSubmission = z.infer<typeof gradeSubmissionSchema>;
-
-export const gutsGradeSubmissionSchema = z.object({
-    id: z.number(),
-    round_id: z.number(),
-    problem_id: z.number(),
-    answer: z.string().default(""),
-    is_correct: z.boolean().default(false),
-});
-
-export type GutsGradeSubmission = z.infer<typeof gutsGradeSubmissionSchema>;
