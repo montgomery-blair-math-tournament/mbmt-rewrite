@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { Problem } from "@/lib/schema/problem";
 import RoundDetailClient from "./RoundDetailClient";
+import { redirect } from "next/navigation";
 
 export default async function RoundPage({
     params,
@@ -9,6 +10,23 @@ export default async function RoundPage({
 }) {
     const { id } = await params;
     const supabase = await createClient();
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    if (!user || !user.id) {
+        redirect("staff/rounds");
+    }
+
+    const { data: roleData } = await supabase
+        .from("user")
+        .select("role")
+        .eq("id", user.id)
+        .limit(1)
+        .single();
+    if (!roleData || roleData.role !== "admin") {
+        redirect("/staff/rounds");
+    }
 
     const { data: round, error: roundError } = await supabase
         .from("round")

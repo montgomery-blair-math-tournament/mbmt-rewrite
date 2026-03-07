@@ -95,11 +95,12 @@ export default function ProblemModal({
                 <div>
                     <Label className="mb-2 block">Number</Label>
                     <Input
-                        type="text"
+                        type="number"
+                        min={1}
+                        max={30}
                         value={number}
                         onChange={(e) => setNumber(parseInt(e.target.value))}
                         className="mt-1"
-                        placeholder="e.g. 1"
                     />
                 </div>
 
@@ -133,7 +134,7 @@ export default function ProblemModal({
                         onChange={(e) => setProbText(e.target.value)}
                         rows={3}
                         className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
-                        placeholder="Problem statement (LaTeX supported)"
+                        placeholder="Problem statement (LaTeX supported, wrap in $)"
                     />
                 </div>
 
@@ -144,7 +145,7 @@ export default function ProblemModal({
                         value={answer}
                         onChange={(e) => setAnswer(e.target.value)}
                         className="mt-1"
-                        placeholder="Answer (LaTeX supported)"
+                        placeholder="Answer (already in LaTeX mode, type \sqrt{2} for example)"
                     />
                 </div>
             </div>

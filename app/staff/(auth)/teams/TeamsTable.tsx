@@ -77,10 +77,10 @@ export default function TeamsTable({
     const [teamToDelete, setTeamToDelete] = useState<TeamDisplay | null>(null);
     const [editingTeam, setEditingTeam] = useState<TeamDisplay | null>(null);
     const [sortColumn, setSortColumn] = useState<keyof TeamDisplay | null>(
-        null
+        "id"
     );
     const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(
-        null
+        "asc"
     );
     const router = useRouter();
     const supabase = createClient();

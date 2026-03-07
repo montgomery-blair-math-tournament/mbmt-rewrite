@@ -11,6 +11,7 @@ export const participantSchema = z.object({
     checked_in: z.boolean(),
     tshirt: z.string(),
     score: z.float64().nullable(),
+    normalized_score: z.float64().nullable(),
     is_flagged: z.boolean().default(false),
 });
 

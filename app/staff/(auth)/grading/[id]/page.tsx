@@ -6,6 +6,7 @@ import { Round } from "@/lib/schema/round";
 import { GradingStatus } from "@/lib/schema/score";
 import { DIVISIONS } from "@/lib/constants/settings";
 import { fetchProblems } from "@/lib/fetchData";
+import { Problem } from "@/lib/schema/problem";
 
 export default async function RoundGradingPage({
     params,
@@ -25,8 +26,14 @@ export default async function RoundGradingPage({
     if (!roundData) {
         return <div>Round not found</div>;
     }
+
     const round = roundData as Round;
-    const problems = await fetchProblems({ roundId });
+    const { data: problemsData } = await supabase
+        .from("problem")
+        .select("*")
+        .eq("round_id", roundId);
+
+    const problems = (problemsData as Problem[]) || [];
 
     let rows: {
         id: number;
