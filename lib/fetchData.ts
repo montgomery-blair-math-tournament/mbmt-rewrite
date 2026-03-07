@@ -17,10 +17,10 @@ export async function fetchParticipants({
 
     let query = supabase.from("participant").select("*");
 
-    if (id !== null) {
+    if (id !== undefined && id !== null) {
         query = query.eq("id", id);
     }
-    if (teamId !== null) {
+    if (teamId !== undefined && teamId !== null) {
         query = query.eq("team_id", teamId);
     }
 
@@ -105,11 +105,11 @@ export async function fetchProblems({
 
     let query = supabase.from("problem").select("*");
 
-    if (id !== null) {
+    if (id !== undefined && id !== null) {
         query = query.eq("id", id);
     }
 
-    if (roundId !== null) {
+    if (roundId !== undefined && roundId !== null) {
         query = query.eq("round_id", roundId);
     }
 
@@ -127,7 +127,7 @@ export async function fetchUsers({ id }: { id?: string | null }) {
 
     let query = supabase.from("user").select("*");
 
-    if (id !== null) {
+    if (id !== undefined && id !== null) {
         query = query.eq("id", id);
     }
 
@@ -155,16 +155,16 @@ export async function fetchParticipantGrades({
 
     let query = supabase.from("participant_grading").select("*");
 
-    if (id !== null) {
+    if (id !== undefined && id !== null) {
         query = query.eq("id", id);
     }
-    if (problemId !== null) {
+    if (problemId !== undefined && problemId !== null) {
         query = query.eq("problem_id", problemId);
     }
-    if (roundId !== null) {
+    if (roundId !== undefined && roundId !== null) {
         query = query.eq("round_id", roundId);
     }
-    if (participantId !== null) {
+    if (participantId !== undefined && participantId !== null) {
         query = query.eq("participant_id", participantId);
     }
 
@@ -192,16 +192,16 @@ export async function fetchTeamGrades({
 
     let query = supabase.from("team_grading").select("*");
 
-    if (id !== null) {
+    if (id !== undefined && id !== null) {
         query = query.eq("id", id);
     }
-    if (problemId !== null) {
+    if (problemId !== undefined && problemId !== null) {
         query = query.eq("problem_id", problemId);
     }
-    if (roundId !== null) {
+    if (roundId !== undefined && roundId !== null) {
         query = query.eq("round_id", roundId);
     }
-    if (teamId !== null) {
+    if (teamId !== undefined && teamId !== null) {
         query = query.eq("team_id", teamId);
     }
 
