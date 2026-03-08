@@ -16,7 +16,7 @@ type GradeOption = {
     graderName: string;
     graderRole?: string;
     answer: string;
-    isCorrect: boolean;
+    is_correct: boolean;
     id: number;
 };
 
@@ -56,7 +56,7 @@ export default function ConflictResolutionModal({
             {
                 choice: string;
                 customAnswer: string;
-                customIsCorrect: boolean;
+                customis_correct: boolean;
             }
         >
     >({});
@@ -93,7 +93,7 @@ export default function ConflictResolutionModal({
                         graderName: g.grader?.username || "Unknown",
                         graderRole: g.grader?.role,
                         answer: g.answer,
-                        isCorrect: g.is_correct,
+                        is_correct: g.is_correct,
                         id: g.id,
                     }));
                 }
@@ -121,11 +121,11 @@ export default function ConflictResolutionModal({
         if (!res) return;
 
         let finalAnswer = "";
-        let finalIsCorrect = false;
+        let finalis_correct = false;
 
         if (res.choice === "new") {
             finalAnswer = res.customAnswer;
-            finalIsCorrect = res.customIsCorrect;
+            finalis_correct = res.customis_correct;
         } else {
             const options = conflicts[problemId];
             const selected = options.find(
@@ -133,7 +133,7 @@ export default function ConflictResolutionModal({
             );
             if (selected) {
                 finalAnswer = selected.answer || "";
-                finalIsCorrect = selected.isCorrect;
+                finalis_correct = selected.is_correct;
             }
         }
 
@@ -144,7 +144,7 @@ export default function ConflictResolutionModal({
                 round_id,
                 problem_id: problemId,
                 answer: finalAnswer,
-                is_correct: finalIsCorrect,
+                is_correct: finalis_correct,
                 is_force: true,
             },
         ]);
@@ -190,7 +190,7 @@ export default function ConflictResolutionModal({
                         const res = resolutions[problemId] || {
                             choice: "",
                             customAnswer: "",
-                            customIsCorrect: null,
+                            customis_correct: null,
                         };
                         const isStandard =
                             problem?.type === "standard" ||
@@ -235,7 +235,7 @@ export default function ConflictResolutionModal({
                                                 </span>
                                                 :
                                                 {isStandard
-                                                    ? opt.isCorrect
+                                                    ? opt.is_correct
                                                         ? " Correct"
                                                         : " Incorrect"
                                                     : ` ${opt.answer}`}
@@ -261,7 +261,7 @@ export default function ConflictResolutionModal({
                                                 <Label>Correct?</Label>
                                                 <Switch
                                                     checked={
-                                                        res.customIsCorrect ===
+                                                        res.customis_correct ===
                                                         true
                                                     }
                                                     onCheckedChange={(
@@ -274,7 +274,7 @@ export default function ConflictResolutionModal({
                                                                     ...prev[
                                                                         problemId
                                                                     ],
-                                                                    customIsCorrect:
+                                                                    customis_correct:
                                                                         checked,
                                                                 },
                                                             })

@@ -230,7 +230,7 @@ export default function GradingForm({
                                     {isStandard ? (
                                         <FormField
                                             control={form.control}
-                                            name={`grades.${problemIdString}.isCorrect`}
+                                            name={`grades.${problemIdString}.is_correct`}
                                             render={({ field }) => (
                                                 <FormItem className="flex items-center gap-2 mb-0">
                                                     <Label
