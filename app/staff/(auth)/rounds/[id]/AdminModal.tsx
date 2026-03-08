@@ -3,7 +3,8 @@ import Modal from "@/components/ui/Modal";
 import { Round } from "@/lib/schema/round";
 import {
     calculateIndividualProblemWeightsByRound,
-    calculateIndividualScoresByRound,
+    calculateIndividualScoresOverall,
+    calculateNormalizedScoresByRound,
 } from "@/lib/services/scoring";
 import { HiMiniCalculator } from "react-icons/hi2";
 import { toast } from "sonner";
@@ -38,17 +39,35 @@ export default function AdminModal({
                         }
                     }}>
                     <HiMiniCalculator className="h-4 w-4" /> Calculate problem
-                    weights
+                    weights (for this round)
+                </HeaderButton>
+                <HeaderButton
+                    onClick={async () => {
+                        try {
+                            const numNormalizedIndividualScores =
+                                await calculateNormalizedScoresByRound({
+                                    roundId: round.id,
+                                });
+                            toast.success(
+                                `Updated ${numNormalizedIndividualScores.size} normalized scores`
+                            );
+                        } catch (error) {
+                            console.error(
+                                `Error calculating normalized scores: ${error}`
+                            );
+                            toast.error("Error calculating normalized scores");
+                        }
+                    }}>
+                    <HiMiniCalculator className="h-4 w-4" /> Calculate
+                    normalized scores (for this round)
                 </HeaderButton>
                 <HeaderButton
                     onClick={async () => {
                         try {
                             const numCalculatedIndividualScores =
-                                await calculateIndividualScoresByRound(
-                                    round.id
-                                );
+                                await calculateIndividualScoresOverall();
                             toast.success(
-                                `Updated ${numCalculatedIndividualScores} problem weights`
+                                `Updated ${numCalculatedIndividualScores.size} individual scores`
                             );
                         } catch (error) {
                             console.error(
@@ -58,7 +77,7 @@ export default function AdminModal({
                         }
                     }}>
                     <HiMiniCalculator className="h-4 w-4" /> Calculate
-                    individual scores
+                    individual scores (ALL individual rounds)
                 </HeaderButton>
             </div>
         </Modal>

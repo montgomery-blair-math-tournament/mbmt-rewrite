@@ -5,7 +5,9 @@ import { createClient } from "@/lib/supabase/server";
 import { Problem } from "@/lib/schema/problem";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
+import { Round } from "../schema/round";
 import { Participant } from "../schema/participant";
+import { ParticipantScore } from "../schema/score";
 
 // Calculates the weights for all problems in an individual round, returning the number of problems updated
 export async function calculateIndividualProblemWeightsByRound(
@@ -13,7 +15,6 @@ export async function calculateIndividualProblemWeightsByRound(
 ): Promise<number> {
     const supabase = await createClient();
     const { error, status } = await checkUserPerms();
-
     if (error || status !== "success") {
         console.error(
             `Unauthorized access attempt to calculateIndividualProblemWeightsByRound: ${error}`
@@ -41,12 +42,27 @@ export async function calculateIndividualProblemWeightsByRound(
     return addIndividualWeightsToDB({ weights });
 }
 
-// Calculates the weight for an individual problem, returning its weight (number)
+// Calculates the weight for an individual problem
+// Returns its weight
 async function calculateIndividualProblemWeight({
     problem,
 }: {
     problem: Problem;
 }): Promise<number> {
+    const { participantsSeen, participantsCorrect } =
+        await getParticipantIdsForProblem(problem);
+
+    const N = participantsSeen.length;
+    const n = participantsCorrect.length;
+
+    return 2 + Math.log((N + 2) / (n + 2));
+}
+
+// Fetches the participant IDs for a given problem
+// Returns the ids of participants who have seen the problem and those who have answered it correctly
+async function getParticipantIdsForProblem(
+    problem: Problem
+): Promise<{ participantsSeen: number[]; participantsCorrect: number[] }> {
     const supabase = await createClient();
     const { data: gradingData } = await supabase
         .from("participant_grading")
@@ -62,7 +78,11 @@ async function calculateIndividualProblemWeight({
         );
     }
 
-    console.log(gradingData);
+    if (gradingData.length === 0) {
+        console.warn(
+            `Attempted to calculate weight for problem ${problem.number} with no grading data`
+        );
+    }
 
     const grades: (GradeSubmission & { participant_id: number })[] = (
         gradingData as ParticipantGrading[]
@@ -99,13 +119,11 @@ async function calculateIndividualProblemWeight({
         }
     });
 
-    const N = participantsSeen.length;
-    const n = participantsCorrect.length;
-
-    return 2 + Math.log((N + 2) / (n + 2));
+    return { participantsSeen, participantsCorrect };
 }
 
-// Given a list of problems and their weights, updates the problem weights in the database and returns the number of problems updated
+// Given a list of problems and their weights, updates the problem weights in the database
+// Returns the number of problems updated
 async function addIndividualWeightsToDB({
     weights: problemWeights,
 }: {
@@ -128,65 +146,207 @@ async function addIndividualWeightsToDB({
     return count;
 }
 
-// Calcluates the individual scores for all participants in a round, returning the number of participants updated
-export async function calculateIndividualScoresByRound(
-    roundId: number
-): Promise<number> {
+export async function calculateIndividualScoresOverall(): Promise<
+    Map<number, number>
+> {
+    const supabase = await createClient();
     const { error, status } = await checkUserPerms();
     if (error || status !== "success") {
         console.error(
-            `Unauthorized access attempt to calculateIndividualScoresByRound: ${error}`
+            `Unauthorized access attempt to calculateIndividualScoresOverall: ${error}`
         );
-        return -1;
     }
 
-    const supabase = await createClient();
+    // Fetch all participants
+    const { data: participantData } = await supabase
+        .from("participant")
+        .select("*");
 
-    const { data: problemWeightsData } = await supabase
-        .from("problem")
-        .select("id, weight")
-        .eq("round_id", roundId);
-    const problemWeights = problemWeightsData as Pick<
-        Problem,
-        "id" | "weight"
-    >[];
-
-    const { data: participantIdsData } = await supabase
-        .from("participant_round")
-        .select("*")
-        .eq("round_id", roundId);
-    const participantIds = participantIdsData as { id: number }[];
-    const participants: Participant[] = await Promise.all(
-        participantIds.map(async (pId) => {
-            const { data: participantData } = await supabase
-                .from("participant")
+    const participants = participantData as Participant[];
+    const participantScoresMap: Map<number, number> = new Map();
+    const dbParticipantScoresMap: Map<Participant, number> = new Map();
+    await Promise.all(
+        participants.map(async (participant) => {
+            const { data: participantScoreData } = await supabase
+                .from("participant_score")
                 .select("*")
-                .eq("id", pId.id)
-                .limit(1)
-                .single();
+                .eq("participant_id", participant.id);
+            const participantScores =
+                participantScoreData as ParticipantScore[];
 
-            return participantData as Participant;
+            if (!participantScores || participantScores.length === 0) {
+                console.warn(
+                    `Could not fetch scores for participant ${participant.first_name} ${participant.last_name}`
+                );
+                return;
+            }
+
+            let totalNormalizedScore = 0;
+            participantScores.forEach(
+                (score) => (totalNormalizedScore += score.normalized_score ?? 0)
+            );
+            participantScoresMap.set(participant.id, totalNormalizedScore);
+            dbParticipantScoresMap.set(participant, totalNormalizedScore);
         })
     );
 
-    return 0;
+    await addIndividualScoresOverallToDB({
+        scores: dbParticipantScoresMap,
+    });
+    return participantScoresMap;
 }
 
-// Calculates the normalized score for all participants in a round, returning the number of participants updated
+async function addIndividualScoresOverallToDB({
+    scores,
+}: {
+    scores: Map<Participant, number>;
+}) {
+    const supabase = await createClient();
+
+    const individualScoresMap: Map<Participant, number> = new Map();
+    await Promise.all(
+        scores.entries().map(async (score) => {
+            const participant = score[0];
+            if (participant) {
+                individualScoresMap.set(
+                    participant,
+                    individualScoresMap.get(participant) ?? 0 + score[1]
+                );
+            }
+        })
+    );
+
+    await Promise.all(
+        individualScoresMap.entries().map(async (score) => {
+            const { error } = await supabase
+                .from("participant")
+                .update({ score: score[1] })
+                .eq("id", score[0].id);
+            if (error) {
+                console.error(
+                    `Error updating score for participant ${score[0].id}: ${error.message}`
+                );
+            }
+        })
+    );
+}
+
+// Calculates the normalized score for all participants in a round
+// Returns the number of participants updated
 export async function calculateNormalizedScoresByRound({
     roundId,
 }: {
     roundId: number;
-}): Promise<number> {
+}): Promise<Map<number, number>> {
     const { error, status } = await checkUserPerms();
     if (error || status !== "success") {
         console.error(
             `Unauthorized access attempt to calculateNormalizedScoresByRound: ${error}`
         );
-        return -1;
+        return new Map();
     }
 
-    return 0;
+    const supabase = await createClient();
+
+    // Fetch the round given the roundId
+    const { data: roundData } = await supabase
+        .from("round")
+        .select("*")
+        .eq("id", roundId)
+        .limit(1)
+        .single();
+    const round = roundData as Round;
+
+    // Fetch the max scores for the round
+    const { data: problemsData } = await supabase
+        .from("problem")
+        .select("*")
+        .eq("round_id", round.id);
+    const problems = problemsData as Problem[];
+
+    // Map the problem IDs to their weights
+    const problemWeights = problems.map((problem) => ({
+        id: problem.id,
+        weight: problem.weight,
+    }));
+    const problemWeightsMap: Map<number, number> = new Map();
+    problemWeights.forEach((problem) => {
+        problemWeightsMap.set(problem.id, problem.weight);
+    });
+
+    // Map the participants to their rounds
+    const { data: participantRoundData } = await supabase
+        .from("participant_round")
+        .select("*, round:round_id(*)")
+        .eq("round_id", round.id);
+    const participantRounds = participantRoundData as {
+        participant_id: number;
+        round_id: number;
+        round: Round;
+    }[];
+    const participantScoresMap: Map<number, number> = new Map();
+
+    await Promise.all(
+        problems.map(async (problem) => {
+            const { participantsCorrect } =
+                await getParticipantIdsForProblem(problem);
+
+            participantRounds.forEach((participantRound) => {
+                // If the participant got the problem correct, add the weight of the problem to their score
+                if (
+                    participantsCorrect.includes(
+                        participantRound.participant_id
+                    )
+                ) {
+                    participantScoresMap.set(
+                        participantRound.participant_id,
+                        (participantScoresMap.get(
+                            participantRound.participant_id
+                        ) ?? 0) + (problemWeightsMap.get(problem.id) ?? 0)
+                    );
+                }
+            });
+        })
+    );
+
+    const maxScore = Math.max(...participantScoresMap.values());
+
+    // Normalize the scores by dividing each participant's score by the max score
+    participantScoresMap.forEach((score, participantId) => {
+        participantScoresMap.set(participantId, score / maxScore);
+    });
+
+    await addNormalizedScoresToDB({
+        scores: participantScoresMap,
+        roundId: roundId,
+    });
+    return participantScoresMap;
+}
+
+async function addNormalizedScoresToDB({
+    roundId,
+    scores,
+}: {
+    roundId: number;
+    scores: Map<number, number>;
+}) {
+    const supabase = await createClient();
+
+    const normalizedScores = await Promise.all(
+        scores.entries().map(async (score) => ({
+            round_id: roundId,
+            participant_id: score[0],
+            normalized_score: score[1],
+        }))
+    );
+
+    const { error: upsertError } = await supabase
+        .from("participant_score")
+        .upsert(normalizedScores);
+
+    if (upsertError) {
+        throw upsertError;
+    }
 }
 
 async function checkUserPerms() {
