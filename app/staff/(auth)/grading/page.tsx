@@ -63,7 +63,7 @@ export default async function GradingPage() {
     return (
         <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
-                <Heading level={1}>Grading</Heading>
+                <Heading level={1}>Grading (Individual & Team)</Heading>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {roundsWithStats.map((round) => (

@@ -1,44 +1,32 @@
-"use client";
-
 import Heading from "@/components/Heading";
-import { Round } from "@/lib/schema/round";
-import { Problem } from "@/lib/schema/problem";
-import HeaderButton from "@/components/HeaderButton";
-import { HiMiniCalculator } from "react-icons/hi2";
-import { calculateIndividualProblemWeights } from "./actions";
-import { toast } from "sonner";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
-export type ProblemWeightMap = Map<
-    Round,
-    { problem: Problem; weight: number }[]
->;
+export default async function AdminPage() {
+    const supabase = await createClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    if (!user || !user.id) {
+        redirect("/staff");
+    }
 
-export default function AdminPage() {
+    const { data: roleData } = await supabase
+        .from("user")
+        .select("role")
+        .eq("id", user.id)
+        .limit(1)
+        .single();
+    if (!roleData || roleData.role !== "admin") {
+        redirect("/staff");
+    }
+
     return (
         <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
                 <Heading level={1}>Admin</Heading>
             </div>
-            <div className="flex flex-col gap-4 justify-between items-baseline">
-                <HeaderButton
-                    onClick={async () => {
-                        try {
-                            const numUpdatedWeights =
-                                await calculateIndividualProblemWeights();
-                            console.log(
-                                `Updated ${numUpdatedWeights} problem weights`
-                            );
-                        } catch (error) {
-                            console.error(
-                                `Error calculating weights: ${error}`
-                            );
-                            toast.error("Error calculating weights");
-                        }
-                    }}>
-                    <HiMiniCalculator className="h-4 w-4" /> Calculate problem
-                    weights (Individual rounds)
-                </HeaderButton>
-            </div>
+            <div className="flex flex-col gap-4 justify-between items-baseline"></div>
         </div>
     );
 }
