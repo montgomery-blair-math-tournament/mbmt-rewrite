@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import ConflictConfirmationModal from "./ConflictConfirmationModal";
 import Modal from "@/components/Modal";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/Form";
+import Math from "@/components/Math";
 
 const formSchema = z.object({
     grades: z.record(
@@ -210,9 +211,12 @@ export default function GradingForm({
                                             `(${problem.points} pts)`}
                                     </Label>
                                     <div className="flex flex-col sm:flex-row gap-2 mt-1">
-                                        <p className="text-xs text-muted-foreground truncate max-w-50">
-                                            {problem.problem}
-                                        </p>
+                                        {/* <div className="text-xs text-muted-foreground line-clamp-2">
+                                            <Math eq={problem.problem} raw />
+                                        </div> */}
+                                        <div className="text-xs font-medium text-gray-700 bg-gray-100 px-2 py-0.5 rounded shrink-0">
+                                            Answer: <Math eq={problem.answer} />
+                                        </div>
                                         {gradingStatus[problem.id] &&
                                             gradingStatus[problem.id].length >
                                                 0 && (

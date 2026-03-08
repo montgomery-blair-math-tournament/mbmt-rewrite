@@ -12,6 +12,7 @@ import { Switch } from "@/components/ui/Switch";
 import { Input } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { submitGrades } from "./gutsGrading";
+import Math from "@/components/Math";
 import { GutsGradeSubmission } from "@/lib/schema/grading";
 import { toast } from "sonner";
 
@@ -204,9 +205,16 @@ export default function GutsGradingForm({
                                             {`(${problem.points} pts)`}
                                         </Label>
                                         <div className="flex flex-col sm:flex-row gap-2 mt-1">
-                                            <p className="text-xs text-muted-foreground truncate max-w-50">
-                                                {problem.problem}
-                                            </p>
+                                            <div className="text-xs text-muted-foreground line-clamp-2">
+                                                <Math
+                                                    eq={problem.problem}
+                                                    raw
+                                                />
+                                            </div>
+                                            <div className="text-xs font-medium text-gray-700 bg-gray-100 px-2 py-0.5 rounded shrink-0">
+                                                Answer:{" "}
+                                                <Math eq={problem.answer} />
+                                            </div>
                                         </div>
                                     </div>
 

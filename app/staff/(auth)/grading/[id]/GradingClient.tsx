@@ -1,4 +1,5 @@
 "use client";
+import "katex/dist/katex.min.css";
 
 import { useState, useEffect, useMemo } from "react";
 import { HiChevronUp, HiChevronDown, HiChevronUpDown } from "react-icons/hi2";

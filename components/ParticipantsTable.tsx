@@ -361,6 +361,10 @@ export default function ParticipantsTable({
                 isOpen={isCheckInModalOpen}
                 onClose={() => setIsCheckInModalOpen(false)}
                 participant={selectedParticipant}
+                onSuccess={() => {
+                    router.refresh();
+                    if (onDelete) onDelete();
+                }}
             />
 
             <EditParticipantModal
