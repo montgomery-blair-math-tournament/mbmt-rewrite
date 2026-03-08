@@ -141,13 +141,13 @@ export async function calculateIndividualScores(): Promise<number> {
         let rawScore = 0;
         for (const problem of problems) {
             // Check if participant is correct for this problem
-            const isCorrect = await checkIfParticipantCorrect({
+            const is_correct = await checkIfParticipantCorrect({
                 participantId: participant.id,
                 problemId: problem.id,
                 gradingData: participantGrading,
             });
 
-            if (isCorrect) {
+            if (is_correct) {
                 // Add points multiplied by weight for correct problems
                 rawScore += (problem.points ?? 0) * (problem.weight ?? 0);
             }
