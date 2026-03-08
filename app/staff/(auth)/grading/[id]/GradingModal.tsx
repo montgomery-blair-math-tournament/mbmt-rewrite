@@ -30,6 +30,11 @@ export default function GradingModal({
     })[];
     isGuts?: boolean;
 }) {
+    const sortedProblems = [...problems].sort((a, b) => a.number - b.number);
+    const sortedGutsProblems = gutsProblems
+        ? [...gutsProblems].sort((a, b) => a.number - b.number)
+        : undefined;
+
     return (
         <Modal
             isOpen={isOpen}
@@ -41,15 +46,15 @@ export default function GradingModal({
                     type={type}
                     id={id}
                     roundId={roundId}
-                    problems={problems}
+                    problems={sortedProblems}
                     onSuccess={onClose}
                 />
             )}
-            {isGuts && gutsProblems && (
+            {isGuts && sortedGutsProblems && (
                 <GutsGradingForm
                     roundId={roundId}
                     teamId={id}
-                    problems={gutsProblems}
+                    problems={sortedGutsProblems}
                     onSuccess={onClose}
                 />
             )}

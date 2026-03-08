@@ -9,17 +9,18 @@ import {
 import { Round } from "@/lib/schema/round";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
-import { redirect } from "next/navigation";
 import { checkInParticipant } from "./actions";
 
 export default function CheckInModal({
     isOpen,
     onClose,
     participant,
+    onSuccess,
 }: {
     isOpen: boolean;
     onClose: () => void;
     participant: ParticipantDisplay | ParticipantDetail | null;
+    onSuccess?: () => void;
 }) {
     const supabase = createClient();
     const [individualRounds, setIndividualRounds] = useState<Round[]>(() => {
@@ -48,7 +49,7 @@ export default function CheckInModal({
             `${participant?.first_name} ${participant?.last_name} checked in successfully`
         );
         onClose();
-        redirect("/staff/participants");
+        onSuccess?.();
     }
 
     useEffect(() => {
