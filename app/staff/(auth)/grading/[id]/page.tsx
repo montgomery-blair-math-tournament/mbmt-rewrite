@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Round } from "@/lib/schema/round";
 import { GradingStatus } from "@/lib/schema/score";
 import { DIVISIONS } from "@/lib/constants/settings";
-import { fetchProblems } from "@/lib/fetchData";
 import { Problem } from "@/lib/schema/problem";
 
 export default async function RoundGradingPage({
