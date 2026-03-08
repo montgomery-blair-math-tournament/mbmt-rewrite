@@ -185,7 +185,11 @@ export default function ParticipantPage({
                             </p>
                         ) : (
                             participant.individualRounds.map((round) => (
-                                <RoundCard key={round.id} round={round} />
+                                <RoundCard
+                                    key={round.id}
+                                    round={round}
+                                    href={`/staff/grading/${round.id}`}
+                                />
                             ))
                         )}
                     </div>
@@ -201,7 +205,11 @@ export default function ParticipantPage({
                             </p>
                         ) : (
                             participant.teamRounds.map((round) => (
-                                <RoundCard key={round.id} round={round} />
+                                <RoundCard
+                                    key={round.id}
+                                    round={round}
+                                    href={`/staff/grading/${round.id}`}
+                                />
                             ))
                         )}
                     </div>
@@ -212,6 +220,11 @@ export default function ParticipantPage({
                 isOpen={isCheckInModalOpen}
                 onClose={() => setIsCheckInModalOpen(false)}
                 participant={participant}
+                onSuccess={() => {
+                    setParticipant((p) =>
+                        p ? { ...p, checked_in: true } : null
+                    );
+                }}
             />
         </div>
     );

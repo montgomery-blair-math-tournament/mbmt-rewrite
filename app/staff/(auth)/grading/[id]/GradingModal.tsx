@@ -3,6 +3,7 @@
 import Modal from "@/components/Modal";
 import GradingForm from "./GradingForm";
 import { Problem } from "@/lib/schema/problem";
+import GutsGradingForm from "./GutsGradingForm";
 
 export default function GradingModal({
     isOpen,
@@ -13,6 +14,8 @@ export default function GradingModal({
     roundId,
     problems,
     targetName,
+    gutsParsedProblems: gutsProblems,
+    isGuts = false,
 }: {
     isOpen: boolean;
     onClose: () => void;
@@ -22,24 +25,39 @@ export default function GradingModal({
     roundId: number;
     problems: Problem[];
     targetName: string;
-    gutsParsedProblems: (Omit<Problem, "guts_section"> & {
+    gutsParsedProblems?: (Omit<Problem, "guts_section"> & {
         guts_section: number;
     })[];
-    isGuts: boolean;
+    isGuts?: boolean;
 }) {
+    const sortedProblems = [...problems].sort((a, b) => a.number - b.number);
+    const sortedGutsProblems = gutsProblems
+        ? [...gutsProblems].sort((a, b) => a.number - b.number)
+        : undefined;
+
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
             title={`Grading: ${targetName} (${type === "participant" ? "ID: " : "Team ID: "}${displayId})`}
             className="w-11/12 md:w-2/3 h-5/6">
-            <GradingForm
-                type={type}
-                id={id}
-                roundId={roundId}
-                problems={problems}
-                onSuccess={onClose}
-            />
+            {!isGuts && (
+                <GradingForm
+                    type={type}
+                    id={id}
+                    roundId={roundId}
+                    problems={sortedProblems}
+                    onSuccess={onClose}
+                />
+            )}
+            {isGuts && sortedGutsProblems && (
+                <GutsGradingForm
+                    roundId={roundId}
+                    teamId={id}
+                    problems={sortedGutsProblems}
+                    onSuccess={onClose}
+                />
+            )}
         </Modal>
     );
 }

@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import RoundCard from "@/components/RoundCard";
 import { Round } from "@/lib/schema/round";
 import { redirect } from "next/navigation";
-import Heading from "@/components/Heading";
+import RoundsHeader from "./RoundsHeader";
 
 export default async function RoundsPage() {
     const supabase = await createClient();
@@ -77,7 +77,7 @@ export default async function RoundsPage() {
 
     return (
         <div className="flex flex-col gap-6">
-            <Heading level={1}>Rounds</Heading>
+            <RoundsHeader />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {roundsWithStats.map((round) => (
                     <RoundCard
