@@ -7,26 +7,7 @@ import { redirect } from "next/navigation";
 import { toast } from "sonner";
 import { Participant } from "../schema/participant";
 
-// Returns the number of problems that updated their weights
-// export async function calculateIndividualProblemWeights(): Promise<number> {
-//     const supabase = await createClient();
-
-//     // Fetch the individual rounds
-//     const { data: problemsData } = await supabase
-//         .from("problem")
-//         .select("*, round:round_id (id, type)")
-//         .eq("round.type", "individual");
-
-//     const problems = problemsData as Problem[];
-
-//     const weights = await Promise.all(
-//         problems.map((problem) => calculateIndividualProblemWeight({ problem }))
-//     );
-
-//     return addIndividualWeightsToDB({ weights });
-// }
-
-// Returns the number of problems that updated their weights
+// Calculates the weights for all problems in an individual round, returning the number of problems updated
 export async function calculateIndividualProblemWeightsByRound(
     roundId: number
 ): Promise<number> {
@@ -51,17 +32,21 @@ export async function calculateIndividualProblemWeightsByRound(
     const problems = problemsData as Problem[];
 
     const weights = await Promise.all(
-        problems.map((problem) => calculateIndividualProblemWeight({ problem }))
+        problems.map(async (problem) => ({
+            problem,
+            weight: await calculateIndividualProblemWeight({ problem }),
+        }))
     );
 
     return addIndividualWeightsToDB({ weights });
 }
 
+// Calculates the weight for an individual problem, returning its weight (number)
 async function calculateIndividualProblemWeight({
     problem,
 }: {
     problem: Problem;
-}): Promise<{ problem: Problem; weight: number }> {
+}): Promise<number> {
     const supabase = await createClient();
     const { data: gradingData } = await supabase
         .from("participant_grading")
@@ -117,9 +102,10 @@ async function calculateIndividualProblemWeight({
     const N = participantsSeen.length;
     const n = participantsCorrect.length;
 
-    return { problem, weight: 2 + Math.log((N + 2) / (n + 2)) };
+    return 2 + Math.log((N + 2) / (n + 2));
 }
 
+// Given a list of problems and their weights, updates the problem weights in the database and returns the number of problems updated
 async function addIndividualWeightsToDB({
     weights: problemWeights,
 }: {
@@ -142,6 +128,7 @@ async function addIndividualWeightsToDB({
     return count;
 }
 
+// Calcluates the individual scores for all participants in a round, returning the number of participants updated
 export async function calculateIndividualScoresByRound(
     roundId: number
 ): Promise<number> {
@@ -181,6 +168,23 @@ export async function calculateIndividualScoresByRound(
             return participantData as Participant;
         })
     );
+
+    return 0;
+}
+
+// Calculates the normalized score for all participants in a round, returning the number of participants updated
+export async function calculateNormalizedScoresByRound({
+    roundId,
+}: {
+    roundId: number;
+}): Promise<number> {
+    const { error, status } = await checkUserPerms();
+    if (error || status !== "success") {
+        console.error(
+            `Unauthorized access attempt to calculateNormalizedScoresByRound: ${error}`
+        );
+        return -1;
+    }
 
     return 0;
 }
