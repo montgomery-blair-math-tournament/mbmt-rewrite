@@ -19,13 +19,13 @@ export async function calculateIndividualProblemWeights(): Promise<number> {
     const problems = problemsData as Problem[];
 
     const weights = await Promise.all(
-        problems.map((problem) => calculateProblemWeight({ problem }))
+        problems.map((problem) => calculateIndividualProblemWeight({ problem }))
     );
 
-    return addWeightsToDB({ weights });
+    return addIndividualWeightsToDB({ weights });
 }
 
-async function calculateProblemWeight({
+async function calculateIndividualProblemWeight({
     problem,
 }: {
     problem: Problem;
@@ -83,7 +83,7 @@ async function calculateProblemWeight({
     return { problem, weight: 2 + Math.log((N + 2) / (n + 2)) };
 }
 
-async function addWeightsToDB({
+async function addIndividualWeightsToDB({
     weights: problemWeights,
 }: {
     weights: { problem: Problem; weight: number }[];
@@ -103,14 +103,6 @@ async function addWeightsToDB({
     );
 
     return count;
-}
-
-async function getProblemWeights() {
-    const supabase = await createClient();
-    const { data: weightData } = await supabase
-        .from("problem")
-        .select("*")
-        .not("weight", "is", null);
 }
 
 export async function calculateIndividualScores(): Promise<number> {
@@ -149,13 +141,13 @@ export async function calculateIndividualScores(): Promise<number> {
         let rawScore = 0;
         for (const problem of problems) {
             // Check if participant is correct for this problem
-            const isCorrect = await checkIfParticipantCorrect({
+            const is_correct = await checkIfParticipantCorrect({
                 participantId: participant.id,
                 problemId: problem.id,
                 gradingData: participantGrading,
             });
 
-            if (isCorrect) {
+            if (is_correct) {
                 // Add points multiplied by weight for correct problems
                 rawScore += (problem.points ?? 0) * (problem.weight ?? 0);
             }

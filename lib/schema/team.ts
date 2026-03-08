@@ -18,5 +18,6 @@ export type TeamWithCount = Team & {
 };
 
 export type TeamDisplay = Team & { size: number; displayId: string };
+export type TeamWithGutsScore = Team & { guts_score: number };
 
 export type TeamDetail = Team & { displayId: string };

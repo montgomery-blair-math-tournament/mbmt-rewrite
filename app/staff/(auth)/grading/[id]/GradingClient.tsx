@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { HiChevronUp, HiChevronDown, HiChevronUpDown } from "react-icons/hi2";
 import { Problem } from "@/lib/schema/problem";
 import { Round } from "@/lib/schema/round";
 import { GradingStatus } from "@/lib/schema/score";
@@ -28,6 +29,43 @@ type GradingRow = {
     roundId: number;
 };
 
+const SortableHeader = ({
+    column,
+    label,
+    currentSortColumn,
+    currentSortDirection,
+    onSort,
+}: {
+    column: keyof GradingRow;
+    label: string;
+    currentSortColumn: keyof GradingRow | null;
+    currentSortDirection: "asc" | "desc" | null;
+    onSort: (col: keyof GradingRow) => void;
+}) => {
+    const isActive = currentSortColumn === column;
+    return (
+        <TableHead>
+            <button
+                type="button"
+                onClick={() => onSort(column)}
+                className="w-full h-full cursor-pointer hover:bg-gray-100 transition-colors select-none text-left flex items-center px-0">
+                <div className="flex items-center gap-1 group/header w-full h-full px-4">
+                    {label}
+                    <span className="text-gray-500">
+                        {isActive && currentSortDirection === "asc" ? (
+                            <HiChevronUp className="w-4 h-4 text-gray-800" />
+                        ) : isActive && currentSortDirection === "desc" ? (
+                            <HiChevronDown className="w-4 h-4 text-gray-800" />
+                        ) : (
+                            <HiChevronUpDown className="w-4 h-4 opacity-50 group-hover/header:opacity-100 transition-opacity" />
+                        )}
+                    </span>
+                </div>
+            </button>
+        </TableHead>
+    );
+};
+
 export default function GradingClient({
     round,
     problems,
@@ -45,6 +83,11 @@ export default function GradingClient({
     const [addingId, setAddingId] = useState<string | null>(null);
     const [localTargets, setLocalTargets] = useState<GradingRow[]>(targets);
 
+    const [sortColumn, setSortColumn] = useState<keyof GradingRow | null>(null);
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(
+        null
+    );
+
     useEffect(() => {
         setLocalTargets(targets);
     }, [targets]);
@@ -55,7 +98,44 @@ export default function GradingClient({
             p.displayId.toLowerCase().includes(search.toLowerCase())
     );
 
+    const handleSort = (column: keyof GradingRow) => {
+        if (sortColumn === column) {
+            if (sortDirection === "asc") {
+                setSortDirection("desc");
+            } else {
+                setSortColumn(null);
+                setSortDirection(null);
+            }
+        } else {
+            setSortColumn(column);
+            setSortDirection("asc");
+        }
+    };
+
+    const sortedTargets = useMemo(() => {
+        if (!sortColumn || !sortDirection) return [...filteredTargets];
+        return [...filteredTargets].sort((a, b) => {
+            const valA = a[sortColumn];
+            const valB = b[sortColumn];
+
+            if (typeof valA === "string" && typeof valB === "string") {
+                return sortDirection === "asc"
+                    ? valA.localeCompare(valB)
+                    : valB.localeCompare(valA);
+            }
+            if (typeof valA === "number" && typeof valB === "number") {
+                return sortDirection === "asc" ? valA - valB : valB - valA;
+            }
+            const strA = String(valA ?? "");
+            const strB = String(valB ?? "");
+            return sortDirection === "asc"
+                ? strA.localeCompare(strB)
+                : strB.localeCompare(strA);
+        });
+    }, [filteredTargets, sortColumn, sortDirection]);
+
     const type = round.type === "individual" ? "participant" : "team";
+    const isGuts = round.type === "guts";
 
     const handleGradeById = () => {
         const trimmedId = gradingId.trim();
@@ -133,19 +213,39 @@ export default function GradingClient({
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>
-                                {type === "team" ? "Team ID" : "ID"}
-                            </TableHead>
-                            <TableHead>
-                                {type === "team" ? "Team Name" : "Name"}
-                            </TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Score</TableHead>
+                            <SortableHeader
+                                column="displayId"
+                                label={type === "team" ? "Team ID" : "ID"}
+                                currentSortColumn={sortColumn}
+                                currentSortDirection={sortDirection}
+                                onSort={handleSort}
+                            />
+                            <SortableHeader
+                                column="name"
+                                label={type === "team" ? "Team Name" : "Name"}
+                                currentSortColumn={sortColumn}
+                                currentSortDirection={sortDirection}
+                                onSort={handleSort}
+                            />
+                            <SortableHeader
+                                column="status"
+                                label="Status"
+                                currentSortColumn={sortColumn}
+                                currentSortDirection={sortDirection}
+                                onSort={handleSort}
+                            />
+                            <SortableHeader
+                                column="score"
+                                label="Score"
+                                currentSortColumn={sortColumn}
+                                currentSortDirection={sortDirection}
+                                onSort={handleSort}
+                            />
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {filteredTargets.length === 0 ? (
+                        {sortedTargets.length === 0 ? (
                             <TableRow>
                                 <TableCell
                                     colSpan={5}
@@ -156,7 +256,7 @@ export default function GradingClient({
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            filteredTargets.map((p) => (
+                            sortedTargets.map((p) => (
                                 <TableRow key={p.id}>
                                     <TableCell className="font-medium">
                                         {p.displayId}
@@ -232,6 +332,19 @@ export default function GradingClient({
                         roundId={round.id}
                         targetName={gradingItem.name}
                         problems={problems}
+                        gutsParsedProblems={problems.map((problem) => ({
+                            id: problem.id,
+                            created_at: problem.created_at,
+                            number: problem.number,
+                            round_id: problem.round_id,
+                            problem: problem.problem,
+                            type: problem.type,
+                            answer: problem.answer,
+                            points: problem.points,
+                            weight: problem.weight,
+                            guts_section: problem.guts_section ?? 0,
+                        }))}
+                        isGuts={isGuts}
                     />
                 )}
 

@@ -29,9 +29,9 @@ export default function Page() {
             <table className="text-center text-xl w-full">
                 <tbody>
                     {shuffledStaff.map((row, i) => (
-                        <tr key={i}>
+                        <tr key={i} className="flex">
                             {row.map((person, j) => (
-                                <td key={j} className="text-xl pb-2">
+                                <td key={j} className="text-xl pb-2 flex-1">
                                     {person}
                                 </td>
                             ))}

@@ -17,10 +17,10 @@ export async function fetchParticipants({
 
     let query = supabase.from("participant").select("*");
 
-    if (id != null) {
+    if (id !== undefined && id !== null) {
         query = query.eq("id", id);
     }
-    if (teamId != null) {
+    if (teamId !== undefined && teamId !== null) {
         query = query.eq("team_id", teamId);
     }
 
@@ -33,31 +33,56 @@ export async function fetchParticipants({
     return data as Participant[];
 }
 
-export async function fetchTeams({ id }: { id?: number | null }) {
+export async function fetchTeams({
+    id,
+    division,
+}: {
+    id?: number | null;
+    division?: number | null;
+}) {
     const supabase = await createClient();
 
     let query = supabase.from("team").select("*");
 
-    if (id != null) {
+    if (id) {
         query = query.eq("id", id);
+    }
+
+    if (division) {
+        query = query.eq("division", division);
     }
 
     const { data, error } = await query;
 
     if (error) {
+        console.log("aisjdgoijsadiogjioad");
         throw error;
     }
 
     return data as Team[];
 }
 
-export async function fetchRounds({ id }: { id?: number | null }) {
+export async function fetchRounds({
+    id,
+    division,
+    type,
+}: {
+    id?: number | null;
+    division?: number | null;
+    type?: Round["type"];
+}) {
     const supabase = await createClient();
 
     let query = supabase.from("round").select("*");
 
-    if (id != null) {
+    if (id) {
         query = query.eq("id", id);
+    }
+    if (division) {
+        query = query.eq("division", division);
+    }
+    if (type) {
+        query = query.eq("type", type);
     }
 
     const { data, error } = await query;
@@ -80,11 +105,11 @@ export async function fetchProblems({
 
     let query = supabase.from("problem").select("*");
 
-    if (id != null) {
+    if (id !== undefined && id !== null) {
         query = query.eq("id", id);
     }
 
-    if (roundId != null) {
+    if (roundId !== undefined && roundId !== null) {
         query = query.eq("round_id", roundId);
     }
 
@@ -97,12 +122,12 @@ export async function fetchProblems({
     return data as Problem[];
 }
 
-export async function fetchUsers({ id }: { id?: number | null }) {
+export async function fetchUsers({ id }: { id?: string | null }) {
     const supabase = await createClient();
 
     let query = supabase.from("user").select("*");
 
-    if (id != null) {
+    if (id !== undefined && id !== null) {
         query = query.eq("id", id);
     }
 
@@ -130,16 +155,16 @@ export async function fetchParticipantGrades({
 
     let query = supabase.from("participant_grading").select("*");
 
-    if (id != null) {
+    if (id !== undefined && id !== null) {
         query = query.eq("id", id);
     }
-    if (problemId != null) {
+    if (problemId !== undefined && problemId !== null) {
         query = query.eq("problem_id", problemId);
     }
-    if (roundId != null) {
+    if (roundId !== undefined && roundId !== null) {
         query = query.eq("round_id", roundId);
     }
-    if (participantId != null) {
+    if (participantId !== undefined && participantId !== null) {
         query = query.eq("participant_id", participantId);
     }
 
@@ -167,16 +192,16 @@ export async function fetchTeamGrades({
 
     let query = supabase.from("team_grading").select("*");
 
-    if (id != null) {
+    if (id !== undefined && id !== null) {
         query = query.eq("id", id);
     }
-    if (problemId != null) {
+    if (problemId !== undefined && problemId !== null) {
         query = query.eq("problem_id", problemId);
     }
-    if (roundId != null) {
+    if (roundId !== undefined && roundId !== null) {
         query = query.eq("round_id", roundId);
     }
-    if (teamId != null) {
+    if (teamId !== undefined && teamId !== null) {
         query = query.eq("team_id", teamId);
     }
 

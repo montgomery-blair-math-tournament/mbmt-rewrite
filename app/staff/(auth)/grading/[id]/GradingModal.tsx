@@ -22,6 +22,10 @@ export default function GradingModal({
     roundId: number;
     problems: Problem[];
     targetName: string;
+    gutsParsedProblems: (Omit<Problem, "guts_section"> & {
+        guts_section: number;
+    })[];
+    isGuts: boolean;
 }) {
     return (
         <Modal

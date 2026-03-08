@@ -88,17 +88,18 @@ export default function TeamPage({
                 const mappedMembers: ParticipantDisplay[] = mData.map((m) => {
                     return {
                         id: m.id,
-                        displayId: `${divisionInfo.prefix}${m.id}`,
-                        firstName: m.first_name,
-                        lastName: m.last_name,
+                        display_id: `${divisionInfo.prefix}${m.id}`,
+                        first_name: m.first_name,
+                        last_name: m.last_name,
                         division: divisionInfo.name,
                         grade: m.grade,
                         school: tData.school,
                         team: tData.name,
                         chaperone: tData.chaperone,
-                        checkedIn: m.checked_in,
-                        teamId: tData.id,
-                        isFlagged: m.is_flagged,
+                        checked_in: m.checked_in,
+                        team_id: tData.id,
+                        display_team_id: `T${divisionInfo.prefix}${tData.id}`,
+                        is_flagged: m.is_flagged,
                     };
                 });
                 setMembers(mappedMembers);
@@ -157,7 +158,11 @@ export default function TeamPage({
                             </p>
                         ) : (
                             teamRounds.map((round) => (
-                                <RoundCard key={round.id} round={round} />
+                                <RoundCard
+                                    key={round.id}
+                                    round={round}
+                                    href={`/staff/grading/${round.id}`}
+                                />
                             ))
                         )}
                     </div>

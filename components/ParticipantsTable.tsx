@@ -20,7 +20,8 @@ import {
 import Link from "next/link";
 import { ParticipantDisplay } from "@/lib/schema/participant";
 import CheckInModal from "./CheckInModal";
-import { redirect, useRouter } from "next/navigation";
+import EditParticipantModal from "@/app/staff/(auth)/participants/EditParticipantModal";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import Modal, { ModalButton } from "@/components/ui/Modal";
@@ -73,6 +74,8 @@ export default function ParticipantsTable({
     const [selectedParticipant, setSelectedParticipant] =
         useState<ParticipantDisplay | null>(null);
     const [isCheckInModalOpen, setIsCheckInModalOpen] = useState(false);
+    const [editingParticipant, setEditingParticipant] =
+        useState<ParticipantDisplay | null>(null);
     const [isDeleting, setIsDeleting] = useState<number | null>(null);
     const [participantToDelete, setParticipantToDelete] =
         useState<ParticipantDisplay | null>(null);
@@ -96,6 +99,21 @@ export default function ParticipantsTable({
 
     const confirmDelete = async () => {
         if (!participantToDelete) return;
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data: roleData } = await supabase
+            .from("user")
+            .select("role")
+            .eq("id", user.id)
+            .limit(1)
+            .single();
+        if (!roleData || roleData.role !== "admin") {
+            return toast.error(
+                "You do not have sufficient permissions to delete a participant."
+            );
+        }
 
         setIsDeleting(participantToDelete.id);
         const { error } = await supabase
@@ -109,7 +127,7 @@ export default function ParticipantsTable({
             toast.error("Failed to delete participant.");
         } else {
             toast.success(
-                `${participantToDelete.firstName} ${participantToDelete.lastName} was removed.`
+                `${participantToDelete.first_name} ${participantToDelete.last_name} was removed.`
             );
             router.refresh();
             if (onDelete) onDelete();
@@ -134,7 +152,7 @@ export default function ParticipantsTable({
         let col = sortColumn;
         let dir = sortDirection;
         if (!col || !dir) {
-            col = "lastName";
+            col = "last_name";
             dir = "asc";
         }
 
@@ -178,28 +196,28 @@ export default function ParticipantsTable({
                     <TableRow>
                         {!readonly && <TableHead className="w-20"></TableHead>}
                         <SortableHeader
-                            column="checkedIn"
+                            column="checked_in"
                             label="Checked In"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
                             onSort={handleSort}
                         />
                         <SortableHeader
-                            column="displayId"
+                            column="display_id"
                             label="ID"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
                             onSort={handleSort}
                         />
                         <SortableHeader
-                            column="firstName"
+                            column="first_name"
                             label="First Name"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
                             onSort={handleSort}
                         />
                         <SortableHeader
-                            column="lastName"
+                            column="last_name"
                             label="Last Name"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
@@ -220,8 +238,8 @@ export default function ParticipantsTable({
                             onSort={handleSort}
                         />
                         <SortableHeader
-                            column="school"
-                            label="School"
+                            column="display_team_id"
+                            label="Team ID"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
                             onSort={handleSort}
@@ -229,6 +247,13 @@ export default function ParticipantsTable({
                         <SortableHeader
                             column="team"
                             label="Team"
+                            currentSortColumn={sortColumn}
+                            currentSortDirection={sortDirection}
+                            onSort={handleSort}
+                        />
+                        <SortableHeader
+                            column="school"
+                            label="School"
                             currentSortColumn={sortColumn}
                             currentSortDirection={sortDirection}
                             onSort={handleSort}
@@ -246,7 +271,7 @@ export default function ParticipantsTable({
                     {loading ? (
                         <TableRow>
                             <TableCell
-                                colSpan={readonly ? 9 : 10}
+                                colSpan={readonly ? 10 : 11}
                                 className="text-center h-24">
                                 Loading...
                             </TableCell>
@@ -254,7 +279,7 @@ export default function ParticipantsTable({
                     ) : participants.length === 0 ? (
                         <TableRow>
                             <TableCell
-                                colSpan={readonly ? 9 : 10}
+                                colSpan={readonly ? 10 : 11}
                                 className="text-center h-24">
                                 No participants found.
                             </TableCell>
@@ -269,9 +294,7 @@ export default function ParticipantsTable({
                                                 <HiOutlinePencil
                                                     className="w-4 h-4"
                                                     onClick={() =>
-                                                        redirect(
-                                                            `/staff/participants/${p.id}`
-                                                        )
+                                                        setEditingParticipant(p)
                                                     }
                                                 />
                                             </TableButton>
@@ -293,25 +316,40 @@ export default function ParticipantsTable({
                                     </TableCell>
                                 )}
                                 <TableCell>
-                                    {p.checkedIn ? "Yes" : "No"}
+                                    {p.checked_in ? "Yes" : "No"}
                                 </TableCell>
                                 <TableCell>
                                     {readonly ? (
-                                        p.displayId
+                                        p.display_id
                                     ) : (
                                         <Link
                                             href={`/staff/participants/${p.id}`}
                                             className="hover:underline text-red-600 hover:text-red-800">
-                                            {p.displayId}
+                                            {p.display_id}
                                         </Link>
                                     )}
                                 </TableCell>
-                                <TableCell>{p.firstName}</TableCell>
-                                <TableCell>{p.lastName}</TableCell>
+                                <TableCell>{p.first_name}</TableCell>
+                                <TableCell>{p.last_name}</TableCell>
                                 <TableCell>{p.division}</TableCell>
                                 <TableCell>{p.grade}</TableCell>
-                                <TableCell>{p.school}</TableCell>
+                                <TableCell>
+                                    {p.display_team_id ? (
+                                        readonly ? (
+                                            p.display_team_id
+                                        ) : (
+                                            <Link
+                                                href={`/staff/teams/${p.team_id}`}
+                                                className="hover:underline text-red-600 hover:text-red-800">
+                                                {p.display_team_id}
+                                            </Link>
+                                        )
+                                    ) : (
+                                        "N/A"
+                                    )}
+                                </TableCell>
                                 <TableCell>{p.team}</TableCell>
+                                <TableCell>{p.school}</TableCell>
                                 <TableCell>{p.chaperone}</TableCell>
                             </TableRow>
                         ))
@@ -323,6 +361,16 @@ export default function ParticipantsTable({
                 isOpen={isCheckInModalOpen}
                 onClose={() => setIsCheckInModalOpen(false)}
                 participant={selectedParticipant}
+            />
+
+            <EditParticipantModal
+                isOpen={!!editingParticipant}
+                onClose={() => setEditingParticipant(null)}
+                participant={editingParticipant}
+                onSuccess={() => {
+                    router.refresh();
+                    if (onDelete) onDelete();
+                }}
             />
 
             <Modal
@@ -350,8 +398,8 @@ export default function ParticipantsTable({
                 <p className="text-gray-800">
                     Are you sure you want to completely remove{" "}
                     <strong>
-                        {participantToDelete?.firstName}{" "}
-                        {participantToDelete?.lastName}
+                        {participantToDelete?.first_name}{" "}
+                        {participantToDelete?.last_name}
                     </strong>
                     ?
                 </p>
