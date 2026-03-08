@@ -15,6 +15,7 @@ export const participantScoreSchema = z.object({
     round_id: z.number(),
     created_at: z.string(),
     score: z.number().nullable(),
+    normalized_score: z.float64().nullable(),
     override_score: z.number().nullable(),
     status: z
         .enum([

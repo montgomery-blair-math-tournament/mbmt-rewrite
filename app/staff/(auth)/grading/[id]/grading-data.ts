@@ -97,7 +97,6 @@ export async function getGradingStatus(
             grader_id: string;
             grader: { username: string }[] | { username: string } | null;
         }) => {
-            console.log(row);
             const problemId = row.problem_id;
             const graderObj = Array.isArray(row.grader)
                 ? row.grader[0]

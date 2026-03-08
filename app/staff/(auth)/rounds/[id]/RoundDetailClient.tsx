@@ -6,7 +6,7 @@ import { Problem } from "@/lib/schema/problem";
 import { Round } from "@/lib/schema/round";
 import ProblemCard from "@/components/ProblemCard";
 import { DIVISIONS } from "@/lib/constants/settings";
-import { HiPencil, HiPlus } from "react-icons/hi2";
+import { HiPencil, HiPlus, HiWrenchScrewdriver } from "react-icons/hi2";
 import { useState } from "react";
 import EditRoundModal from "@/app/staff/(auth)/rounds/[id]/EditRoundModal";
 import ProblemModal from "@/app/staff/(auth)/rounds/[id]/ProblemModal";
@@ -17,6 +17,8 @@ import { deleteProblem } from "./actions";
 import { deleteRound } from "../actions";
 import { toast } from "sonner";
 import Badge from "@/components/Badge";
+import AdminModal from "./AdminModal";
+import HeaderButton from "@/components/HeaderButton";
 
 export default function RoundDetailClient({
     round,
@@ -36,6 +38,7 @@ export default function RoundDetailClient({
         null
     );
     const [isDeleteRoundOpen, setIsDeleteRoundOpen] = useState(false);
+    const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
 
     const handleEditProblem = (problem: Problem) => {
         setSelectedProblem(problem);
@@ -50,6 +53,10 @@ export default function RoundDetailClient({
     const handleCloseProblemModal = () => {
         setIsProblemModalOpen(false);
         setSelectedProblem(null);
+    };
+
+    const handleCloseAdminModal = () => {
+        setIsAdminModalOpen(false);
     };
 
     const handleDeleteClick = (problem: Problem) => {
@@ -115,6 +122,10 @@ export default function RoundDetailClient({
                             <HiPlus className="mr-2 h-4 w-4" />
                             Add Problem
                         </Button>
+                        <HeaderButton onClick={() => setIsAdminModalOpen(true)}>
+                            <HiWrenchScrewdriver className="w-4 h-4" />
+                            Admin Actions
+                        </HeaderButton>
                     </div>
                 </div>
             </div>
@@ -144,6 +155,12 @@ export default function RoundDetailClient({
                 problem={selectedProblem}
                 isOpen={isProblemModalOpen}
                 onClose={handleCloseProblemModal}
+            />
+
+            <AdminModal
+                round={round}
+                isOpen={isAdminModalOpen}
+                onClose={handleCloseAdminModal}
             />
 
             <Modal

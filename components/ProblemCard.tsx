@@ -25,7 +25,7 @@ export default function ProblemCard({
                             ? "Correct/Incorrect"
                             : problem.type}
                     </div>
-                    {/* {onEdit && (
+                    {onEdit && (
                         <Button
                             variant="ghost"
                             size="icon"
@@ -44,7 +44,7 @@ export default function ProblemCard({
                             aria-label="Delete problem">
                             <HiTrash className="w-4 h-4" />
                         </Button>
-                    )} */}
+                    )}
                 </div>
             </CardHeader>
             <CardContent>
