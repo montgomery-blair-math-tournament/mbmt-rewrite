@@ -50,7 +50,7 @@ export default async function RoundPage({
 
         registered = regCount || 0;
         graded = gradCount || 0;
-    } else if (round.type === "team") {
+    } else if (round.type === "team" || round.type === "guts") {
         const { count: regCount } = await supabase
             .from("team_round")
             .select("*", { count: "exact", head: true })
